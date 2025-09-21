@@ -115,6 +115,13 @@ LLM 需要评估所有可用的信息，然后决定：我需要采取哪些步�
 
 ![img](docs/images/mcp.webp)
 
+![img](docs/images/mcp-example.webp)
+
+* [调用 Unity 的 MCP 接口，让 AI 自己开发游戏](https://www.bilibili.com/video/BV1kzoWYXECJ)
+* [调用 Blender 的 MCP 接口，让 AI 自己 3D 建模](https://www.bilibili.com/video/BV1pHQNYREAX)
+* [调用百度地图的 MCP 接口，让 AI 自己联网、查路况、导航](https://www.bilibili.com/video/BV1dbdxY5EUP)
+* [ 调用 Playwright 的 MCP 接口，让 AI 自己操作网页](https://mp.weixin.qq.com/s/w_43x5fFVfDPDgMorn3XfA)
+
 
 ### Agent2Agent
 
@@ -217,4 +224,3 @@ LangChain 的升级版 LangGraph 等。
 * 文章
     - [如何提升大模型的 Agent 推理规划等能力](https://mp.weixin.qq.com/s/7208b2TxskVJn3IKj6hw6Q)
     - [LangChain 创始人万字科普：手把手教你设计 Agent 用户交互](https://mp.weixin.qq.com/s/SQFPXe0RqwBn4pXRNOUYMw)
-    - [Dify MCP 教程](https://mp.weixin.qq.com/s/w_43x5fFVfDPDgMorn3XfA)
