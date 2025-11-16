@@ -1,27 +1,29 @@
 <details><summary>目录</summary><p>
 
 - [Agent 简介](#agent-简介)
-  - [什么是智能体](#什么是智能体)
-    - [什么是智能体特性](#什么是智能体特性)
-    - [智能体特性有什么用](#智能体特性有什么用)
-  - [如何为智能体进行规划](#如何为智能体进行规划)
-    - [什么是规划和推理](#什么是规划和推理)
-    - [如何改善智能体的规划能力](#如何改善智能体的规划能力)
-  - [AI Agent 开发范式](#ai-agent-开发范式)
-  - [Agent 协议](#agent-协议)
-    - [MCP](#mcp)
-    - [Agent2Agent](#agent2agent)
-  - [Agent 思考框架](#agent-思考框架)
-    - [思维链-CoT](#思维链-cot)
-    - [ReAct](#react)
-    - [Plan-and-Execute](#plan-and-execute)
+    - [什么是智能体](#什么是智能体)
+        - [智能体类型](#智能体类型)
+        - [智能体的构成和运行原理](#智能体的构成和运行原理)
+        - [什么是智能体特性](#什么是智能体特性)
+        - [智能体特性有什么用](#智能体特性有什么用)
+    - [如何为智能体进行规划](#如何为智能体进行规划)
+        - [什么是规划和推理](#什么是规划和推理)
+        - [如何改善智能体的规划能力](#如何改善智能体的规划能力)
+    - [AI Agent 开发范式](#ai-agent-开发范式)
+    - [Agent 协议](#agent-协议)
+        - [MCP](#mcp)
+        - [Agent2Agent](#agent2agent)
+    - [Agent 思考框架](#agent-思考框架)
+        - [思维链-CoT](#思维链-cot)
+        - [ReAct](#react)
+        - [Plan-and-Execute](#plan-and-execute)
 - [Agent 开发](#agent-开发)
-  - [开发框架](#开发框架)
-  - [LangChain-AI116384](#langchain-ai116384)
-  - [Agentic Design Patterns](#agentic-design-patterns)
-    - [Prompt Chaining](#prompt-chaining)
-  - [一起学多 AI 智能体系统](#一起学多-ai-智能体系统)
-  - [Agent 开发框架](#agent-开发框架)
+    - [开发框架](#开发框架)
+    - [LangChain-AI116384](#langchain-ai116384)
+    - [Agentic Design Patterns](#agentic-design-patterns)
+        - [Prompt Chaining](#prompt-chaining)
+    - [一起学多 AI 智能体系统](#一起学多-ai-智能体系统)
+    - [Agent 开发框架](#agent-开发框架)
 - [参考资料](#参考资料)
 </p></details><p></p>
 
@@ -34,6 +36,30 @@
 
 > Andrew Ng 在推文中，他建议「与其争论什么应被归类为真正的智能体，不如承认系统具有不同程度的智能体特性（agentic）」。
 > 就像自动驾驶汽车有不同的自动化等级一样，我们也可以将智能体的能力视作一个光谱。
+
+在人工智能领域，智能体被定义为任何能够通过 **传感器（Sensors）** 感知其所处 **环境（Environment）**，
+并自主地通过 **执行器（Actuators）**采取 **行动（Action）** 以达成特定目标的实体。
+
+### 智能体类型
+
+1. 基于内部决策架构的分类
+    - 简单的反应式智能体
+    - 引入内部模型的模型式智能体
+    - 基于目标和基于效用的智能体
+2. 基于时间与反应性的分类：追求速度的反应性（Reactivity）与追求最优解的规划性（Deliberation）之间的平衡
+    - 反应式智能体 (Reactive Agents)
+    - 规划式智能体(Deliberative Agents)
+    - 混合式智能体(Hybrid Agents)
+3. 基于知识表示的分类
+    - 符号主义 AI（Symbolic AI）
+    - 亚符号主义 AI（Sub-symbolic AI）
+    - 神经符号主义 AI（Neuro-Symbolic AI）
+
+### 智能体的构成和运行原理
+
+
+
+
 
 ### 什么是智能体特性
 
@@ -201,6 +227,7 @@ LangChain 的升级版 LangGraph 等。
 
 ### Prompt Chaining
 
+* TODO
 
 ## 一起学多 AI 智能体系统
 
@@ -208,11 +235,11 @@ LangChain 的升级版 LangGraph 等。
 
 ## Agent 开发框架
 
-* [LangChain,LangGraph]
+* [LangChain,LangGraph]()
     - 提供了一种灵活的方式，将语言模型和其他组件串联起来，为构建复杂的操作序列和图形提供了一个强大的画布。
-* [Crew AI]
+* [Crew AI]()
     - 提供了一个专门为协调多个智能体、角色和任务而设计的结构化框架，它作为一个画布，特别适合协作智能体系统。
-* [Google ADK]
+* [Google ADK]()
     - 提供了用于构建、评估和部署智能体的工具和组件，它又提供了一个有价值的画布，通常与谷歌的 AI 基础设施集成。
 
 # 参考资料
@@ -224,3 +251,4 @@ LangChain 的升级版 LangGraph 等。
 * 文章
     - [如何提升大模型的 Agent 推理规划等能力](https://mp.weixin.qq.com/s/7208b2TxskVJn3IKj6hw6Q)
     - [LangChain 创始人万字科普：手把手教你设计 Agent 用户交互](https://mp.weixin.qq.com/s/SQFPXe0RqwBn4pXRNOUYMw)
+* [Hello Agents](https://datawhalechina.github.io/hello-agents/#/./chapter1/%E7%AC%AC%E4%B8%80%E7%AB%A0%20%E5%88%9D%E8%AF%86%E6%99%BA%E8%83%BD%E4%BD%93?id=_112-%e5%a4%a7%e8%af%ad%e8%a8%80%e6%a8%a1%e5%9e%8b%e9%a9%b1%e5%8a%a8%e7%9a%84%e6%96%b0%e8%8c%83%e5%bc%8f)
