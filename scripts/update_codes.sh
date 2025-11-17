@@ -1,13 +1,13 @@
 # !/bin/bash
 
 echo "--------------------------"
-echo "update tsproj codes..."
+echo "update codes..."
 echo "--------------------------"
 git checkout main
 echo "Successfully checked out main."
 
 git add .
-git commit -m "init project"
+git commit -m "update"
 
 git pull
 echo "Successfully pulled the latest changes."

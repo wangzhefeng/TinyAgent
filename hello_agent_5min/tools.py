@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 # ***************************************************
-# * File        : main.py
+# * File        : tools.py
 # * Author      : Zhefeng Wang
 # * Email       : zfwang7@gmail.com
-# * Date        : 2025-11-15
-# * Version     : 1.0.111523
+# * Date        : 2025-11-17
+# * Version     : 1.0.111721
 # * Description : description
 # * Link        : link
 # * Requirement : 相关模块版本需求(例如: numpy >= 2.1.0)
@@ -20,40 +20,19 @@ if ROOT not in sys.path:
     sys.path.append(ROOT)
 import warnings
 warnings.filterwarnings("ignore")
-import json
 import requests
 from dotenv import find_dotenv, load_dotenv
 
 from tavily import TavilyClient
 
-# global variable
-LOGGING_LABEL = Path(__file__).name[:-3]
-os.environ['LOG_NAME'] = LOGGING_LABEL
 from utils.log_util import logger
 
+# global variable
+LOGGING_LABEL = Path(__file__).name[:-3]
+
+# 读取本地/项目环境变量
 _ = load_dotenv(find_dotenv())
 
-
-# ##############################
-# 指令模板(提示工程, Prompt Engineering)
-# ##############################
-AGENT_SYSTEM_PROMPT = """
-你是一个智能旅行助手。你的任务是分析用户的请求，并使用可用工具一步步地解决问题。
-
-# 可用工具:
-- `get_weather(city: str)`: 查询指定城市的实时天气。
-- `get_attraction(city: str, weather: str)`: 根据城市和天气搜索推荐的旅游景点。
-
-# 行动格式:
-你的回答必须严格遵循以下格式。首先是你的思考过程，然后是你要执行的具体行动，每次回复只输出一对Thought-Action：
-Thought: [这里是你的思考过程和下一步计划]
-Action: [这里是你要调用的工具，格式为 function_name(arg_name="arg_value")]
-
-# 任务完成:
-当你收集到足够的信息，能够回答用户的最终问题时，你必须在`Action:`字段后使用 `finish(answer="...")` 来输出最终答案。
-
-请开始吧！
-"""
 
 # ##############################
 # 工具1：查询真实天气
@@ -137,6 +116,7 @@ def get_attraction(city: str, weather: str) -> str:
     except Exception as e:
         return f"错误: 执行 Tavily 搜索时出现问题 - {e}"
 
+
 # ##############################
 # 将所有功率函数放入一个字典，供主循环调用
 # ##############################
@@ -144,7 +124,6 @@ available_tools = {
     "get_weather": get_weather,
     "get_attraction": get_attraction,
 }
-
 
 
 
