@@ -208,13 +208,14 @@ __marimo__/
 
 
 # custom
-.DS_Store
 dataset/
+results/
 logs/
+downloaded_models/
 utils/
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 .langgraph_api
-downloaded_models/
+.DS_Store
