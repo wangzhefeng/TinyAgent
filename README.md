@@ -257,6 +257,7 @@ LangChain 的升级版 LangGraph 等。
 
 * [Hello Agents](https://datawhalechina.github.io/hello-agents/#/./chapter1/%E7%AC%AC%E4%B8%80%E7%AB%A0%20%E5%88%9D%E8%AF%86%E6%99%BA%E8%83%BD%E4%BD%93?id=_112-%e5%a4%a7%e8%af%ad%e8%a8%80%e6%a8%a1%e5%9e%8b%e9%a9%b1%e5%8a%a8%e7%9a%84%e6%96%b0%e8%8c%83%e5%bc%8f)
 * [Handy Multi Agent](https://datawhalechina.github.io/handy-multi-agent/#/README)
+* [FareedKhan-dev/all-agentic-architectures](https://github.com/FareedKhan-dev/all-agentic-architectures)
 
 # 参考资料
 
@@ -267,3 +268,4 @@ LangChain 的升级版 LangGraph 等。
 * 文章
     - [如何提升大模型的 Agent 推理规划等能力](https://mp.weixin.qq.com/s/7208b2TxskVJn3IKj6hw6Q)
     - [LangChain 创始人万字科普：手把手教你设计 Agent 用户交互](https://mp.weixin.qq.com/s/SQFPXe0RqwBn4pXRNOUYMw)
+    - [AI智能体构建总结：17种架构详细实现](https://mp.weixin.qq.com/s/6kNF9jaHIyX0qhASrl6zSg)
