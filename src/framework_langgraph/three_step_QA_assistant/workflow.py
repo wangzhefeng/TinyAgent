@@ -21,11 +21,41 @@ if ROOT not in sys.path:
 import warnings
 warnings.filterwarnings("ignore")
 
+from langgraph.graph import StateGraph, START, END
+from langgraph.checkpoint.memory import InMemorySaver
+
+from src.framework_langgraph.three_step_QA_assistant.state import (
+    SearchState,
+)
+from src.framework_langgraph.three_step_QA_assistant.nodes import (
+    understand_query_node,
+    tavily_search_node,
+    generate_answer_node,
+)
+
 # global variable
 LOGGING_LABEL = Path(__file__).name[:-3]
 
 
+def create_search_assistant():
+    workflow = StateGraph()
 
+    # 添加节点
+    workflow.add_node("understand", understand_query_node)
+    workflow.add_node("search", tavily_search_node)
+    workflow.add_node("answer", generate_answer_node)
+
+    # 设置线性流程
+    workflow.add_edge(START, "understand")
+    workflow.add_edge("understand", "search")
+    workflow.add_edge("search", "answer")
+    workflow.add_edge("answer", END)
+
+    # 编译图
+    memory = InMemorySaver()
+    app = workflow.compile(checkpointer=memory)
+
+    return app
 
 
 
