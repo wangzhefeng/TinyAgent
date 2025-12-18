@@ -42,7 +42,7 @@ class AgentsLLM:
         timeout = timeout or int(os.getenv("LLM_TIMEOUT", 60))
 
         if not all([self.model, apiKey, baseUrl]):
-            raise ValueError("模型 ID、API 密钥和服务地址必须被提供或再 .env 文件中定义。")
+            raise ValueError("模型 ID、API 密钥和服务地址必须被提供或在 .env 文件中定义。")
 
         # llm client
         self.client = OpenAI(api_key=apiKey, base_url=baseUrl, timeout=timeout)
