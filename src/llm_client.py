@@ -35,17 +35,17 @@ class AgentsLLM:
     """
     LLM Client，用于调用任何兼容 OpenAI API 的服务，并默认使用流式响应
     """
-    def __init__(self, model: str=None, apiKey: str=None, baseUrl: str=None, timeout: int=None):
+    def __init__(self, model: str=None, api_key: str=None, base_url: str=None, timeout: int=None):
         self.model = model or os.getenv("LLM_MODEL_ID")
-        apiKey = apiKey or os.getenv("LLM_API_KEY")
-        baseUrl = baseUrl or os.getenv("LLM_BASE_URL")
+        api_key = api_key or os.getenv("LLM_API_KEY")
+        base_url = base_url or os.getenv("LLM_BASE_URL")
         timeout = timeout or int(os.getenv("LLM_TIMEOUT", 60))
 
-        if not all([self.model, apiKey, baseUrl]):
+        if not all([self.model, api_key, base_url]):
             raise ValueError("模型 ID、API 密钥和服务地址必须被提供或在 .env 文件中定义。")
 
         # llm client
-        self.client = OpenAI(api_key=apiKey, base_url=baseUrl, timeout=timeout)
+        self.client = OpenAI(api_key=api_key, base_url=base_url, timeout=timeout)
     
     def think(self, messages: List[Dict[str, str]], temperature: float=0.0) -> str:
         """
