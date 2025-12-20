@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # ***************************************************
-# * File        : vllm_client.py
+# * File        : ollama_client.py
 # * Author      : Zhefeng Wang
 # * Email       : zfwang7@gmail.com
 # * Date        : 2025-12-19
@@ -21,7 +21,7 @@ if ROOT not in sys.path:
 import warnings
 warnings.filterwarnings("ignore")
 
-from src_framework.core.llm import LLM
+from hello_agents.core.llm import LLM
 
 # global variable
 LOGGING_LABEL = Path(__file__).name[:-3]
@@ -29,12 +29,12 @@ os.environ['LOG_NAME'] = LOGGING_LABEL
 from utils.log_util import logger
 
 
-# vLLM 本地服务
+# Ollama 本地服务
 llm_client = LLM(
-    provider="vllm",
-    model="Qwen/Qwen1.5-0.5B-Chat",  # 需与服务启动时指定的模型一致
-    base_url="http://localhost:8000/v1",
-    api_key="vllm",  # 本地服务通常不需要真实API Key，可填任意非空字符串
+    provider="ollama",
+    model="llama3",  # 需与 `ollama run` 指定的模型一致
+    base_url="http://localhost:11434/v1",
+    api_key="ollama"  # 本地服务同样不需要真实 Key
 )
 
 

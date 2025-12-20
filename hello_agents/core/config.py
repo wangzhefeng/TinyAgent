@@ -54,7 +54,7 @@ class Config(BaseModel):
         return cls(
             debug=os.getenv("DEBUG", "false").lower() == "true",
             log_level=os.getenv("LOG_LEVEL", "INFO"),
-            temperature=float(os.getenv("TEMPERATURE", 0.7)),
+            temperature=float(os.getenv("TEMPERATURE", "0.7")),
             max_tokens=int(os.getenv("MAX_TOKENS")) if os.getenv("MAX_TOKENS") else None,
         )
     
@@ -62,10 +62,7 @@ class Config(BaseModel):
         """
         转换为字典
         """
-        return self.dict()
-
-
-
+        return self.model_dump()
 
 
 

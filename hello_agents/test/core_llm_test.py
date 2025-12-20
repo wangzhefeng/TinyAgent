@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 # ***************************************************
-# * File        : llm.py
+# * File        : core_llm_test.py
 # * Author      : Zhefeng Wang
 # * Email       : zfwang7@gmail.com
-# * Date        : 2025-12-18
-# * Version     : 1.0.121822
+# * Date        : 2025-12-20
+# * Version     : 1.0.122023
 # * Description : description
 # * Link        : link
 # * Requirement : 相关模块版本需求(例如: numpy >= 2.1.0)
@@ -24,7 +24,7 @@ from typing import Optional
 
 from openai import OpenAI
 
-from src.llm_client import AgentsLLM
+from hello_agents.core.llm import AgentsLLM
 
 # global variable
 LOGGING_LABEL = Path(__file__).name[:-3]

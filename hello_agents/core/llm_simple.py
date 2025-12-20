@@ -22,13 +22,15 @@ import warnings
 warnings.filterwarnings("ignore")
 from typing import List, Dict
 
-from openai import OpenAI
 from dotenv import load_dotenv
-# 加载 .env 文件中的环境变量
-load_dotenv()
+from openai import OpenAI
 
 # global variable
 LOGGING_LABEL = Path(__file__).name[:-3]
+
+
+# 加载 .env 文件中的环境变量
+load_dotenv()
 
 
 class AgentsLLM:
@@ -50,13 +52,6 @@ class AgentsLLM:
     def think(self, messages: List[Dict[str, str]], temperature: float=0.0) -> str:
         """
         调用 LLM 进行思考，并返回其响应
-
-        Args:
-            messages (List[Dict[str, str]]): _description_
-            temperature (float, optional): _description_. Defaults to 0.0.
-
-        Returns:
-            str: _description_
         """
         try:
             # 调用 LLM

@@ -22,7 +22,7 @@ import warnings
 warnings.filterwarnings("ignore")
 from typing import List
 
-from llm_client import AgentsLLM
+from hello_agents.core.llm_simple import AgentsLLM
 
 # global variable
 LOGGING_LABEL = Path(__file__).name[:-3]

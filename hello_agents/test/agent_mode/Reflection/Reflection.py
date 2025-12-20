@@ -20,7 +20,7 @@ if ROOT not in sys.path:
 import warnings
 warnings.filterwarnings("ignore")
 
-from llm_client import AgentsLLM
+from hello_agents.core.llm_simple import AgentsLLM
 from memory import Memory
 
 # global variable

@@ -21,7 +21,7 @@ import warnings
 warnings.filterwarnings("ignore")
 import re
 
-from llm_client import AgentsLLM
+from hello_agents.core.llm_simple import AgentsLLM
 from ReAct.tools import ToolExecutor
 
 # global variable
