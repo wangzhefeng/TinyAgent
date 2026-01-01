@@ -13,18 +13,18 @@
 
 # python libraries
 import os
-import sys
+# import sys
 from pathlib import Path
-ROOT = str(Path.cwd())
-if ROOT not in sys.path:
-    sys.path.append(ROOT)
-import warnings
-warnings.filterwarnings("ignore")
+# ROOT = str(Path.cwd())
+# if ROOT not in sys.path:
+#     sys.path.append(ROOT)
+# import warnings
+# warnings.filterwarnings("ignore")
 from typing import Optional, Literal, Iterator
 
 from openai import OpenAI
 
-from hello_agents.core.exceptions import AgentsException
+from .exceptions import AgentsException
 
 # global variable
 LOGGING_LABEL = Path(__file__).name[:-3]

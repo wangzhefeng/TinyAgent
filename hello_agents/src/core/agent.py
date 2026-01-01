@@ -12,20 +12,20 @@
 # ***************************************************
 
 # python libraries
-import os
-import sys
+# import os
+# import sys
 from pathlib import Path
-ROOT = str(Path.cwd())
-if ROOT not in sys.path:
-    sys.path.append(ROOT)
-import warnings
-warnings.filterwarnings("ignore")
+# ROOT = str(Path.cwd())
+# if ROOT not in sys.path:
+#     sys.path.append(ROOT)
+# import warnings
+# warnings.filterwarnings("ignore")
 from abc import ABC, abstractmethod
 from typing import Optional, List
 
-from hello_agents.core.message import Message
-from hello_agents.core.llm import AgentsLLM
-from hello_agents.core.config import Config
+from .llm import AgentsLLM
+from .config import Config
+from .message import Message
 
 # global variable
 LOGGING_LABEL = Path(__file__).name[:-3]

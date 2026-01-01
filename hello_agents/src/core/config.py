@@ -13,13 +13,13 @@
 
 # python libraries
 import os
-import sys
+# import sys
 from pathlib import Path
-ROOT = str(Path.cwd())
-if ROOT not in sys.path:
-    sys.path.append(ROOT)
-import warnings
-warnings.filterwarnings("ignore")
+# ROOT = str(Path.cwd())
+# if ROOT not in sys.path:
+#     sys.path.append(ROOT)
+# import warnings
+# warnings.filterwarnings("ignore")
 from typing import Optional, Dict, Any
 
 from pydantic import BaseModel
@@ -32,20 +32,20 @@ class Config(BaseModel):
     """
     Agents 配置类
     """
-
+    
     # LLM 配置
     default_model: str = "gpt-3.5-turbo"
     default_provider: str = "openai"
     temperature: float = 0.7
     max_tokens: Optional[int] = None
-
+    
     # 系统配置
     debug: bool = False
     log_level: str = "INFO"
-
+    
     # 其他配置
     max_history_length: int = 100
-
+    
     @classmethod
     def from_env(cls) -> "Config":
         """

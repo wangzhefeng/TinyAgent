@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 # ***************************************************
-# * File        : react_agent.py
+# * File        : manager.py
 # * Author      : Zhefeng Wang
 # * Email       : zfwang7@gmail.com
-# * Date        : 2025-12-18
-# * Version     : 1.0.121822
+# * Date        : 2025-12-27
+# * Version     : 1.0.122713
 # * Description : description
 # * Link        : link
 # * Requirement : 相关模块版本需求(例如: numpy >= 2.1.0)

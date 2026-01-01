@@ -13,13 +13,13 @@
 
 # python libraries
 import os
-import sys
+# import sys
 from pathlib import Path
-ROOT = str(Path.cwd())
-if ROOT not in sys.path:
-    sys.path.append(ROOT)
-import warnings
-warnings.filterwarnings("ignore")
+# ROOT = str(Path.cwd())
+# if ROOT not in sys.path:
+#     sys.path.append(ROOT)
+# import warnings
+# warnings.filterwarnings("ignore")
 from typing import Dict, Any, Optional
 
 from dotenv import load_dotenv
@@ -146,7 +146,7 @@ class DatabaseConfig(BaseModel):
 
         # 验证 Qdrant 配置
         try:
-            from hello_agents.memory.storage.qdrant_store import QdrantVectorStore
+            from ..memory.storage.qdrant_store import QdrantVectorStore
             qdrant_store = QdrantVectorStore(**self.get_qdrant_config())
             results["qdrant"] = qdrant_store.health_check()
             logger.info(f"✅ Qdrant连接验证: {'成功' if results['qdrant'] else '失败'}")
@@ -156,7 +156,7 @@ class DatabaseConfig(BaseModel):
         
         # 验证 Neo4j 配置
         try:
-            from hello_agents.memory.storage.neo4j_store import Neo4jGraphStore
+            from ..memory.storage.neo4j_store import Neo4jGraphStore
             neo4j_store = Neo4jGraphStore(**self.get_neo4j_config())
             results["neo4j"] = neo4j_store.health_check()
             logger.info(f"✅ Neo4j连接验证: {'成功' if results['neo4j'] else '失败'}")
