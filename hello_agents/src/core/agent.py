@@ -1,34 +1,16 @@
 # -*- coding: utf-8 -*-
 
-# ***************************************************
-# * File        : agent.py
-# * Author      : Zhefeng Wang
-# * Email       : zfwang7@gmail.com
-# * Date        : 2025-12-18
-# * Version     : 1.0.121822
-# * Description : Agent 基类
-# * Link        : link
-# * Requirement : 相关模块版本需求(例如: numpy >= 2.1.0)
-# ***************************************************
+"""
+Agent 基类
+"""
 
 # python libraries
-# import os
-# import sys
-from pathlib import Path
-# ROOT = str(Path.cwd())
-# if ROOT not in sys.path:
-#     sys.path.append(ROOT)
-# import warnings
-# warnings.filterwarnings("ignore")
 from abc import ABC, abstractmethod
 from typing import Optional, List
 
 from .llm import AgentsLLM
 from .config import Config
 from .message import Message
-
-# global variable
-LOGGING_LABEL = Path(__file__).name[:-3]
 
 
 class Agent(ABC):
@@ -78,13 +60,3 @@ class Agent(ABC):
 
     def __repr__(self) -> str:
         return self.__str__()
-
-
-
-
-# 测试代码 main 函数
-def main():
-    pass
-
-if __name__ == "__main__":
-    main()

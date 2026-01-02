@@ -1,32 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# ***************************************************
-# * File        : llm_agent.py
-# * Author      : Zhefeng Wang
-# * Email       : zfwang7@gmail.com
-# * Date        : 2025-11-22
-# * Version     : 1.0.112217
-# * Description : description
-# * Link        : link
-# * Requirement : 相关模块版本需求(例如: numpy >= 2.1.0)
-# ***************************************************
-
 # python libraries
 import os
-# import sys
-from pathlib import Path
-# ROOT = str(Path.cwd())
-# if ROOT not in sys.path:
-#     sys.path.append(ROOT)
-# import warnings
-# warnings.filterwarnings("ignore")
 from typing import List, Dict
 
 from dotenv import load_dotenv
 from openai import OpenAI
-
-# global variable
-LOGGING_LABEL = Path(__file__).name[:-3]
 
 
 # 加载 .env 文件中的环境变量

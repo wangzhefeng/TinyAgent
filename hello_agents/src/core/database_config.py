@@ -1,35 +1,17 @@
 # -*- coding: utf-8 -*-
 
-# ***************************************************
-# * File        : database_config.py
-# * Author      : Zhefeng Wang
-# * Email       : zfwang7@gmail.com
-# * Date        : 2025-12-20
-# * Version     : 1.0.122017
-# * Description : 数据库配置管理，支持 Qdrant 向量数据库和 Neo4j 图数据库的配置
-# * Link        : link
-# * Requirement : 相关模块版本需求(例如: numpy >= 2.1.0)
-# ***************************************************
+"""
+数据库配置管理，支持 Qdrant 向量数据库和 Neo4j 图数据库的配置
+"""
 
 # python libraries
 import os
-# import sys
-from pathlib import Path
-# ROOT = str(Path.cwd())
-# if ROOT not in sys.path:
-#     sys.path.append(ROOT)
-# import warnings
-# warnings.filterwarnings("ignore")
 from typing import Dict, Any, Optional
 
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 
 from utils.log_util import logger
-
-# global variable
-LOGGING_LABEL = Path(__file__).name[:-3]
-
 
 # Load environment variables early so DB configs pick them up
 load_dotenv()
@@ -190,13 +172,3 @@ def update_database_config(**kwargs) -> None:
         db_config.neo4j = Neo4jConfig(**kwargs["neo4j"])
     
     logger.info("✅ 数据库配置已更新")
-
-
-
-
-# 测试代码 main 函数
-def main():
-    pass
-
-if __name__ == "__main__":
-    main()

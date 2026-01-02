@@ -1,33 +1,16 @@
 # -*- coding: utf-8 -*-
 
-# ***************************************************
-# * File        : llm.py
-# * Author      : Zhefeng Wang
-# * Email       : zfwang7@gmail.com
-# * Date        : 2025-12-18
-# * Version     : 1.0.121822
-# * Description : Agents 统一 LLM 接口：基于 OpenAI 原生 API
-# * Link        : link
-# * Requirement : 相关模块版本需求(例如: numpy >= 2.1.0)
-# ***************************************************
+"""
+Agents 统一 LLM 接口：基于 OpenAI 原生 API
+"""
 
 # python libraries
 import os
-# import sys
-from pathlib import Path
-# ROOT = str(Path.cwd())
-# if ROOT not in sys.path:
-#     sys.path.append(ROOT)
-# import warnings
-# warnings.filterwarnings("ignore")
 from typing import Optional, Literal, Iterator
 
 from openai import OpenAI
 
 from .exceptions import AgentsException
-
-# global variable
-LOGGING_LABEL = Path(__file__).name[:-3]
 
 
 # 支持的 LLM 提供商
@@ -371,13 +354,3 @@ class AgentsLLM:
         """
         temperature = kwargs.get('temperature')
         yield from self.think(messages, temperature)
-
-
-
-
-# 测试代码 main 函数
-def main():
-    pass
-
-if __name__ == "__main__":
-    main()
