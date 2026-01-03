@@ -46,3 +46,13 @@ class Config(BaseModel):
         转换为字典
         """
         return self.model_dump()
+
+
+
+# 测试代码 main 函数
+def main():
+    config = Config()
+    print(config.to_dict())
+
+if __name__ == "__main__":
+    main()

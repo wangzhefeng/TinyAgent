@@ -5,14 +5,10 @@
 """
 
 # python libraries
-from pathlib import Path
 from typing import Optional, Dict, Any, Literal
 from datetime import datetime
 
 from pydantic import BaseModel
-
-# global variable
-LOGGING_LABEL = Path(__file__).name[:-3]
 
 
 # 定义消息角色的类型，限制其取值
@@ -54,7 +50,20 @@ class Message(BaseModel):
 
 # 测试代码 main 函数
 def main():
-    pass
+    print(Message(content="Hello, world!", role="user").content)
+    print(Message(content="Hello, world!", role="user").role)
+    print(Message(content="Hello, world!", role="user").timestamp)
+    print(Message(content="Hello, world!", role="user").metadata)
+    
+    msg = Message(content="Hello, world!", role="user")
+    print(msg)
+    print(msg.content)
+    print(msg.role)
+    print(msg.timestamp)
+    print(msg.metadata)
+    
+    msg = msg.to_dict()
+    print(msg)
 
 if __name__ == "__main__":
     main()
