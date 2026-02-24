@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 
 """
-工具链管理器 - HelloAgents工具链式调用支持
+工具链管理器 - HelloAgents 工具链式调用支持
 """
 
 # python libraries
 from typing import List, Dict, Any, Optional
+
 from .registry import ToolRegistry
 
 
 class ToolChain:
-    """工具链 - 支持多个工具的顺序执行"""
+    """
+    工具链 - 支持多个工具的顺序执行
+    """
 
     def __init__(self, name: str, description: str):
         self.name = name
@@ -85,7 +88,9 @@ class ToolChain:
 
 
 class ToolChainManager:
-    """工具链管理器"""
+    """
+    工具链管理器
+    """
 
     def __init__(self, registry: ToolRegistry):
         self.registry = registry
