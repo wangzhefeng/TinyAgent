@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+from .agents.plan_solve_agent import PlanAndSolveAgent
 from .agents.react_agent import TinyAgent
+from .agents.reflection_agent import ReflectionAgent
 from .agents.swarm import Swarm
 from .codecs.native import NativeCodec
 from .codecs.react_text import ReactTextCodec
@@ -10,6 +12,7 @@ from .core.guardrails import AllowlistGuardrail, CompositeGuardrail
 from .core.handoff import HANDOFF_MARKER, extract_handoff, make_transfer_tools
 from .core.llm import PROVIDER_PRESETS, OpenAIChatModel
 from .core.loop import agent_loop
+from .core.memory import FileLongTermMemory, ListMemory
 from .core.protocols import (
     ChatModel,
     Guardrail,
@@ -35,11 +38,13 @@ __all__ = [
     "AllowlistGuardrail",
     "ChatModel",
     "CompositeGuardrail",
+    "FileLongTermMemory",
     "FileSessionStore",
     "FinalAnswer",
     "Guardrail",
     "HANDOFF_MARKER",
     "JsonlTracer",
+    "ListMemory",
     "LoopResult",
     "Memory",
     "Message",
@@ -47,7 +52,9 @@ __all__ = [
     "NativeCodec",
     "OpenAIChatModel",
     "PROVIDER_PRESETS",
+    "PlanAndSolveAgent",
     "ReactTextCodec",
+    "ReflectionAgent",
     "SessionStore",
     "Swarm",
     "TinyAgent",
