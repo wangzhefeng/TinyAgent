@@ -2,13 +2,8 @@
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "packages" / "tinyagent-core" / "src"))
-
-from tinyagent.codecs.react_text import ReactTextCodec  # noqa: E402
-from tinyagent.core.types import FinalAnswer, ModelReply, ToolSpec  # noqa: E402
+from tinyagent.codecs.react_text import ReactTextCodec
+from tinyagent.core.types import FinalAnswer, ModelReply, ToolSpec
 
 
 def _spec() -> ToolSpec:

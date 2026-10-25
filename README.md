@@ -1,58 +1,77 @@
-# TinyAgent
+# tinyagent
 
-TinyAgent 是一个以**「从零手写 Agent → 自研教学级框架 → 框架实战与生态」**为主线的 AI Agent 学习与实验仓库。双主线：`learn/`（L0–L6 学习路径）与 `packages/tinyagent-core`（自研框架）；载体应用 **Experiment Copilot** 面向时序预测实验仓库（默认 `~/projects/tsproj_ml`）。
+**A teaching-grade, extensible agent framework** — 一个 ~50 行的循环内核、六个可插拔协议、双工具调用编解码，以及面向真实工程的能力面（handoff/Swarm、MCP 工具源、长期记忆）。
 
-协作强制规则见 [AGENTS.md](AGENTS.md)；完整文档见 [docs/README.md](docs/README.md)。
+> 本仓库同时是 AI Agent 学习实验室（`learn/` L0–L6、`apps/` 应用、`evals/` 评测），见下方 [Lab 章节](#lab-学习与应用层)。
 
-## 快速索引
-
-| 域 | 代码 | 文档 |
-|---|---|---|
-| L0–L1 基础与手写 | [`learn/level0_llm_basics/`](learn/level0_llm_basics)、[`learn/level1_from_scratch/`](learn/level1_from_scratch) | [docs/10-scratch](docs/10-scratch/index.md) |
-| L2 自研框架 | [`packages/tinyagent-core/`](packages/tinyagent-core)、[`learn/level2_own_framework/`](learn/level2_own_framework) | [docs/20-framework](docs/20-framework/index.md) |
-| 载体应用 Copilot | [`apps/experiment_copilot/`](apps/experiment_copilot) | [docs/30-copilot](docs/30-copilot/index.md) |
-| L3 LangGraph（M3） | `learn/level3_langgraph/` | [docs/40-langgraph](docs/40-langgraph/index.md) |
-| L4 模式实验室（M4） | `learn/level4_patterns/` | [docs/50-patterns](docs/50-patterns/index.md) |
-| L5 生态与协议 | [`learn/level5_ecosystem/`](learn/level5_ecosystem) | [docs/60-ecosystem](docs/60-ecosystem/index.md) |
-| L6 评测与观测（M5） | `learn/level6_evals/`、`evals/` | [docs/70-evals](docs/70-evals/index.md) |
-| 工程规范 | [`scripts/`](scripts)、[`utils/`](utils)、`tests/` | [docs/80-development](docs/80-development/index.md) |
-
-## 快速开始
+## 安装
 
 ```bash
-# 环境（uv，Python 3.11+）
-uv sync
-source .venv/bin/activate
+# 库本体（Python ≥ 3.11）
+pip install tinyagent-core          # 或: uv add tinyagent-core
+pip install "tinyagent-core[mcp]"   # 需要 MCP 工具源时
+```
 
-# 配置：复制模板并填入密钥（默认智谱 OpenAI 兼容端点 + 免费档 glm-4.7-flash）
-cp .env.example .env
+本地开发（本仓库）：
 
-# 文档健康检查与代码风格
-python scripts/check_docs.py
+```bash
+uv sync --all-extras        # 库 + dev + mcp
+uv sync --all-groups        # 另含 learn/apps 所需的 course/lab 依赖
+```
+
+## 30 秒上手
+
+```python
+from tinyagent import TinyAgent, tool
+
+@tool
+def calculator(expression: str) -> str:
+    """Arithmetic calculator supporting + - * / // % ** and parentheses."""
+    ...
+
+agent = TinyAgent(tools=[calculator])   # 模型配置读 .env（LLM_*，OpenAI 兼容端点）
+print(agent.run("Compute (123 + 456) * 2").text)
+```
+
+可运行示例见 [`examples/`](examples/)（最小冒烟 / 编排组件 / 长期记忆 / MCP 挂载）。
+
+## 能力面
+
+| 能力 | 入口 | 说明 |
+|---|---|---|
+| 六协议内核 | `tinyagent.core.loop.agent_loop` | ChatModel / Tool / SessionStore / Tracer / Guardrail / Memory 全部可注入替换（[ADR-0001](docs/20-framework/adr/0001-agent-loop-and-protocols.md)） |
+| 双 codec | `ReactTextCodec` / `NativeCodec` | ReAct 文本协议与原生 function calling 同内核切换 |
+| 多智能体 | `Swarm` / `make_transfer_tools` | 移交即工具，max_handoffs 防乒乓（ADR-0004） |
+| MCP 工具源 | `tinyagent.ext.mcp.MCPToolSource` | stdio 挂载任意 MCP server（ADR-0005） |
+| 会话与观测 | `FileSessionStore` / `JsonlTracer` | 可恢复会话 + JSONL 事件流（ADR-0003） |
+| 开箱组件 | `ReflectionAgent` / `PlanAndSolveAgent` | 生成-反思-优化 / 规划-执行（ADR-0007） |
+| 长期记忆 | `ListMemory` / `FileLongTermMemory` | embedding 余弦检索，离线自动退化关键词 |
+
+稳定导入面：`tinyagent.api`（`from tinyagent import ...`）；`0.x` 阶段 semver 起步。
+
+## Lab（学习与应用层）
+
+仓库下半部分是完整的 Agent 学习路径与应用实验（不打包进 wheel）：
+
+| 层 | 代码 | 文档 |
+|---|---|---|
+| L0–L1 基础与手写 | [`learn/level0_llm_basics/`](learn/level0_llm_basics)、[`learn/level1_from_scratch/`](learn/level1_from_scratch) | [docs/10-scratch](docs/10-scratch/index.md) |
+| L2 框架对照 | [`learn/level2_own_framework/`](learn/level2_own_framework) | [docs/20-framework](docs/20-framework/index.md) |
+| L3 LangGraph 课程 | [`learn/level3_langgraph/`](learn/level3_langgraph) | [docs/40-langgraph](docs/40-langgraph/index.md) |
+| L4 模式实验室 | [`learn/level4_patterns/`](learn/level4_patterns) | [docs/50-patterns](docs/50-patterns/index.md) |
+| L5 生态（MCP/ADK/部署） | [`learn/level5_ecosystem/`](learn/level5_ecosystem) | [docs/60-ecosystem](docs/60-ecosystem/index.md) |
+| 载体应用 Copilot | [`apps/experiment_copilot/`](apps/experiment_copilot) | [docs/30-copilot](docs/30-copilot/index.md) |
+| Survey Agent | [`apps/survey_agent/`](apps/survey_agent) | [docs/70-evals](docs/70-evals/index.md) |
+| 评测 | [`evals/`](evals) | [docs/70-evals](docs/70-evals/index.md) |
+
+学习地图与里程碑见 [docs/00-overview/learning-path](docs/00-overview/learning-path.md)；项目全览见[收官总结](docs/90-reference/project-summary.md)。
+
+## 开发
+
+```bash
+uv run pytest tests -q        # 33 项（unit + 示例冒烟，无 API key）
 uv run ruff check .
-
-# 框架最小示例（需 .env 中的 LLM 配置）
-python packages/tinyagent-core/examples/hello_world.py
+python scripts/check_docs.py
 ```
 
-## 目录概览
-
-```text
-TinyAgent/
-├── AGENTS.md  README.md  pyproject.toml(uv workspace)  .env.example
-├── docs/               # 唯一文档中心（十域，见 docs/README.md）
-├── learn/              # L0–L6 学习路径（level0_llm_basics ... level6_evals）
-├── packages/tinyagent-core/  # 自研框架（导入名 tinyagent）+ examples/
-├── apps/experiment_copilot/  # 载体应用（doc_qa 起步）
-├── evals/  tests/      # 评测数据与测试（随里程碑建立）
-├── scripts/            # check_docs.py 等
-├── utils/              # 共享日志等工具
-└── hello_agents/       # 框架复刻源码（M2 重构迁入 packages 后移除）
-```
-
-## 文档入口
-
-- [学习地图与里程碑](docs/00-overview/learning-path.md)：L0–L6 各级学什么、M0–M5 执行到哪一步
-- [重构方案与决策记录](docs/90-reference/refactor-plan-2026-10.md)
-- [环境与模型配置](docs/00-overview/environment.md)
-- [术语约定](docs/00-overview/terminology.md) ｜ [编码风格](docs/80-development/coding-style.md)
+协作规则（文档系统/编码风格/安全边界）见 [AGENTS.md](AGENTS.md)；完整文档中心见 [docs/README.md](docs/README.md)。

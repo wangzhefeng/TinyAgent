@@ -8,9 +8,7 @@ from pathlib import Path
 
 import pytest
 
-EXAMPLES_DIR = (
-    Path(__file__).resolve().parents[2] / "packages" / "tinyagent-core" / "examples"
-)
+EXAMPLES_DIR = Path(__file__).resolve().parents[2] / "examples"
 
 
 @pytest.mark.parametrize(

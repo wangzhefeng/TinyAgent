@@ -2,21 +2,15 @@
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "packages" / "tinyagent-core" / "src"))
-
-from tinyagent import (  # noqa: E402
+from tests.conftest import ScriptedModel
+from tinyagent import (
     Swarm,
     TinyAgent,
     extract_handoff,
     make_transfer_tools,
 )
-from tinyagent.codecs.react_text import ReactTextCodec  # noqa: E402
-from tinyagent.core.types import LoopResult, Message, ModelReply  # noqa: E402
-
-from tests.conftest import ScriptedModel  # noqa: E402
+from tinyagent.codecs.react_text import ReactTextCodec
+from tinyagent.core.types import LoopResult, Message, ModelReply
 
 
 def test_transfer_tools_schema_and_marker():

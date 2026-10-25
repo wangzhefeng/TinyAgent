@@ -1,42 +1,72 @@
 [project]
-name = "tinyagent"
-version = "0.1.0"
-description = "TinyAgent: AI agent learning lab - from-scratch implementations, a teaching-grade agent framework, and an experiment copilot"
+name = "tinyagent-core"
+description = "A teaching-grade, extensible agent framework: a ~50-line loop kernel, six pluggable protocols, dual tool-call codecs, handoff/Swarm, MCP tool source, and long-term memory."
+readme = "README.md"
+dynamic = ["version"]
 requires-python = ">=3.11"
+keywords = ["agent", "llm", "framework", "teaching", "mcp", "react"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
+]
 dependencies = [
-    "httpx[socks]",
-    "json5",
     "openai>=1.0",
-    "requests",
+    "python-dotenv",
+]
+
+[project.optional-dependencies]
+mcp = ["mcp>=1.0"]
+
+# ------------------------------------------------------------------
+# Lab 层（learn/ apps/ evals/）依赖：不进库元数据，按组安装
+#   uv sync --group course   # LangGraph/LangChain 课程栈
+#   uv sync --group lab      # Copilot/评测/学习示例全部依赖
+# ------------------------------------------------------------------
+[dependency-groups]
+dev = [
+    "mypy>=1.11.1",
+    "ruff>=0.6.1",
+    "pytest",
+    "pytest-xdist",
+]
+course = [
     "langchain>=0.3.9",
     "langchain-core>=0.3.59",
     "langchain-openai",
     "langgraph>=0.4.2",
-    "langsmith[pytest]>=0.3.4",
-    "pandas",
-    "matplotlib",
-    "pytest",
-    "pytest-xdist",
-    "jupyter",
     "langgraph-cli[inmem]",
+    "langsmith[pytest]>=0.3.4",
     "google-api-python-client>=2.128.0",
     "google-auth-oauthlib",
     "google-auth-httplib2",
-    "python-dotenv",
+]
+lab = [
+    "httpx[socks]",
+    "json5",
+    "requests",
+    "pandas",
+    "matplotlib",
+    "rich",
+    "jupyter",
     "pyppeteer",
     "html2text",
-    "rich",
 ]
 
-[project.optional-dependencies]
-dev = ["mypy>=1.11.1", "ruff>=0.6.1"]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.uv]
-# 学习仓库根不作为安装包；可安装的包在 packages/ 下（workspace 成员）
-package = false
+[tool.hatch.version]
+path = "src/tinyagent/__init__.py"
 
-[tool.uv.workspace]
-members = ["packages/*"]
+[tool.hatch.build.targets.wheel]
+packages = ["src/tinyagent"]
 
 [tool.ruff]
 lint.select = [
@@ -62,10 +92,9 @@ lint.ignore = [
 # 迁移期旧代码豁免：I001/F401/F541/F811/F841/E722 为历史风格；新代码应保持整洁（见 docs/80-development/coding-style.md）
 "learn/*" = ["D", "UP", "T201", "E402", "I001", "F401", "F541", "F811", "F841", "E722"]
 "apps/*" = ["D", "UP", "T201", "E402", "I001", "F401", "F541", "F811", "F841", "E722"]
-"hello_agents/*" = ["D", "UP", "T201", "E402", "I001", "F401", "F541", "F811", "F841", "E722"]
+"examples/*" = ["D", "T201"]
 "scripts/*" = ["T201"]
 "evals/*" = ["D", "T201"]
-"packages/*/examples/*" = ["D", "T201"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"

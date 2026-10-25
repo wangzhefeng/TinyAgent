@@ -2,13 +2,8 @@
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "packages" / "tinyagent-core" / "src"))
-
-from tinyagent.codecs.native import NativeCodec  # noqa: E402
-from tinyagent.core.types import FinalAnswer, ModelReply, ToolCallReply  # noqa: E402
+from tinyagent.codecs.native import NativeCodec
+from tinyagent.core.types import FinalAnswer, ModelReply, ToolCallReply
 
 
 def test_no_system_fragment_and_native_flag():

@@ -2,12 +2,10 @@
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "packages" / "tinyagent-core" / "src"))
-
-from tinyagent import (  # noqa: E402
+from tests.conftest import ScriptedModel
+from tinyagent import (
     FileLongTermMemory,
     ListMemory,
     Message,
@@ -15,8 +13,6 @@ from tinyagent import (  # noqa: E402
     PlanAndSolveAgent,
     ReflectionAgent,
 )
-
-from tests.conftest import ScriptedModel  # noqa: E402
 
 
 def test_reflection_agent_converges():

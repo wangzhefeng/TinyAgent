@@ -3,14 +3,11 @@
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "packages" / "tinyagent-core" / "src"))
-
-from tinyagent.core.session import FileSessionStore  # noqa: E402
-from tinyagent.core.tracer import JsonlTracer  # noqa: E402
-from tinyagent.core.types import Message  # noqa: E402
+from tinyagent.core.session import FileSessionStore
+from tinyagent.core.tracer import JsonlTracer
+from tinyagent.core.types import Message
 
 
 def test_session_messages_roundtrip(tmp_path: Path):

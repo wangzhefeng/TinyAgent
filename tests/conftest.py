@@ -2,14 +2,9 @@
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "packages" / "tinyagent-core" / "src"))
-
-from tinyagent.core.types import ModelReply  # noqa: E402
+from tinyagent.core.types import ModelReply
 
 
 class ScriptedModel:

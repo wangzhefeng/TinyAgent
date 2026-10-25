@@ -2,14 +2,9 @@
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "packages" / "tinyagent-core" / "src"))
-
-from tinyagent.core.tools import ToolRegistry, tool  # noqa: E402
+from tinyagent.core.tools import ToolRegistry, tool
 
 
 @tool

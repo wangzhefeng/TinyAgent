@@ -2,17 +2,11 @@
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "packages" / "tinyagent-core" / "src"))
-
-from tinyagent.codecs.react_text import ReactTextCodec  # noqa: E402
-from tinyagent.core.loop import agent_loop  # noqa: E402
-from tinyagent.core.tools import ToolRegistry, tool  # noqa: E402
-from tinyagent.core.types import ModelReply  # noqa: E402
-
-from tests.conftest import ScriptedModel  # noqa: E402
+from tests.conftest import ScriptedModel
+from tinyagent.codecs.react_text import ReactTextCodec
+from tinyagent.core.loop import agent_loop
+from tinyagent.core.tools import ToolRegistry, tool
+from tinyagent.core.types import ModelReply
 
 
 @tool
