@@ -23,8 +23,8 @@
 |---|---|---|---|
 | C0 | M1 | 只读工具：`list_configs` / `read_config` / `list_results` / `read_result_summary` | **已完成（2026-10-25）** |
 | C1 | M2/M3 | 用自研框架重组工具；`doc_qa/` 修复依赖并入应用 | **已完成（2026-10-25）** |
-| C2 | M3 | HITL 批准 + 长任务断点续跑（LangGraph interrupt） | 规划 |
-| C3 | M4 | planner / executor / analyst / reporter 多智能体 + 工具 MCP server 化 | 规划 |
+| C2 | M3 | HITL 批准 + 长任务断点续跑（LangGraph interrupt） | 部分：interrupt 课程验证 ✅，Copilot 内置待 M5 |
+| C3 | M4 | planner / executor / analyst / reporter 多智能体 + 工具 MCP server 化 | **已完成（2026-10-25）**：server 化 ✅、四角色编排 ✅ |
 | C4 | M5 | 真实实验产物评测集；Survey Agent 毕业项 | 规划 |
 
 ## C0 使用（已完成）

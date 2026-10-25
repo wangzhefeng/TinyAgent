@@ -97,7 +97,7 @@ C0（M1）只读工具 `list_configs/read_config/read_metrics/diff_configs`，�
 | **M1 L0+L1** | 手写三范式 API 化（智谱 `glm-4.7-flash` 免费档起步）；Copilot C0 只读工具 | 无本地模型可跑通 ReAct/Plan-Execute/Reflection；能答 tsproj_ml 配置/指标问题 |
 | **M2 框架 v0.1** | `packages/tinyagent-core` 重构 + 单测 + examples + CI | 独立可安装；单测覆盖 loop/codec/session |
 
-> 进度：M0、M1、M2、M3 已于 2026-10-25 完成（M1 实测：免费档 glm-4.7-flash 返回 429/1314 套餐失效，已按阶梯切换 glm-5.3-flash 验收全部通过；M2 框架 v0.1 单测 20/20 + 真实 API 全链路通过，CI 已配；M3 课程三 part（手写/状态图/HITL+多智能体）+ Copilot C1 实跑通过，含 checkpointer 记忆与 interrupt 审批验证）。
+> 进度：M0–M4 已于 2026-10-25 完成（M1 实测免费档 glm-4.7-flash 返回 429/1314 套餐失效，按阶梯切换 glm-5.3-flash 验收；M2 框架 v0.1 单测全绿 + CI；M3 课程三 part + Copilot C1 含 checkpointer/interrupt 验证；M4 框架 v0.3（handoff/Swarm + MCP 工具源）、自建 MCP server 挂载实跑干净退出、六模式实验室全过、Copilot C3 四角色多智能体产出真实口径对比报告）。
 | **M3 LangGraph** | 邮件助手课程全程 + Copilot C2 | 课程项目含 HITL/记忆/多 agent 跑通 |
 | **M4 模式+生态** | patterns 实验室 + MCP/ADK + Copilot C3 | 框架可挂载自建 MCP server |
 | **M5 评测收尾** | evals + 三版本 Copilot 对照 + Survey Agent | 同一评测集出可对比数据；学习地图全勾 |
