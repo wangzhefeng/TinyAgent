@@ -27,9 +27,9 @@
 | C3 | M4 | planner / executor / analyst / reporter 多智能体 + 工具 MCP server 化 |
 | C4 | M5 | 真实实验产物评测集；Survey Agent 毕业项 |
 
-## 现状（迁移期）
+## 现状
 
-- `src/qa_chain/`：RAG 问答（chroma + 智谱 embedding + Streamlit），M0 迁入本应用为 `doc_qa/`，修复缺失的 `embedding_api` 依赖。
+- `apps/experiment_copilot/doc_qa/`（M0 自 `src/qa_chain/` 迁入）：RAG 问答（chroma + 智谱 embedding + Streamlit），待修复缺失的 `embedding_api` 依赖。`database/` 为 RAG 语料（数据，不入文档体系）。
 
 ## 相关
 

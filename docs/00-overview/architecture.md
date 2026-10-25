@@ -14,9 +14,9 @@
 - **自研框架**：从 L1 的最小内核逐级进化到具备 memory / session / tracing / handoff 的完整框架，每一级对标一个成熟框架源码。
 - **载体应用**：面向时序预测实验仓库的实验副驾驶，默认操作 `~/projects/tsproj_ml`。
 
-## 当前结构（迁移期）
+## 当前结构（M0 迁移已完成）
 
-仓库尚处重构前状态，代码分布在 `src/TinyAgent/`、`src/mcp_dev/`、`src/adk_dev/`、`src/qa_chain/`、`hello_agents/`、`agent_usage/`；与目标结构的对应关系见 [repo-map](repo-map.md) 与[重构方案](../90-reference/refactor-plan-2026-10.md)。
+2026-10-25 M0 完成：学习代码迁入 `learn/`，RAG 应用迁入 `apps/experiment_copilot/doc_qa/`，框架示例位建于 `packages/tinyagent-core/examples/`。残留 `hello_agents/`（`src/` 与 `version.py`）为 M2 重构迁入前的过渡。映射明细见[重构方案](../90-reference/refactor-plan-2026-10.md)与[repo-map](repo-map.md)。
 
 ## 目标结构
 

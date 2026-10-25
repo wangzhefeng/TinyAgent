@@ -13,9 +13,9 @@
 - **版本演进**：v0.1 loop + 双 codec + 文件 session + JSONL tracer → v0.2 guardrail + memory + API 冻结 → v0.3 handoff + MCP 工具源 + 多智能体 → v0.4 graph runtime 预研 + LangChain 适配器。
 - 每个抽象配一篇 ADR（本目录 `adr/`，M2 建立），说明对标框架与简化理由。
 
-## 现状（迁移期）
+## 现状
 
-现有 `hello_agents/src/` 是对 Datawhale Hello Agents 的复刻，约 3800 行，已具备：
+现有 `hello_agents/src/`（M2 重构迁入 `packages/tinyagent-core` 前的过渡位置）是对 Datawhale Hello Agents 的复刻，约 3800 行，遵循三条核心原则：**分层解耦、职责单一、接口统一**。已具备：
 
 ```text
 core/      Agent 基类、HelloAgentsLLM（多 provider）、消息、配置、异常

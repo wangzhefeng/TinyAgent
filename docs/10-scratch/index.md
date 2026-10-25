@@ -7,19 +7,23 @@
 - **L0 LLM 基础**：chat API、流式、结构化输出、prompt chaining、路由——为一切 Agent 开发打底。
 - **L1 从零手写**：不借助框架实现 ReAct / Plan-Execute / Reflection 三种范式，理解 Agent 的最小内核（生成 → 解析工具调用 → 执行 → 回填 → 终止）。
 
-## 现状（迁移期）
+## 现状（M0 已迁入，M1 API 化改造）
 
-| 现有代码 | 说明 | 去向 |
-|---|---|---|
-| `src/TinyAgent/Agent/` | 手写 ReAct（InternLM2 本地推理） | `learn/level1_from_scratch/react/`，M1 API 化 |
-| `src/TinyAgent/prompt_chaining.py` | LCEL 链式调用示例 | `learn/level0_llm_basics/` |
-| `src/TinyAgent/{chat_model,routing}.py` | 模型调用 / 路由骨架 | `learn/level0_llm_basics/`，routing 补完 |
-| `hello_agents/test/agent_mode/` | ReAct / PlanAndSolve / Reflection 练习 | `learn/level1_from_scratch/` 对应子目录 |
+| 代码 | 说明 |
+|---|---|
+| `learn/level0_llm_basics/prompt_chaining.py` | LCEL 链式调用（提取规格 → 转 JSON） |
+| `learn/level0_llm_basics/chat_model.py` | 模型调用基础 |
+| `learn/level0_llm_basics/routing.py` | 路由骨架（DeepSeek），待补完 |
+| `learn/level1_from_scratch/react/` | 手写 ReAct：`Agent.py`（system prompt + Action/Observation 解析 + 两次调用）、`LLM.py`（InternLM2 本地推理）、`tool.py`（Serper 搜索）、`agent_run.py` |
+| `learn/level1_from_scratch/react_hello_agents/` | ReAct 复刻练习 |
+| `learn/level1_from_scratch/plan_execute/` | Plan-Execute：`PlanAndSolve.py` + `planner.py` + `executor.py` |
+| `learn/level1_from_scratch/reflection/` | Reflection：`Reflection.py` + `memory.py` |
+| `learn/level1_from_scratch/hello_agent_5min/` | 5 分钟快速上手（smolagents 风格） |
 
-## 目标
+## M1 改造目标
 
-1. 三范式全部支持 OpenAI 兼容 API，无需下载本地模型即可运行（本地推理作为可选）。
-2. 每个范式一个独立入口脚本 + 精简 README（学习目标 / 运行方式 / 核心代码导读）。
+1. 三范式全部改用 OpenAI 兼容 API（默认智谱 `glm-4.7-flash` 免费档），本地 transformers 推理降为可选；修 `agent_run.py` 的 `history=_` 误用。
+2. 每个范式一个独立入口 + 精简说明（学习目标 / 运行方式 / 核心代码导读）。
 3. 接入 Copilot C0 只读工具（`list_configs` / `read_metrics` 等），让手写 Agent 第一次操作真实实验仓库。
 
 ## 相关

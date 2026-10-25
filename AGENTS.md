@@ -9,9 +9,9 @@ TinyAgent 是 AI Agent 学习与实验仓库，双主线 + 一个载体应用：
 
 | 主线 | 位置 | 说明 |
 |---|---|---|
-| 学习路径 | `learn/`（L0–L6；迁移期见 `src/`、`hello_agents/`） | 从零手写 → 框架 → 模式 → 生态 → 评测 |
-| 自研框架 | `packages/tinyagent-core/`（发行名 `tinyagent-core`，导入名 `tinyagent`；迁移期见 `hello_agents/`） | 教学级、可扩展的 Agent 框架 |
-| 载体应用 | `apps/experiment_copilot/`（规划中） | 实验副驾驶，默认操作 `~/projects/tsproj_ml` |
+| 学习路径 | `learn/`（L0–L2、L5 已迁入；L3/L4/L6 随里程碑填充） | 从零手写 → 框架 → 模式 → 生态 → 评测 |
+| 自研框架 | `packages/tinyagent-core/`（发行名 `tinyagent-core`，导入名 `tinyagent`；M0 骨架已建，M2 自 `hello_agents/src/` 重构迁入） | 教学级、可扩展的 Agent 框架 |
+| 载体应用 | `apps/experiment_copilot/`（doc_qa 已迁入） | 实验副驾驶，默认操作 `~/projects/tsproj_ml` |
 
 学习地图与里程碑见 [learning-path](docs/00-overview/learning-path.md)。
 
