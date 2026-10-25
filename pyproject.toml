@@ -65,7 +65,7 @@ lint.ignore = [
 "hello_agents/*" = ["D", "UP", "T201", "E402", "I001", "F401", "F541", "F811", "F841", "E722"]
 "scripts/*" = ["T201"]
 "evals/*" = ["D", "T201"]
-"packages/*/examples/*" = ["D", "UP", "T201", "E402", "I001"]
+"packages/*/examples/*" = ["D", "T201"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"

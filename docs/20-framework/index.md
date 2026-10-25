@@ -29,7 +29,18 @@
 | `agents/react_agent.py` | `TinyAgent` 门面：声明式组装六协议 |
 | `api.py` | 版本化公共 API（唯一稳定导入面） |
 
-验证：单测 20/20（mock 无 key，含 M1 教训回归）+ 真实 API 全链路（L2 demo：事件流 / 会话持久化 / 工具往返）。
+验证：单测 29 项全绿（mock 无 key，含 M1 教训回归）+ 真实 API 全链路（L2 demo：事件流 / 会话持久化 / 工具往返）。
+
+## 示例（包级 quickstart）
+
+`packages/tinyagent-core/examples/`（import 零副作用，`tests/smoke` 保障不腐化）：
+
+| 文件 | 演示 |
+|---|---|
+| `hello_world.py` | 最小冒烟：`@tool` + `TinyAgent` |
+| `reflection_plan_solve.py` | 开箱编排组件：ReflectionAgent / PlanAndSolveAgent |
+| `memory_retrieval.py` | 长期记忆与自适应检索（ADR-0007） |
+| `mcp_mount.py` | 挂载任意 MCP server 的工具（需 `[mcp]` extra） |
 
 ## ADR
 

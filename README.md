@@ -30,6 +30,9 @@ cp .env.example .env
 # 文档健康检查与代码风格
 python scripts/check_docs.py
 uv run ruff check .
+
+# 框架最小示例（需 .env 中的 LLM 配置）
+python packages/tinyagent-core/examples/hello_world.py
 ```
 
 ## 目录概览
