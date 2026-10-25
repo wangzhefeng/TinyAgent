@@ -12,7 +12,7 @@
 | L3 | LangGraph：agents-from-scratch 邮件助手课程 | `learn/level3_langgraph/` 课程项目（HITL/记忆/多智能体） | **M3 完成**（三 part 实跑通过） |
 | L4 | 模式实验室：路由/链式/反思/自纠错/…对照实现 | `learn/level4_patterns/` | **M4 完成**（六模式实跑） |
 | L5 | 生态与协议：MCP、ADK、框架横评、本地部署 | `learn/level5_ecosystem/` | **M4 完成**（MCP 双向；ADK 说明就位） |
-| L6 | 评测与观测：evals、tracing、对比实验 | `learn/level6_evals/` + `evals/` | 规划（M5） |
+| L6 | 评测与观测：evals、tracing、对比实验 | `learn/level6_evals/` + `evals/` | **M5 完成**（三版本对照 + Survey Agent） |
 
 ## 工程里程碑 M0–M5
 
@@ -24,5 +24,7 @@
 | M3 LangGraph | 邮件助手课程 + Copilot HITL/断点 | 课程项目全程跑通 |
 | M4 模式+生态 | patterns 实验室 + MCP/ADK + Copilot 多智能体 | 框架可挂载自建 MCP server |
 | M5 评测收尾 | evals + 三版本 Copilot 对照 + Survey Agent | 同一评测集出可对比数据 |
+
+> **M0–M5 全部完成（2026-10-25）**：三版本对照 15/15 零失败（数据见 [70-evals](../70-evals/index.md)）；Survey Agent 五段工作流实跑通过；总结见[项目收官总结](../90-reference/project-summary.md)。
 
 详细执行方案见[重构方案（评审稿）](../90-reference/refactor-plan-2026-10.md)。
