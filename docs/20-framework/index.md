@@ -36,10 +36,12 @@
 - [ADR-0001 内核与六协议](adr/0001-agent-loop-and-protocols.md)
 - [ADR-0002 双 codec](adr/0002-call-codec.md)
 - [ADR-0003 session 与 tracing](adr/0003-session-and-tracing.md)
+- [ADR-0004 handoff 与 Swarm](adr/0004-handoff-and-swarm.md)（v0.3 已实现）
+- [ADR-0005 MCP 工具源](adr/0005-mcp-tool-source.md)（v0.3 已实现，extras `mcp`）
 
 ## 演进
 
-v0.1（M2，已实现）loop + 双 codec + 文件 session + JSONL tracer + 单测 → v0.2 guardrail 完善 + memory + api 冻结 → v0.3（M4）handoff + MCP 工具源 + 多 agent → v0.4（M5+）graph runtime 预研 + LangChain 适配器。`hello_agents/src/`（复刻版）作为对照保留，其能力按版本渐进并入后移除。
+v0.1（M2）loop + 双 codec + 文件 session + JSONL tracer + 单测 → v0.2（M2 期间随 C1 落地 guardrail 应用 + memory 语义）→ **v0.3（M4，已实现）handoff/Swarm + MCP 工具源（`tinyagent.ext.mcp`）** → v0.4（M5+）graph runtime 预研 + LangChain 适配器。`hello_agents/src/`（复刻版）作为对照保留，其能力按版本渐进并入后移除。
 
 ## 相关
 

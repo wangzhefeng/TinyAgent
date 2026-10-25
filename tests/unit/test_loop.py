@@ -68,6 +68,22 @@ def test_loop_feeds_tool_error_back_for_self_correction():
     assert result.text == "Final Answer: recovered"
 
 
+def test_loop_feeds_any_tool_exception_back_for_self_correction():
+    @tool
+    def boom(n: int) -> str:
+        """必然失败的工具。"""
+        raise FileNotFoundError(f"文件不存在: demo_{n}.yaml")
+
+    model = ScriptedModel([
+        ModelReply(text='Action: boom\nAction Input: {"n": 1}'),
+        ModelReply(text="Final Answer: 工具报告文件不存在，已了解"),
+    ])
+    result = agent_loop(model, ReactTextCodec(), ToolRegistry([boom]), "q")
+    # FileNotFoundError 也不崩溃，错误作为 Observation 回填后模型收敛
+    assert result.text.startswith("Final Answer")
+    assert any("FileNotFoundError" in m.content for m in result.messages)
+
+
 def test_loop_react_codec_passes_no_native_tools():
     model = ScriptedModel([ModelReply(text="ok")])
     agent_loop(model, ReactTextCodec(), _registry(), "q")

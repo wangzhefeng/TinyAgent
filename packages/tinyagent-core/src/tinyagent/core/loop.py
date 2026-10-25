@@ -75,8 +75,10 @@ def agent_loop(
                                     "arguments": action.arguments})
         try:
             result = registry.call(action.name, **action.arguments)
-        except ValueError as e:
-            result = f"tool error: {e}"  # 错误回填，给模型自纠机会
+        except Exception as e:  # noqa: BLE001
+            # 错误回填（M4 泛化）：任何工具异常都转为 Observation 给模型自纠，
+            # 而非让整次运行崩溃；护栏的 on_action 在上方独立执行，不被吞掉
+            result = f"tool error: {type(e).__name__}: {e}"
         _emit(tracer, "tool_result", {"step": step, "name": action.name,
                                       "result": str(result)[:200]})
         messages.append(codec.observation(str(result), reply))
