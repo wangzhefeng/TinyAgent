@@ -10,7 +10,7 @@
 
 ### 评测基建
 
-- 评测集：`evals/dataset.jsonl`（5 题，期望事实取自 tsproj_ml 真实产物：dirmo MAE/RMSE、naive MAE、折数、origin、口径警示）。
+- 评测集：`evals/datasets/`（5 题按场景分文件：`facts.jsonl` 取数事实、`caliber.jsonl` 口径综合；期望事实取自 tsproj_ml 真实产物）。
 - Harness：`python -m evals.run_eval` 顺序跑 C0/C1/C3，按事实命中率 + 耗时 + 失败数打分，报告写 `results/evals/`（outputs 约定，不入库）。
 
 ### 三版本 Copilot 对照（2026-10-25 实测，15/15 零失败）

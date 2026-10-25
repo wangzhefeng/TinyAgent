@@ -20,8 +20,13 @@ RESULTS_DIR = Path("results/evals")
 
 
 def load_dataset() -> list[dict]:
-    """加载评测集。"""
-    return json.loads((EVALS_DIR / "dataset.jsonl").read_text(encoding="utf-8"))
+    """加载 evals/datasets/ 下全部场景文件（真 JSONL，逐行解析，按 id 排序）。"""
+    items: list[dict] = []
+    for path in sorted((EVALS_DIR / "datasets").glob("*.jsonl")):
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                items.append(json.loads(line))
+    return sorted(items, key=lambda x: x["id"])
 
 
 def make_runner(version: str):
@@ -66,6 +71,7 @@ def main(versions: tuple[str, ...] = ("c0", "c1", "c3")) -> None:
                 {
                     "version": version,
                     "id": item["id"],
+                    "scenario": item["scenario"],
                     "hits": hits,
                     "hit_rate": sum(hits) / len(hits),
                     "duration_s": round(duration, 1),
@@ -73,7 +79,7 @@ def main(versions: tuple[str, ...] = ("c0", "c1", "c3")) -> None:
                 }
             )
             print(
-                f"[{version}] q{item['id']} 命中 {sum(hits)}/{len(hits)} "
+                f"[{version}] q{item['id']}({item['scenario']}) 命中 {sum(hits)}/{len(hits)} "
                 f"({duration:.0f}s) {err[:60]}"
             )
 
@@ -84,7 +90,7 @@ def main(versions: tuple[str, ...] = ("c0", "c1", "c3")) -> None:
         "# Copilot 三版本对照（M5 评测）",
         "",
         f"- 时间：{datetime.now().isoformat(timespec='seconds')}",
-        "- 评测集：`evals/dataset.jsonl`（5 题，期望事实来自 tsproj_ml 真实产物）",
+        f"- 评测集：`evals/datasets/*.jsonl`（{len(dataset)} 题，按场景分文件：facts 取数事实 / caliber 口径综合）",
         "",
         "## 汇总",
         "",
@@ -99,10 +105,10 @@ def main(versions: tuple[str, ...] = ("c0", "c1", "c3")) -> None:
         lines.append(
             f"| {version} | {hit:.0%} | {dur:.0f} | {fails} |"
         )
-    lines += ["", "## 明细", "", "| 版本 | 题 | 命中 | 耗时(s) | 错误 |", "|---|---|---|---|---|"]
+    lines += ["", "## 明细", "", "| 版本 | 题 | 场景 | 命中 | 耗时(s) | 错误 |", "|---|---|---|---|---|---|"]
     for r in rows:
         lines.append(
-            f"| {r['version']} | {r['id']} | {sum(r['hits'])}/{len(r['hits'])} "
+            f"| {r['version']} | {r['id']} | {r['scenario']} | {sum(r['hits'])}/{len(r['hits'])} "
             f"| {r['duration_s']} | {r['error'][:40]} |"
         )
     report.write_text("\n".join(lines), encoding="utf-8")

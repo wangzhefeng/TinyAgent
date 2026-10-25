@@ -1,0 +1,1 @@
+{"id": 5, "scenario": "caliber", "question": "lightgbm-dirmo 与 naive 的结果能否直接比较？请说明口径差异并给出结论。", "expected_facts": ["17", "72", "口径"]}

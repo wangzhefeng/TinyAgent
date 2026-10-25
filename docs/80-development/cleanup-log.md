@@ -15,3 +15,4 @@
 | 2026-10-25 | **库化重构**：`packages/` 目录移除（`git mv` 保历史：src/ 与 examples/ 提根，成员 pyproject 并入根） | 仓库转型为单包库项目（`tinyagent-core`），Lab 层（learn/apps/evals）同仓保留不打包；wheel 验证零泄漏 |
 | 2026-10-25 | 发行名更名：`tinyagent-core` → `tinyagent`（pyproject、uv.lock 与全部现行文档同步；历史记录保留当时名称） | 发行名与导入名统一，消除双名认知成本 |
 | 2026-10-25 | 删除 `scripts/env_setup.sh`、`scripts/rm_dsstore.sh`、`scripts/update_codes.sh`（`git rm`） | 重构前个人脚本：env_setup 语法/依赖已失效且与现行文档冲突；rm_dsstore 一次性清理已被仓库 `.gitignore` 的 `.DS_Store` 规则覆盖；update_codes 违反提交规范（`git add .` + "update"）且含 utils 旧独立仓库残留 |
+| 2026-10-25 | 评测集迁移：`evals/dataset.jsonl` → `evals/datasets/{facts,caliber}.jsonl`（改为真 JSONL + `scenario` 字段，`run_eval.py` 改为 glob 加载） | 按场景分类（取数事实 / 口径判断）为评测扩容铺路；明确入库评测资产与不入库的 `dataset/` 产物目录用途区分 |
