@@ -6,8 +6,8 @@
 
 | 层级 | 主题 | 产出 | 状态 |
 |---|---|---|---|
-| L0 | LLM API 基础：chat、流式、结构化输出、链式/路由 | `learn/level0_llm_basics/` 可运行示例 | 已迁入（M1 API 化） |
-| L1 | 从零手写：ReAct / Plan-Execute / Reflection 最小实现 | `learn/level1_from_scratch/` 三范式 + API 化改造 | 已迁入（M1 改造） |
+| L0 | LLM API 基础：chat、流式、结构化输出、链式/路由 | `learn/level0_llm_basics/` 可运行示例 | **M1 完成**（routing/共享客户端） |
+| L1 | 从零手写：ReAct / Plan-Execute / Reflection 最小实现 | `learn/level1_from_scratch/` 三范式 + API 化改造 | **M1 完成**（三范式 + Copilot C0 实跑通过） |
 | L2 | 自研框架：用 tinyagent 重写 L1，对标源码笔记 | `packages/tinyagent-core` v0.x + `learn/level2_own_framework/` | 示例已迁入，框架 M2 |
 | L3 | LangGraph：agents-from-scratch 邮件助手课程 | `learn/level3_langgraph/` 课程项目（HITL/记忆/多智能体） | 规划（M3） |
 | L4 | 模式实验室：路由/链式/反思/自纠错/…对照实现 | `learn/level4_patterns/` | 规划（M4） |

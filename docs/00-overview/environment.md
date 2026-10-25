@@ -27,10 +27,11 @@ source .venv/bin/activate
 
 模型阶梯与计费：
 
-- **默认 `glm-4.7-flash`：免费**（输入/输出/缓存均免费，见 [API 定价](https://docs.bigmodel.cn/cn/guide/start/pricing.md)）；免费档尽力交付，高峰期可能返回 `429`（错误码 1305 拥堵）。
-- 拥堵或需更强质量时，`LLM_MODEL_ID` 一行切换 `glm-5.3-flash`（¥0.8 / ¥2.8 每百万 token）；强推理任务 `glm-5.3`（¥8 / ¥28）。
+- **默认尝试免费档 `glm-4.7-flash`**（输入/输出/缓存均免费，见 [API 定价](https://docs.bigmodel.cn/cn/guide/start/pricing.md)）；**2026-10-25 实测**：该 key 调用免费档返回 429/1314「套餐已失效」，故 `.env` 当前为 `glm-5.3-flash`（¥0.8 / ¥2.8 每百万 token）。免费档恢复后改回一行即可。
+- `ChatClient` 内置 429 指数退避重试；强推理任务 `glm-5.3`（¥8 / ¥28）。
 - DeepSeek 为最后备用（付费，尽量不用）；M2 框架的 retry / 降级钩子会把该阶梯自动化。
 - `glm-5.3-flash` 默认输出思考过程（`reasoning_content`），低延迟场景可通过 `extra_body` 的 `thinking.type`（enabled / disabled）控制。
+- `TPROJ_ML_ROOT`：Copilot 默认操作仓库路径（默认 `~/projects/tsproj_ml`）。
 
 ## 运行约定
 

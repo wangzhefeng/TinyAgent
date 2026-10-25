@@ -19,13 +19,27 @@
 
 ## 阶段规划
 
-| 阶段 | 里程碑 | 能力 |
-|---|---|---|
-| C0 | M1 | 只读工具：`list_configs` / `read_config` / `read_metrics` / `diff_configs` |
-| C1 | M2 | 用自研框架重组工具；`src/qa_chain/` 迁入为 doc_qa 能力 |
-| C2 | M3 | HITL 批准 + 长任务断点续跑（LangGraph interrupt） |
-| C3 | M4 | planner / executor / analyst / reporter 多智能体 + 工具 MCP server 化 |
-| C4 | M5 | 真实实验产物评测集；Survey Agent 毕业项 |
+| 阶段 | 里程碑 | 能力 | 状态 |
+|---|---|---|---|
+| C0 | M1 | 只读工具：`list_configs` / `read_config` / `list_results` / `read_result_summary` | **已完成（2026-10-25）** |
+| C1 | M2 | 用自研框架重组工具；`doc_qa/` 修复依赖并入入应用 | 规划 |
+| C2 | M3 | HITL 批准 + 长任务断点续跑（LangGraph interrupt） | 规划 |
+| C3 | M4 | planner / executor / analyst / reporter 多智能体 + 工具 MCP server 化 | 规划 |
+| C4 | M5 | 真实实验产物评测集；Survey Agent 毕业项 | 规划 |
+
+## C0 使用（已完成）
+
+```bash
+# 工具自检（无 LLM）：列出配置/结果并汇总指标
+python -m apps.experiment_copilot.copilot0.tools
+
+# ReAct Agent + 只读工具，回答 tsproj_ml 配置与指标问题
+python -m apps.experiment_copilot.copilot0.run_react
+```
+
+- 工具集：`apps/experiment_copilot/copilot0/tools.py`；目标仓库可用环境变量 `TPROJ_ML_ROOT` 覆盖（默认 `~/projects/tsproj_ml`）。
+- 指标来源：各 result identity 下的 `test_scores_df.csv`（MAE/RMSE/Bias/MAPE/Accuracy + Naive 基线），按 `scope=aggregate` 求均值。
+- 安全实现：路径 resolve 后强制落在 `config/`、`results/` 内（防穿越）；单次返回 6000 字符截断；无任何写/执行操作。
 
 ## 现状
 

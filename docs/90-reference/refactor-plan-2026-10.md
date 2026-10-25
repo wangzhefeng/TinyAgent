@@ -96,6 +96,8 @@ C0（M1）只读工具 `list_configs/read_config/read_metrics/diff_configs`，�
 | **M0 结构迁移** | **直接在 `main` 逐 commit 执行**；建目录骨架；按映射表 `git mv`（纯移动不改内容）；删除项 12/17/18；README 拆分改索引；repo-map 与域页按新结构重建（域页骨架已先行落位）；pyproject workspace 化 | check_docs 全绿；ruff 新代码零告警；抽样运行每域至少一个入口；逐 commit 可回溯 |
 | **M1 L0+L1** | 手写三范式 API 化（智谱 `glm-4.7-flash` 免费档起步）；Copilot C0 只读工具 | 无本地模型可跑通 ReAct/Plan-Execute/Reflection；能答 tsproj_ml 配置/指标问题 |
 | **M2 框架 v0.1** | `packages/tinyagent-core` 重构 + 单测 + examples + CI | 独立可安装；单测覆盖 loop/codec/session |
+
+> 进度：M0、M1 已于 2026-10-25 完成（M1 实测：免费档 glm-4.7-flash 返回 429/1314 套餐失效，已按阶梯切换 glm-5.3-flash 验收全部通过）。
 | **M3 LangGraph** | 邮件助手课程全程 + Copilot C2 | 课程项目含 HITL/记忆/多 agent 跑通 |
 | **M4 模式+生态** | patterns 实验室 + MCP/ADK + Copilot C3 | 框架可挂载自建 MCP server |
 | **M5 评测收尾** | evals + 三版本 Copilot 对照 + Survey Agent | 同一评测集出可对比数据；学习地图全勾 |
