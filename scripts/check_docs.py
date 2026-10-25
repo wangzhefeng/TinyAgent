@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
 ALLOWED_ROOT_DOCS = {ROOT / "README.md", ROOT / "AGENTS.md"}
 LINK_RE = re.compile(r"\]\(([^)]+)\)")
-SKIP_DIRS = {".git", ".venv", "__pycache__", "dataset", "database", "downloaded_models", "logs", "results"}
+SKIP_DIRS = {".git", ".venv", "__pycache__", ".pytest_cache", ".ruff_cache", "dataset", "database", "downloaded_models", "logs", "results"}
 
 
 def iter_markdown(base: Path):

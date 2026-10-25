@@ -4,9 +4,12 @@
 
 ## 现状
 
-测试体系尚未建立；当前质量门禁为 `python scripts/check_docs.py` 与 `uv run ruff check .`。
+`tests/unit/` 已建立（2026-10-25，随 M2）：20 个用例，全 mock、无 API key 可跑，覆盖
+codec 解析（含 M1 冒号 bug 回归）、`@tool` Schema 生成与注册分发、`agent_loop`
+工具往返 / max_steps / 错误回填自纠、session 与 tracer 往返。CI（`.github/workflows/ci.yml`）
+跑 ruff + check_docs + pytest 三门禁。
 
-## 规划（随 M2 建立）
+## 规划
 
 | 层 | 范围 | 要求 |
 |---|---|---|
