@@ -4,6 +4,10 @@ version = "0.1.0"
 description = "TinyAgent: AI agent learning lab - from-scratch implementations, a teaching-grade agent framework, and an experiment copilot"
 requires-python = ">=3.11"
 dependencies = [
+    "httpx[socks]",
+    "json5",
+    "openai>=1.0",
+    "requests",
     "langchain>=0.3.9",
     "langchain-core>=0.3.59",
     "langchain-openai",
@@ -54,9 +58,10 @@ lint.ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["D", "UP"]
-"learn/*" = ["D", "UP", "T201", "E402"]
-"apps/*" = ["D", "UP", "T201", "E402"]
-"hello_agents/*" = ["D", "UP", "T201", "E402"]
+# 迁移期旧代码豁免：I001/F401/F541/F811/F841/E722 为历史风格；新代码应保持整洁（见 docs/80-development/coding-style.md）
+"learn/*" = ["D", "UP", "T201", "E402", "I001", "F401", "F541", "F811", "F841", "E722"]
+"apps/*" = ["D", "UP", "T201", "E402", "I001", "F401", "F541", "F811", "F841", "E722"]
+"hello_agents/*" = ["D", "UP", "T201", "E402", "I001", "F401", "F541", "F811", "F841", "E722"]
 "scripts/*" = ["T201"]
 "packages/*/examples/*" = ["D", "UP", "T201", "E402", "I001"]
 
