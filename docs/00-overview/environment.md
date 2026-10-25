@@ -5,6 +5,7 @@
 ## 基础环境
 
 - Python ≥ 3.11；[uv](https://docs.astral.sh/uv/) 管理依赖与虚拟环境。
+- 开发解释器钉定：`.python-version`（3.12，与 CI 一致，2026-10-25 添加）；库本身的兼容下限仍为 `requires-python = ">=3.11"`。
 - 仓库即库（2026-10-25 库化，发行名已统一为 `tinyagent`）：根 `pyproject.toml` 就是 `tinyagent` 包（src 布局）；learn/apps 依赖按组安装（`uv sync --all-groups`）。
 
 ```bash

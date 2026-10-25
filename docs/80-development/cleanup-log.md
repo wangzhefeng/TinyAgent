@@ -13,3 +13,5 @@
 | 2026-10-25 | M0 吸收后删除 6 处代码目录 README：`src/mcp_dev/`、`src/adk_dev/`（空文件）、`hello_agents/`、`framework_camel/`、`local_server/`、`langgraph/framework/` | 内容并入 `docs/60-ecosystem/`（MCP 三页 + 框架要点）与 `docs/20-framework/`；消除 check_docs 全部现存告警 |
 | 2026-10-25 | **`hello_agents/` 整体移除**（28 文件约 3800 行；其 `test/` 已于 M0 迁出） | 能力已并入 tinyagent v0.3.1（ADR-0007：memory 空壳兑现 + Reflection/PlanAndSolve 两组件；多 provider LLM、四类 agent 变体、工具注册确认已被覆盖）；最后 6 个消费者全部改写为 tinyagent/L0 实现并实跑验证 |
 | 2026-10-25 | **库化重构**：`packages/` 目录移除（`git mv` 保历史：src/ 与 examples/ 提根，成员 pyproject 并入根） | 仓库转型为单包库项目（`tinyagent-core`），Lab 层（learn/apps/evals）同仓保留不打包；wheel 验证零泄漏 |
+| 2026-10-25 | 发行名更名：`tinyagent-core` → `tinyagent`（pyproject、uv.lock 与全部现行文档同步；历史记录保留当时名称） | 发行名与导入名统一，消除双名认知成本 |
+| 2026-10-25 | 删除 `scripts/env_setup.sh`、`scripts/rm_dsstore.sh`、`scripts/update_codes.sh`（`git rm`） | 重构前个人脚本：env_setup 语法/依赖已失效且与现行文档冲突；rm_dsstore 一次性清理已被仓库 `.gitignore` 的 `.DS_Store` 规则覆盖；update_codes 违反提交规范（`git add .` + "update"）且含 utils 旧独立仓库残留 |
