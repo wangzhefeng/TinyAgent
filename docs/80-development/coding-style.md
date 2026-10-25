@@ -53,7 +53,7 @@ if __name__ == "__main__":
 
 ## 8. 依赖管理
 
-- 新增第三方依赖须说明理由；重依赖进 `packages/tinyagent-core` 的 extras（`mcp` / `vector` / `local`）或根 dependency-groups（`dev` / `course`）。
+- 新增第三方依赖须说明理由；**库依赖**只进根 `[project].dependencies`（当前仅 openai/python-dotenv），重依赖进 extras（`mcp`）；学习/应用层依赖进 dependency-groups（`dev` / `course` / `lab`）。
 - 框架包用下限约束；学习示例依赖跟随根锁定（`uv.lock`）。
 
 ## 9. Lint

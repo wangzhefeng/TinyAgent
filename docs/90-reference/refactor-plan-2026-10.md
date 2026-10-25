@@ -14,6 +14,7 @@
 | M0 执行方式 | **直接在 `main` 逐 commit 执行**（不用分支）；CI 暂缓，M2 测试就绪后再配 |
 | 默认 LLM | 智谱 BigModel **OpenAI 兼容端点** `https://open.bigmodel.cn/api/paas/v4`，默认 `glm-4.7-flash`（**免费档**，高峰可能 429/1305 拥堵）；拥堵或强质量需求切 `glm-5.3-flash`（¥0.8/¥2.8 每百万 token，已实测可用）；**DeepSeek 备用（`deepseek-flash`，按需使用，尽量不用）** |
 | 删除项 | `src/dify_dev/`（已确认） |
+| **库化（2026-10-25 追加）** | `src/` 提根、仓库即库 `tinyagent-core`（Lab 层同仓不打包）；LICENSE 与 PyPI 发布暂缓——本表 §1/§2/§6 中 workspace/成员包的描述以本行为准 |
 
 前置已落地：`AGENTS.md`、`scripts/check_docs.py`、`utils/log_util.py`（解除 `.gitignore` 误忽略）、`docs/` 十域骨架、`.env` 规范化 + `.env.example`。
 

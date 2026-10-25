@@ -8,7 +8,7 @@
 
 | 交付物 | 位置 | 状态 |
 |---|---|---|
-| 自研框架 tinyagent（v0.3） | `packages/tinyagent-core/`（六协议 + 双 codec + Swarm/handoff + MCP 工具源，24 单测，6 篇 ADR） | ✅ |
+| 自研框架 tinyagent（v0.3） | `src/`（六协议 + 双 codec + Swarm/handoff + MCP 工具源，29 单测 + 4 冒烟，7 篇 ADR） | ✅ |
 | 学习路径 L0–L6 | `learn/`（手写三范式 → 框架对照 → LangGraph 课程三 part → 六模式实验室 → MCP/ADK/部署） | ✅ |
 | Experiment Copilot | `apps/experiment_copilot/`（C0 手写版 → C1 框架版 → C3 四角色多智能体；doc_qa RAG） | ✅ |
 | Survey Agent（毕业项目） | `apps/survey_agent/`（调研→评测→结论工作流自动化） | ✅ |

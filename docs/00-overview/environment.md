@@ -5,7 +5,7 @@
 ## 基础环境
 
 - Python ≥ 3.11；[uv](https://docs.astral.sh/uv/) 管理依赖与虚拟环境。
-- M0 后为 uv workspace：根 `pyproject.toml` + `packages/tinyagent-core`。
+- 仓库即库（2026-10-25 库化）：根 `pyproject.toml` 就是 `tinyagent-core` 包（src 布局）；learn/apps 依赖按组安装（`uv sync --all-groups`）。
 
 ```bash
 uv sync

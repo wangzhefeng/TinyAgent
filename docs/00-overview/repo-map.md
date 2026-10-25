@@ -9,7 +9,7 @@
 | `learn/level0_llm_basics/` | [10-scratch](../10-scratch/index.md) |
 | `learn/level1_from_scratch/`（react / react_hello_agents / plan_execute / reflection / hello_agent_5min） | [10-scratch](../10-scratch/index.md) |
 | `learn/level2_own_framework/` | [20-framework](../20-framework/index.md) |
-| `packages/tinyagent-core/`（框架本体 + examples） | [20-framework](../20-framework/index.md) |
+| `src/tinyagent/`（库本体）、`examples/` | [20-framework](../20-framework/index.md) |
 | `learn/level2_own_framework/` | [20-framework](../20-framework/index.md) |
 | `apps/experiment_copilot/`（doc_qa 及后续 Copilot 版本） | [30-copilot](../30-copilot/index.md) |
 | `learn/level3_langgraph/`（M3 建立） | [40-langgraph](../40-langgraph/index.md) |

@@ -15,7 +15,7 @@
 
 ## 现状（v0.1 已实现，2026-10-25）
 
-`packages/tinyagent-core/src/tinyagent/`（发行名 `tinyagent-core`，导入名 `tinyagent`）：
+`src/tinyagent/`（仓库即库：发行名 `tinyagent-core`，导入名 `tinyagent`；2026-10-25 库化，src 提根）：
 
 | 模块 | 职责 |
 |---|---|
@@ -33,7 +33,7 @@
 
 ## 示例（包级 quickstart）
 
-`packages/tinyagent-core/examples/`（import 零副作用，`tests/smoke` 保障不腐化）：
+`examples/`（import 零副作用，`tests/smoke` 保障不腐化）：
 
 | 文件 | 演示 |
 |---|---|

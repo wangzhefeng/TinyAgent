@@ -16,7 +16,7 @@
 
 ## 当前结构（M0 迁移已完成）
 
-2026-10-25 M0 完成：学习代码迁入 `learn/`，RAG 应用迁入 `apps/experiment_copilot/doc_qa/`，框架示例位建于 `packages/tinyagent-core/examples/`；`hello_agents/` 于同日能力并入（ADR-0007）后整体移除。映射明细见[重构方案](../90-reference/refactor-plan-2026-10.md)与[repo-map](repo-map.md)。
+2026-10-25 M0 完成学习代码迁移；同日完成 hello_agents 能力并入（ADR-0007）后移除，以及**库化重构**：`src/` 提根为仓库本体（发行名 `tinyagent-core`），learn/apps/evals 保留为不打包的 Lab 层。映射明细见[重构方案](../90-reference/refactor-plan-2026-10.md)与[repo-map](repo-map.md)。
 
 ## 目标结构
 
@@ -24,7 +24,7 @@
 
 ```text
 learn/                  # L0–L6 学习路径
-packages/tinyagent-core/# 自研框架（uv workspace 成员，导入名 tinyagent）
+src/                    # 自研框架本体（仓库即库：tinyagent-core，导入名 tinyagent）
 apps/experiment_copilot/# 载体应用
 evals/  tests/          # 评测与测试
 docs/                   # 唯一文档中心（本目录）
