@@ -21,8 +21,9 @@ import warnings
 warnings.filterwarnings("ignore")
 import re
 
-from hello_agents.core.llm_simple import AgentsLLM
-from ReAct.tools import ToolExecutor
+# local libraries
+from learn.level0_llm_basics.llm_client import ChatClient
+from learn.level1_from_scratch.react_hello_agents.tools import ToolExecutor
 
 # global variable
 LOGGING_LABEL = Path(__file__).name[:-3]
@@ -51,7 +52,7 @@ History: {history}
 
 # 核心循环的实现
 class ReActAgent:
-    def __init__(self, llm_client: AgentsLLM, tool_executor: ToolExecutor, max_steps: int=5):
+    def __init__(self, llm_client: ChatClient, tool_executor: ToolExecutor, max_steps: int=5):
         self.llm_client = llm_client
         self.tool_executor = tool_executor
         self.max_steps = max_steps
@@ -100,11 +101,8 @@ class ReActAgent:
             )
             print(f"debug::prompt: \n{prompt}")
             
-            # 2. 调用LLM进行思考
-            messages = [
-                {"role": "user", "content": prompt}
-            ]
-            response_text = self.llm_client.think(messages=messages)
+            # 2. 调用LLM进行思考（单轮：History 已内嵌于提示词模板）
+            response_text = self.llm_client.chat(prompt)[0]
             print(f"debug::response_text: \n{response_text}")
 
             if not response_text:
