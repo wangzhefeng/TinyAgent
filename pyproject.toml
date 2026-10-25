@@ -1,7 +1,7 @@
 [project]
 name = "tinyagent"
 version = "0.1.0"
-description = "Build an e-mail assistant from scratch"
+description = "TinyAgent: AI agent learning lab - from-scratch implementations, a teaching-grade agent framework, and an experiment copilot"
 requires-python = ">=3.11"
 dependencies = [
     "langchain>=0.3.9",
@@ -27,18 +27,12 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["mypy>=1.11.1", "ruff>=0.6.1"]
 
-[build-system]
-requires = ["setuptools>=73.0.0", "wheel"]
-build-backend = "setuptools.build_meta"
+[tool.uv]
+# 学习仓库根不作为安装包；可安装的包在 packages/ 下（workspace 成员）
+package = false
 
-[tool.setuptools]
-packages = ["email_assistant"]
-
-[tool.setuptools.package-dir]
-"email_assistant" = "src/email_assistant"
-
-[tool.setuptools.package-data]
-"*" = ["py.typed"]
+[tool.uv.workspace]
+members = ["packages/*"]
 
 [tool.ruff]
 lint.select = [
@@ -60,6 +54,11 @@ lint.ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["D", "UP"]
+"learn/*" = ["D", "UP", "T201", "E402"]
+"apps/*" = ["D", "UP", "T201", "E402"]
+"hello_agents/*" = ["D", "UP", "T201", "E402"]
+"scripts/*" = ["T201"]
+"packages/*/examples/*" = ["D", "UP", "T201", "E402", "I001"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"

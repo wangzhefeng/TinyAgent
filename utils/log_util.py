@@ -17,6 +17,7 @@ _LOGGER = None
 
 
 def get_logger():
+    """Return the process-wide configured logger, creating it on first use."""
     global _LOGGER
     if _LOGGER is not None:
         return _LOGGER

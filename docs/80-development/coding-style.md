@@ -6,9 +6,9 @@
 
 ## 1. 文件组织
 
-- 文件头：`# -*- coding: utf-8 -*-` + 横幅注释块（File / Author / Email / Date / Version / Description / Link / Requirement）。
-- 纯工具模块（如 `utils/log_util.py`）可用模块 docstring 替代横幅。
-- 分节注释：`# python libraries`（标准库与第三方）、`# global variable`，导入与全局定义分区。
+- `learn/`、`apps/` 下的示例代码沿用历史约定：`# -*- coding: utf-8 -*-` 声明 + 横幅注释块（File / Author / Email / Date / Version / Description / Link / Requirement）。
+- 新增的框架 / 工具 / 脚本代码（`packages/`、`utils/`、`scripts/`、`tests/`）不写 utf-8 声明与横幅，用模块 docstring 开篇（对应 ruff `UP009` / `D100` 规则）。
+- 分节注释：`# python libraries`（标准库与第三方）、`# global variable`，导入与全局定义分区（示例代码适用；新代码用常规分段即可）。
 
 ## 2. 导入
 

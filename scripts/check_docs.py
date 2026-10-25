@@ -26,6 +26,7 @@ SKIP_DIRS = {".git", ".venv", "__pycache__", "dataset", "database", "downloaded_
 
 
 def iter_markdown(base: Path):
+    """Yield markdown files under *base*, skipping junk directories."""
     for path in base.rglob("*.md"):
         if any(part in SKIP_DIRS for part in path.parts):
             continue
@@ -33,6 +34,7 @@ def iter_markdown(base: Path):
 
 
 def check_size(max_lines: int) -> list[str]:
+    """Report docs pages exceeding the line limit."""
     issues = []
     for path in iter_markdown(DOCS):
         n = len(path.read_text(encoding="utf-8").splitlines())
@@ -42,6 +44,7 @@ def check_size(max_lines: int) -> list[str]:
 
 
 def check_links() -> list[str]:
+    """Report relative links that point to missing files."""
     issues = []
     paths = [ROOT / "README.md", ROOT / "AGENTS.md", *iter_markdown(DOCS)]
     for path in paths:
@@ -67,6 +70,7 @@ def check_links() -> list[str]:
 
 
 def check_outside_docs() -> list[str]:
+    """Report markdown files located outside docs/."""
     issues = []
     for path in iter_markdown(ROOT):
         if DOCS in path.parents:
@@ -78,6 +82,7 @@ def check_outside_docs() -> list[str]:
 
 
 def main() -> int:
+    """Run all checks and return the exit code."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--max-lines", type=int, default=150)
     args = parser.parse_args()
