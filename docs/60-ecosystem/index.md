@@ -14,11 +14,11 @@ Agent 之外的生态位：工具协议（MCP）、其他开发框架（横评�
 | [MCP 笔记（二）：功能](mcp-features.md) | Tools / Resources / Prompt / Sampling 与发现机制 |
 | [MCP 笔记（三）：SDK 与客户端](mcp-clients.md) | FastMCP、mcp.json 配置、smolagents 代码客户端 |
 
-## 现状（M0 已迁入）
+## 现状（M0 已迁入；M4 完成 MCP 双向与 ADK 说明）
 
 | 代码 | 说明 | 来源 |
 |---|---|---|
-| `learn/level5_ecosystem/mcp/` | FastMCP server（weather 三要素示例）+ stdio/remote/packages 三种 client | `src/mcp_dev/` |
+| `learn/level5_ecosystem/mcp/` | FastMCP server（weather 三要素示例）+ 三种 client + **`tsproj_tools_server.py`（面向 tsproj_ml 的只读四工具 server）** + **`mount_with_framework.py`（tinyagent 挂载 MCP server，M4 验收项）** | `src/mcp_dev/` + M4 新增 |
 | `learn/level5_ecosystem/adk/` | Google ADK 单/多智能体示例 | `src/adk_dev/` |
 | `learn/level5_ecosystem/frameworks/langgraph/` | workflow + 三步 QA 助手两个练习 | `hello_agents/test/framework/framework_langgraph/` |
 | `learn/level5_ecosystem/frameworks/agentscope/` | 角色扮演、结构化输出等练习 | 同上 |
@@ -33,12 +33,13 @@ Agent 之外的生态位：工具协议（MCP）、其他开发框架（横评�
 * **本地部署**：[vLLM](https://docs.vllm.ai/en/latest/getting_started/installation/)、[Ollama](https://ollama.com/)，
   均以 OpenAI 兼容协议接入。
 
-## 规划（M4/M5）
+## 规划（M4 已完成 / M5 待做）
 
-1. **MCP 双向**：写一个面向 tsproj_ml 的真实工具 server；自研框架作为 MCP client 挂载（框架 v0.3 工具源）。
+1. **MCP 双向 ✅（M4）**：`tsproj_tools_server.py` 把 Copilot 只读四工具服务化；框架侧 `tinyagent.ext.mcp.MCPToolSource` 挂载实跑通过（stdio、含 cwd 支持）。
 2. **框架横评**：LangGraph / AgentScope / AutoGen 各保留"读设计 + 笔记 + 官方 quickstart"，深入开发只留 LangGraph 与 ADK。
-3. **A2A**：协议调研笔记 + 最小 demo（低优先级）。
-4. **部署**：Ollama / vLLM 以 OpenAI 兼容协议接入自研框架。
+3. **ADK 说明**：`adk/` 示例需 `google-adk` 依赖与 `GOOGLE_API_KEY`（Gemini），本仓库未配置时跳过实跑，仅作结构对照（agent 树/sub_agents 与框架 Swarm 的对等关系见 [40-langgraph 笔记](../40-langgraph/course-notes.md)）。
+4. **A2A**：协议调研笔记 + 最小 demo（低优先级）。
+5. **部署**：Ollama / vLLM 以 OpenAI 兼容协议接入自研框架。
 
 ## 相关
 

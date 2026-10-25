@@ -4,28 +4,33 @@
 
 ## 定位
 
-同一批任务在不同架构模式下的对照实现与小结，参考 [all-agentic-architectures](https://github.com/FareedKhan-dev/all-agentic-architectures) 的模式清单，用自研框架逐个实现。
+同一批任务在不同架构模式下的对照实现与小结，用自研框架逐个实现；部分模式以 Copilot 的真实任务为实验对象，避免玩具化。
 
-## 模式清单（规划）
+## 模式清单（六模式已实现，2026-10-25）
 
-| 模式 | 一句话 | 优先级 |
+统一入口（顺序跑通并打印 ✅/❌ 结果）：
+
+```bash
+python -m learn.level4_patterns.run_all
+```
+
+| 模式 | 实现 | 要点 |
 |---|---|---|
-| Prompt Chaining | 串行流水线，每步一个专注子任务 | 高（L0 已有雏形） |
-| Routing | 按输入类型分流到不同处理链 | 高 |
-| ReAct | 思考-行动-观察循环 | 高（L1 已有） |
-| Plan-and-Execute | 先整体规划再逐步执行 | 高（L1 已有） |
-| Reflection | 生成-批评-修订循环 | 高（L1 已有） |
-| Self-correction / Retry | 执行失败自纠错重试 | 中 |
-| Multi-agent Supervisor | 中央调度 + 专家执行 | 中（C3 前置） |
-| Swarm / Handoffs | 同伴间控制权移交 | 中（框架 v0.3） |
-| Evaluator-Optimizer | 打分者与优化者对抗迭代 | 低 |
+| Prompt Chaining | `chaining.py` | 提取 → 润色两段链；每步一个专注子任务 |
+| Routing | `routing_pattern.py` | 意图分类分发四条链（框架版，L0 的进阶） |
+| Self-Correction | `self_correction.py` | 生成 + 校验器 + 失败带反馈重试（JSON 合法性校验） |
+| Evaluator-Optimizer | `evaluator_optimizer.py` | 打分者给 1-10 分与建议，优化者改写，观察分数轨迹 |
+| Supervisor | `supervisor.py` | analyst → reporter 顺序编排两个专家（应用层编排范式） |
+| Swarm/Handoffs | `swarm_handoff.py` | 框架 `Swarm` 对等移交（ADR-0004） |
 
-## 规划（M4）
+已由其他层覆盖、此处不重复实现的模式：
 
-1. 每模式：最小实现 + 适用场景 + 代价（延迟/成本/复杂度）笔记，落于 `learn/level4_patterns/`。
-2. 用 Copilot 的真实任务（配置生成、指标对比）作为部分模式的实验对象，避免玩具化。
+- **ReAct / Plan-and-Execute / Reflection**：L1 手写版 + L2 框架版（`learn/level1_from_scratch/`、`level2_own_framework/`）。
+
+## 后续（M5）
+
+- 用 `evals/` 数据集对关键模式做量化对比（延迟 / 成本 / 稳定性）。
 
 ## 相关
 
-- [10-scratch](../10-scratch/index.md)：三种范式的手写版
-- [70-evals](../70-evals/index.md)：模式间的量化对比
+- [20-framework](../20-framework/index.md)（Swarm/handoff 实现）｜ [70-evals](../70-evals/index.md)
