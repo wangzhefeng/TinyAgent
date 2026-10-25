@@ -3297,7 +3297,7 @@ wheels = [
 ]
 
 [[package]]
-name = "tinyagent-core"
+name = "tinyagent"
 source = { editable = "." }
 dependencies = [
     { name = "openai" },

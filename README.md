@@ -8,8 +8,8 @@
 
 ```bash
 # 库本体（Python ≥ 3.11）
-pip install tinyagent-core          # 或: uv add tinyagent-core
-pip install "tinyagent-core[mcp]"   # 需要 MCP 工具源时
+pip install tinyagent            # 或: uv add tinyagent
+pip install "tinyagent[mcp]"     # 需要 MCP 工具源时
 ```
 
 本地开发（本仓库）：

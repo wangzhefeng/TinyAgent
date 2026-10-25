@@ -17,7 +17,7 @@ tinyagent 直接挂载（方案 M4 验收项），同时本仓库的 Copilot 工
 2. 上下文管理器形态：`with MCPToolSource(command).tools() as tools:`——连接生命周期
    显式、退出即关；工具调用转发到 server 进程执行（本仓库只读 server，安全边界在
    server 侧实现）。
-3. MCP 依赖放 extras：`pip install tinyagent-core[mcp]`，不进核心依赖。
+3. MCP 依赖放 extras：`pip install tinyagent[mcp]`，不进核心依赖。
 
 ## 后果
 

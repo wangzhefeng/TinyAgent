@@ -17,7 +17,7 @@
    `embedding-3`）做余弦相似度检索；不可用时自动退化为字符 bigram 重叠打分——
    无重依赖、离线可用，且接口不变。
 3. **拒绝假实现**：qdrant/neo4j 后端不并入（无法在无服务环境下验证），
-   留待真实需求出现时以 `tinyagent-core[vector]` extras 承接。
+   留待真实需求出现时以 `tinyagent[vector]` extras 承接。
 4. 存储路径遵循 outputs 约定：默认 `logs/tinyagent/memory.jsonl`，不入库。
 
 ## 后果

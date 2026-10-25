@@ -1,5 +1,5 @@
 [project]
-name = "tinyagent-core"
+name = "tinyagent"
 description = "A teaching-grade, extensible agent framework: a ~50-line loop kernel, six pluggable protocols, dual tool-call codecs, handoff/Swarm, MCP tool source, and long-term memory."
 readme = "README.md"
 dynamic = ["version"]
@@ -67,6 +67,11 @@ path = "src/tinyagent/__init__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/tinyagent"]
+
+[tool.pytest.ini_options]
+# tests/unit/* 以 `from tests.conftest import ...` 绝对导入共享 fixture，
+# console script（uv run pytest）不把 cwd 放进 sys.path，需显式声明
+pythonpath = ["."]
 
 [tool.ruff]
 lint.select = [

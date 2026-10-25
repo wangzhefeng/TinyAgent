@@ -15,7 +15,7 @@
 
 ## 现状（v0.1 已实现，2026-10-25）
 
-`src/tinyagent/`（仓库即库：发行名 `tinyagent-core`，导入名 `tinyagent`；2026-10-25 库化，src 提根）：
+`src/tinyagent/`（仓库即库：发行名与导入名同为 `tinyagent`，2026-10-25 库化并由 `tinyagent-core` 更名统一，src 提根）：
 
 | 模块 | 职责 |
 |---|---|

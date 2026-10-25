@@ -2,7 +2,7 @@
 
 Replace ``args``/``cwd`` with your own server launch command; this example
 uses the repo's read-only tsproj_ml server from ``learn/level5_ecosystem``.
-Requires the ``mcp`` extra: ``pip install tinyagent-core[mcp]``.
+Requires the ``mcp`` extra: ``pip install tinyagent[mcp]``.
 """
 
 import sys
