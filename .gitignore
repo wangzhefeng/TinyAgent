@@ -212,10 +212,10 @@ dataset/
 results/
 logs/
 downloaded_models/
-utils/
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.bak*
 .langgraph_api
 .DS_Store
