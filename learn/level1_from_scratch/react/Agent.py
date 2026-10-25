@@ -4,28 +4,19 @@
 # * File        : Agent.py
 # * Author      : Zhefeng Wang
 # * Email       : wangzhefengr@163.com
-# * Date        : 2024-09-24
-# * Version     : 0.1.092414
-# * Description : description
-# * Link        : link
-# * Requirement : 相关模块版本需求(例如: numpy >= 2.1.0)
+# * Date        : 2026-10-25
+# * Version     : 2.0.1025
+# * Description : 手写 ReAct Agent（M1 API 化：模型后端注入，工具统一分发）
 # ***************************************************
 
 # python libraries
-import os
-import sys
-ROOT = os.getcwd()
-if str(ROOT) not in sys.path:
-    sys.path.append(str(ROOT))
+from typing import List
+
+# third-party libraries
 import json5
-from typing import Dict, List, Tuple, Optional, Union
 
-from LLM import InternLM2Chat
-from tool import Tools
-
-# global variable
-LOGGING_LABEL = __file__.split('/')[-1][:-3]
-
+# local libraries
+from learn.level1_from_scratch.react.tool import Tools
 
 TOOL_DESC = """{name_for_model}: Call this tool to interact with the {name_for_human} API. What is the {name_for_human} API useful for? {description_for_model} Parameters: {parameters} Format the arguments as a JSON object."""
 REACT_PROMPT = """Answer the following questions as best you can. You have access to the following tools:
@@ -43,6 +34,12 @@ Observation: the result of the action
 Thought: I now know the final answer
 Final Answer: the final answer to the original input question
 
+Rules (MUST follow):
+1. The Observation line is filled in ONLY by the system after the Action is executed. NEVER write, guess, or imagine any Observation content yourself.
+2. Before calling a tool that needs a path (e.g. read_config / read_result_summary), you MUST first call the corresponding list tool (list_configs / list_results) and use a REAL path from its result. NEVER guess or invent file paths.
+3. If an Observation reports an error (unknown tool, file not found, failure), adapt your next Action to fix it (e.g. call the list tool first). NEVER pretend the call succeeded or fabricate its result.
+4. Your Final Answer must be based strictly on the Observation contents actually returned by the system.
+
 Begin!
 """
 
@@ -51,19 +48,27 @@ class Agent:
     """
     Agent 的结构是一个 React 的结构，提供一个 `system_prompt`，
     使得 LLM 知道自己可以调用哪些工具，并以什么样的格式输出。
-    
+
+    M1 改造：模型后端通过依赖注入（`model` 参数），API 后端用
+    `learn.level0_llm_basics.llm_client.ChatClient`，本地推理后端用
+    `learn.level1_from_scratch.react.llm_local.InternLM2Chat`（可选，
+    需 torch/transformers）；两者共用同一 `chat` 接口。
+    工具通过 `tools` 参数注入（默认 ReAct 演示工具集），需提供
+    `toolConfig`（描述）与 `call(name, **kwargs)`（分发）。
+
     每次用户的提问，如要需要调用工具的话，都会进行两次的 LLM 调用：
         - 第一次解析用户的提问，选择调用的工具和参数；
         - 第二次将工具返回的结果与用户的提问整合，这样就可以实现一个 ReAct 的结构。
     """
-    
-    def __init__(self, path: str = "") -> None:
+
+    def __init__(self, model, tools=None) -> None:
         # 工具
-        self.tool = Tools()
+        self.tool = tools if tools is not None else Tools()
         # system prompt
         self.system_prompt = self._build_system_input()
-        self.model = InternLM2Chat(path)
-    
+        # 模型后端（API 或本地）
+        self.model = model
+
     def _build_system_input(self):
         """
         构建 ReAct 形式的 system prompt
@@ -74,16 +79,17 @@ class Agent:
         tool_names = [tool["name_for_model"] for tool in self.tool.toolConfig]
         tool_descs = "\n\n".join(tool_descs)
         tool_names = ",".join(tool_names)
-        sys_prompt = REACT_PROMPT.format(tool_descs = tool_descs, tool_names = tool_names)
+        sys_prompt = REACT_PROMPT.format(tool_descs=tool_descs, tool_names=tool_names)
 
         return sys_prompt
 
     def _parse_latest_plugin_call(self, text: str):
         """
-        TODO
+        从模型输出中解析最近一次 Action / Action Input，
+        并补全缺失的 Observation 分隔符。
         """
         plugin_name, plugin_args = "", ""
-        
+
         i = text.rfind("\nAction:")
         j = text.rfind("\nAction Input:")
         k = text.rfind("\nObservation:")
@@ -91,91 +97,73 @@ class Agent:
             if k < j:  # but does not contain "Observation"
                 text = text.rstrip() + "\nObservation:"  # add it back
             k = text.rfind("\nObservation:")
-            plugin_name = text[(i + len("\nAction")):j].strip()
+            # 修复课程代码的切片 bug：从 "\nAction:" 之后取工具名（原版少切冒号，
+            # 会把工具名解析成 ": list_configs" 导致"未知工具"）
+            plugin_name = text[(i + len("\nAction:")):j].strip()
             plugin_args = text[(j + len("\nAction Input:")):k].strip()
             text = text[:k]
-        
+
         return plugin_name, plugin_args, text
-    
+
     def _call_plugin(self, plugin_name, plugin_args):
         """
-        TODO
+        分发工具调用（json5 宽松解析参数），返回 Observation 文本。
         """
         plugin_args = json5.loads(plugin_args)
-        if plugin_name == "google_search":
-            return "\nObservation:" + self.tool.google_search(**plugin_args)
-    
-    def text_completion(self, text: str, history: List = []):
+        return "\nObservation:" + str(self.tool.call(plugin_name, **plugin_args))
+
+    def text_completion(self, text: str, history: List = [], max_tool_rounds: int = 5):
         """
-        调用 LLM，根据 ReAct 的 Agent 的逻辑，调用 Tools 中的工具
-        
-        每次用户的提问，如要需要调用工具的话，都会进行两次的 LLM 调用：
-            - 第一次解析用户的提问，选择调用的工具和参数；
-            - 第二次将工具返回的结果与用户的提问整合，这样就可以实现一个 ReAct 的结构。
+        调用 LLM，按 ReAct 逻辑迭代调用工具直至给出 Final Answer
+        （M1 升级：课程版固定两次调用，改为有界循环——每轮解析 Action →
+        执行工具 → 回填 Observation → 再生成；无工具调用或达到轮数上限即止）。
 
         Args:
             text (_type_): 用户的提问
             history (list, optional): 消息历史. Defaults to [].
+            max_tool_rounds (int, optional): 最大工具调用轮数. Defaults to 5.
+
+        Returns:
+            tuple: (最终回复, 更新后的消息历史)
         """
         # query
         text = f"\nQuestion: {text}"
         # 模型生成
         response, history = self.model.chat(
-            prompt = text, 
-            history = history, 
-            meta_instruction = self.system_prompt
+            prompt=text,
+            history=history,
+            meta_instruction=self.system_prompt,
         )
-        plugin_name, plugin_args, response = self._parse_latest_plugin_call(response)
-        if plugin_name:
+        # ReAct 迭代循环
+        for _ in range(max_tool_rounds):
+            plugin_name, plugin_args, response = self._parse_latest_plugin_call(response)
+            if not plugin_name:
+                break  # 无工具调用：已是 Final Answer
             response += self._call_plugin(plugin_name, plugin_args)
-        # tool + person
-        response, history = self.model.chat(
-            prompt = response, 
-            history = history, 
-            meta_instruction = self.system_prompt
-        )
+            response, history = self.model.chat(
+                prompt=response,
+                history=history,
+                meta_instruction=self.system_prompt,
+            )
 
         return response, history
 
 
-
-
 # 测试代码 main 函数
 def main():
-    agent = Agent(path = "./downloaded_models/Shanghai_AI_Laboratory/internlm2-chat-20b")
-    system_prompt = agent.system_prompt
-    print(system_prompt)
-    
-    """
-    ================ Loading model ================
-    Loading checkpoint shards:   0%|          | 0/8 [00:00<?, ?it/s]
-    Loading checkpoint shards:  12%|█▎        | 1/8 [00:01<00:09,  1.37s/it]
-    Loading checkpoint shards:  25%|██▌       | 2/8 [00:03<00:12,  2.10s/it]
-    Loading checkpoint shards:  38%|███▊      | 3/8 [00:08<00:15,  3.12s/it]
-    Loading checkpoint shards:  50%|█████     | 4/8 [00:12<00:13,  3.47s/it]
-    Loading checkpoint shards:  62%|██████▎   | 5/8 [00:17<00:12,  4.21s/it]
-    Loading checkpoint shards:  75%|███████▌  | 6/8 [00:24<00:09,  4.94s/it]
-    Loading checkpoint shards:  88%|████████▊ | 7/8 [00:30<00:05,  5.27s/it]
-    Loading checkpoint shards: 100%|██████████| 8/8 [00:36<00:00,  5.57s/it]
-    Loading checkpoint shards: 100%|██████████| 8/8 [00:36<00:00,  4.54s/it]
-    ================ Model loaded ================
-    Answer the following questions as best you can. You have access to the following tools:
+    from learn.level0_llm_basics.llm_client import ChatClient
 
-    google_search: Call this tool to interact with the 谷歌搜索 API. What is the 谷歌搜索 API useful for? 谷歌搜索是一个通用搜索引擎，可用于访问互联网、查询百科知识、了解时事新闻等。 Parameters: [{'name': 'search_query', 'description': '搜索关键词或短语', 'required': True, 'schema': {'type': 'string'}}] Format the arguments as a JSON object.
+    agent = Agent(model=ChatClient())
+    print(agent.system_prompt)
 
-    Use the following format:
+    response, history = agent.text_completion(text="你好", history=[])
+    print(response)
 
-    Question: the input question you must answer
-    Thought: you should always think about what to do
-    Action: the action to take, should be one of [google_search]
-    Action Input: the input to the action
-    Observation: the result of the action
-    ... (this Thought/Action/Action Input/Observation can be repeated zero or more times)
-    Thought: I now know the final answer
-    Final Answer: the final answer to the original input question
+    response, history = agent.text_completion(
+        text="计算 (123 + 456) * 2 等于多少？", history=history
+    )
+    print(response)
 
-    Begin!
-    """
 
 if __name__ == "__main__":
     main()

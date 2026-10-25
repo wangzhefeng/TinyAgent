@@ -4,30 +4,18 @@
 # * File        : Reflection.py
 # * Author      : Zhefeng Wang
 # * Email       : zfwang7@gmail.com
-# * Date        : 2025-11-23
-# * Version     : 1.0.112321
-# * Description : description
-# * Link        : link
-# * Requirement : 相关模块版本需求(例如: numpy >= 2.1.0)
+# * Date        : 2026-10-25
+# * Version     : 2.0.1025
+# * Description : Reflection 范式（M1 API 化，独立可运行）
 # ***************************************************
 
 # python libraries
-import sys
-from pathlib import Path
-ROOT = str(Path.cwd())
-if ROOT not in sys.path:
-    sys.path.append(ROOT)
-import warnings
-warnings.filterwarnings("ignore")
 
-from hello_agents.core.llm_simple import AgentsLLM
-from memory import Memory
+# local libraries
+from learn.level0_llm_basics.llm_client import ChatClient
+from learn.level1_from_scratch.reflection.memory import Memory
 
-# global variable
-LOGGING_LABEL = Path(__file__).name[:-3]
-
-
-# 初始执行提示词 (Execution Prompt) 
+# 初始执行提示词 (Execution Prompt)
 INITIAL_PROMPT_TEMPLATE = """
 你是一位资深的Python程序员。请根据以下要求，编写一个Python函数。
 你的代码必须包含完整的函数签名、文档字符串，并遵循PEP 8编码规范。
@@ -37,7 +25,7 @@ INITIAL_PROMPT_TEMPLATE = """
 请直接输出代码，不要包含任何额外的解释。
 """
 
-# 反思提示词 (Reflection Prompt) 
+# 反思提示词 (Reflection Prompt)
 REFLECT_PROMPT_TEMPLATE = """
 你是一位极其严格的代码评审专家和资深算法工程师，对代码的性能有极致的要求。
 你的任务是审查以下Python代码，并专注于找出其在<strong>算法效率</strong>上的主要瓶颈。
@@ -52,12 +40,12 @@ REFLECT_PROMPT_TEMPLATE = """
 
 请分析该代码的时间复杂度，并思考是否存在一种<strong>算法上更优</strong>的解决方案来显著提升性能。
 如果存在，请清晰地指出当前算法的不足，并提出具体的、可行的改进算法建议（例如，使用筛法替代试除法）。
-如果代码在算法层面已经达到最优，才能回答“无需改进”。
+如果代码在算法层面已经达到最优，才能回答"无需改进"。
 
 请直接输出你的反馈，不要包含任何额外的解释。
 """
 
-# 优化提示词 (Refinement Prompt) 
+# 优化提示词 (Refinement Prompt)
 REFINE_PROMPT_TEMPLATE = """
 你是一位资深的Python程序员。你正在根据一位代码评审专家的反馈来优化你的代码。
 
@@ -76,7 +64,7 @@ REFINE_PROMPT_TEMPLATE = """
 
 
 class ReflectionAgent:
-    def __init__(self, llm_client: AgentsLLM, max_iterations=3):
+    def __init__(self, llm_client: ChatClient, max_iterations: int = 2):
         self.llm_client = llm_client
         self.memory = Memory()
         self.max_iterations = max_iterations
@@ -92,7 +80,7 @@ class ReflectionAgent:
 
         # --- 2. 迭代循环:反思与优化 ---
         for i in range(self.max_iterations):
-            print(f"\n--- 第 {i+1}/{self.max_iterations} 轮迭代 ---")
+            print(f"\n--- 第 {i + 1}/{self.max_iterations} 轮迭代 ---")
 
             # a. 反思
             print("\n-> 正在进行反思...")
@@ -109,32 +97,27 @@ class ReflectionAgent:
             # c. 优化
             print("\n-> 正在进行优化...")
             refine_prompt = REFINE_PROMPT_TEMPLATE.format(
-                task=task,
-                last_code_attempt=last_code,
-                feedback=feedback
+                task=task, last_code_attempt=last_code, feedback=feedback
             )
             refined_code = self._get_llm_response(refine_prompt)
             self.memory.add_record("execution", refined_code)
-        
+
         final_code = self.memory.get_last_execution()
         print(f"\n--- 任务完成 ---\n最终生成的代码:\n```python\n{final_code}\n```")
         return final_code
 
     def _get_llm_response(self, prompt: str) -> str:
         """
-        一个辅助方法，用于调用LLM并获取完整的流式响应
+        调用 LLM 并返回文本响应（单轮，不携带历史——轨迹由 Memory 管理）。
         """
-        messages = [{"role": "user", "content": prompt}]
-        response_text = self.llm_client.think(messages=messages) or ""
-
-        return response_text
-
-
+        return self.llm_client.chat(prompt)[0]
 
 
 # 测试代码 main 函数
 def main():
-    pass
+    agent = ReflectionAgent(llm_client=ChatClient(), max_iterations=2)
+    agent.run("编写一个函数，找出 100 以内所有的素数")
+
 
 if __name__ == "__main__":
     main()

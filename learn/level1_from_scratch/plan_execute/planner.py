@@ -4,33 +4,22 @@
 # * File        : planner.py
 # * Author      : Zhefeng Wang
 # * Email       : zfwang7@gmail.com
-# * Date        : 2025-11-23
-# * Version     : 1.0.112319
-# * Description : description
-# * Link        : link
-# * Requirement : 相关模块版本需求(例如: numpy >= 2.1.0)
+# * Date        : 2026-10-25
+# * Version     : 2.0.1025
+# * Description : Plan-and-Execute 规划器（M1 API 化，独立可运行）
 # ***************************************************
 
 # python libraries
-import sys
-from pathlib import Path
-ROOT = str(Path.cwd())
-if ROOT not in sys.path:
-    sys.path.append(ROOT)
-import warnings
-warnings.filterwarnings("ignore")
 import ast
 from typing import List
 
-from hello_agents.core.llm_simple import AgentsLLM
-
-# global variable
-LOGGING_LABEL = Path(__file__).name[:-3]
-
+# local libraries
+from learn.level0_llm_basics.llm_client import ChatClient
 
 PLANNER_PROMPT_TEMPLATE = """
 你是一个顶级的AI规划专家。你的任务是将用户提出的复杂问题分解成一个由多个简单步骤组成的行动计划。
 请确保计划中的每个步骤都是一个独立的、可执行的子任务，并且严格按照逻辑顺序排列。
+计划应精简聚焦，控制在 3 到 5 个步骤内，不要超过 5 步。
 你的输出必须是一个Python列表，其中每个元素都是一个描述子任务的字符串。
 
 问题: {question}
@@ -43,7 +32,7 @@ PLANNER_PROMPT_TEMPLATE = """
 
 
 class Planner:
-    def __init__(self, llm_client: AgentsLLM):
+    def __init__(self, llm_client: ChatClient):
         self.llm_client = llm_client
 
     def plan(self, question: str) -> List[str]:
@@ -53,21 +42,16 @@ class Planner:
         # format prompt
         prompt = PLANNER_PROMPT_TEMPLATE.format(question=question)
 
-        # 为了生成计划，构建一个简单的消息列表
-        messages = [{"role": "user", "content": prompt}]
-
-        # 使用流式输出来获取完整的计划
         print("--- 正在生成计划 ---")
-        response_text = self.llm_client.think(messages=messages) or ""
+        response_text = self.llm_client.chat(prompt)[0]
         print(f"✅ 计划已生成:\n{response_text}")
-        
+
         # 解析LLM输出的列表字符串
         try:
             # 找到 ```python和```之间的内容
-            plan_str = response_text \
-                .split("```python")[1] \
-                .split("```")[0] \
-                .strip()
+            plan_str = (
+                response_text.split("```python")[1].split("```")[0].strip()
+            )
             # 使用 ast.literal_eval 来安全地执行字符串，将其转换为 Python 列表
             plan = ast.literal_eval(plan_str)
             plan = plan if isinstance(plan, list) else []
@@ -81,11 +65,11 @@ class Planner:
             return []
 
 
-
-
 # 测试代码 main 函数
 def main():
-    pass
+    planner = Planner(ChatClient())
+    print(planner.plan("如何系统地学习时间序列预测？"))
+
 
 if __name__ == "__main__":
     main()

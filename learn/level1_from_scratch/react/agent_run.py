@@ -1,56 +1,51 @@
 # -*- coding: utf-8 -*-
 
 # ***************************************************
-# * File        : test.py
+# * File        : agent_run.py
 # * Author      : Zhefeng Wang
 # * Email       : zfwang7@gmail.com
-# * Date        : 2024-09-24
-# * Version     : 1.0.092404
-# * Description : description
-# * Link        : link
-# * Requirement : 相关模块版本需求(例如: numpy >= 2.1.0)
-# * TODO        : 1.
+# * Date        : 2026-10-25
+# * Version     : 2.0.1025
+# * Description : 手写 ReAct Agent 演示入口（API 后端；本地后端见 llm_local.py）
 # ***************************************************
-
-__all__ = []
 
 # python libraries
 import os
-import sys
-ROOT = os.getcwd()
-if str(ROOT) not in sys.path:
-    sys.path.append(str(ROOT))
 
-from Agent import Agent
-
-# global variable
-LOGGING_LABEL = __file__.split('/')[-1][:-3]
-# params
-llm_dir = "./downloaded_models/Shanghai_AI_Laboratory/internlm2-chat-7b"
+# local libraries
+from learn.level0_llm_basics.llm_client import ChatClient
+from learn.level1_from_scratch.react.Agent import Agent
 
 
-agent = Agent(path = llm_dir)
-print(agent.system_prompt)
-
-response, _ = agent.text_completion(text = "你好", history = [])
-print(response)
-
-response, _ = agent.text_completion(text = "特朗普哪一年出生地？", history = _)
-print(response)
-
-response, _ = agent.text_completion(text = "周杰伦是谁？", history = _)
-print(response)
-
-response, _ = agent.text_completion(text = "书生浦语是什么？", history = _)
-print(response)
-
-
-
-
-# 测试代码 main 函数
 def main():
-    # result
-    pass
+    # 默认 API 后端（智谱 OpenAI 兼容端点，.env 控制）
+    agent = Agent(model=ChatClient())
+    print("=" * 60)
+    print("ReAct system prompt:")
+    print(agent.system_prompt)
+    print("=" * 60)
+
+    # 注意：history 显式传递并接收更新（原版 `history = _` 的误用已修复）
+    response, history = agent.text_completion(text="你好", history=[])
+    print(f"\n[回复 1] {response}\n")
+
+    # 无需任何外部 key 的工具调用演示（calculator）
+    response, history = agent.text_completion(
+        text="请用计算器算一下 (123 + 456) * 2 的结果", history=history
+    )
+    print(f"\n[回复 2] {response}\n")
+
+    # 搜索工具（可选）：需要 .env 配置 GOOGLE_SERPER_API_KEY
+    if os.environ.get("GOOGLE_SERPER_API_KEY"):
+        response, history = agent.text_completion(
+            text="书生浦语是什么？", history=history
+        )
+        print(f"\n[回复 3] {response}\n")
+
+    # 本地模型后端（可选，需要 torch/transformers + downloaded_models/）：
+    #   from learn.level1_from_scratch.react.llm_local import InternLM2Chat
+    #   agent = Agent(model=InternLM2Chat("./downloaded_models/..."))
+
 
 if __name__ == "__main__":
     main()

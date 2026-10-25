@@ -4,32 +4,21 @@
 # * File        : PlanAndSolve.py
 # * Author      : Zhefeng Wang
 # * Email       : zfwang7@gmail.com
-# * Date        : 2025-11-23
-# * Version     : 1.0.112319
-# * Description : description
-# * Link        : link
-# * Requirement : 相关模块版本需求(例如: numpy >= 2.1.0)
+# * Date        : 2026-10-25
+# * Version     : 2.0.1025
+# * Description : Plan-and-Execute 范式入口（M1 独立化，python -m 运行）
 # ***************************************************
 
 # python libraries
-import os
-import sys
-from pathlib import Path
-ROOT = str(Path.cwd())
-if ROOT not in sys.path:
-    sys.path.append(ROOT)
-import warnings
-warnings.filterwarnings("ignore")
 
-from PlanAndSolve.planner import Planner
-from PlanAndSolve.executor import Executor
-
-# global variable
-LOGGING_LABEL = Path(__file__).name[:-3]
+# local libraries
+from learn.level0_llm_basics.llm_client import ChatClient
+from learn.level1_from_scratch.plan_execute.executor import Executor
+from learn.level1_from_scratch.plan_execute.planner import Planner
 
 
 class PlanAndSolveAgent:
-    def __init__(self, llm_client):
+    def __init__(self, llm_client: ChatClient):
         """
         初始化智能体，同时创建规划器和执行器实例
         """
@@ -42,25 +31,26 @@ class PlanAndSolveAgent:
         运行智能体的完整流程：先规划，后执行
         """
         print(f"\n--- 开始处理问题 ---\n问题: {question}")
-        
+
         # 1. 调用规划器生成计划
         plan = self.planner.plan(question)
-        
+
         # 检查计划是否成功生成
         if not plan:
             print("\n--- 任务终止 --- \n无法生成有效的行动计划。")
-            return
-        
+            return None
+
         # 2. 调用执行器执行计划
         final_answer = self.executor.execute(question, plan)
-        print(f"\n--- 任务完成 ---\n最终答案: {final_answer}") 
-
-
+        print(f"\n--- 任务完成 ---\n最终答案: {final_answer}")
+        return final_answer
 
 
 # 测试代码 main 函数
 def main():
-    pass
+    agent = PlanAndSolveAgent(llm_client=ChatClient())
+    agent.run("如何系统地学习时间序列预测？请给出可操作的学习计划。")
+
 
 if __name__ == "__main__":
     main()

@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
 # ***************************************************
-# * File        : LLM.py
+# * File        : llm_local.py
 # * Author      : Zhefeng Wang
 # * Email       : zfwang7@gmail.com
-# * Date        : 2024-09-24
-# * Version     : 1.0.092403
-# * Description : description
+# * Date        : 2026-10-25
+# * Version     : 2.0.1025
+# * Description : 本地推理后端（可选）：需 torch/transformers 与 downloaded_models/，
+# *               与 ChatClient 共用 chat 接口，由 Agent 注入选择
 # * Link        : link
 # * Requirement : 相关模块版本需求(例如: numpy >= 2.1.0)
 # * TODO        : 1.
@@ -17,20 +18,19 @@ __all__ = []
 # python libraries
 import os
 import sys
+
 ROOT = os.getcwd()
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))
 import json
-from tqdm import tqdm
-from typing import Dict, List, Tuple, Optional, Union
+from typing import Dict, List
 
 import torch
 from peft import PeftModel
+from tqdm import tqdm
 from transformers import (
-    AutoTokenizer, 
-    LlamaTokenizer,
-    LlamaForCausalLM,
     AutoModelForCausalLM,
+    AutoTokenizer,
 )
 
 # global variable
@@ -209,7 +209,7 @@ class InternLM2Chat(BaseModel):
     
     def load_model(self):
         import torch
-        from transformers import AutoTokenizer, AutoModelForCausalLM
+        from transformers import AutoModelForCausalLM, AutoTokenizer
         print('================ Loading model ================')
         self.tokenizer = AutoTokenizer.from_pretrained(
             self.path, 
