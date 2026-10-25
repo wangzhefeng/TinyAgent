@@ -3067,6 +3067,16 @@ provides-extras = ["dev"]
 name = "tinyagent-core"
 version = "0.1.0"
 source = { editable = "packages/tinyagent-core" }
+dependencies = [
+    { name = "openai" },
+    { name = "python-dotenv" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "openai", specifier = ">=1.0" },
+    { name = "python-dotenv" },
+]
 
 [[package]]
 name = "tinycss2"

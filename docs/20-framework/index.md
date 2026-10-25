@@ -13,20 +13,35 @@
 - **版本演进**：v0.1 loop + 双 codec + 文件 session + JSONL tracer → v0.2 guardrail + memory + API 冻结 → v0.3 handoff + MCP 工具源 + 多智能体 → v0.4 graph runtime 预研 + LangChain 适配器。
 - 每个抽象配一篇 ADR（本目录 `adr/`，M2 建立），说明对标框架与简化理由。
 
-## 现状
+## 现状（v0.1 已实现，2026-10-25）
 
-现有 `hello_agents/src/`（M2 重构迁入 `packages/tinyagent-core` 前的过渡位置）是对 Datawhale Hello Agents 的复刻，约 3800 行，遵循三条核心原则：**分层解耦、职责单一、接口统一**。已具备：
+`packages/tinyagent-core/src/tinyagent/`（发行名 `tinyagent-core`，导入名 `tinyagent`）：
 
-```text
-core/      Agent 基类、HelloAgentsLLM（多 provider）、消息、配置、异常
-agents/    Simple / ReAct / Reflection / PlanAndSolve / FunctionCall / ToolAware
-tools/     注册机制、工具链、异步执行器、内置 calculator 与 search
-memory/    embedding、qdrant / neo4j 存储、manager
-```
+| 模块 | 职责 |
+|---|---|
+| `core/protocols.py` | **六协议**定义（ChatModel / Tool / SessionStore / Tracer / Guardrail / Memory） |
+| `core/loop.py` | `agent_loop` 内核（ADR-0001） |
+| `core/llm.py` | `OpenAIChatModel`：provider 预设（智谱/DeepSeek/OpenAI）+ 重试阶梯 |
+| `core/tools.py` | `@tool` 装饰器（类型注解→JSON Schema）+ `ToolRegistry`（参数校验/未知参数回填） |
+| `core/session.py` / `tracer.py` | `FileSessionStore` / `JsonlTracer`（ADR-0003） |
+| `core/guardrails.py` | `CompositeGuardrail` + `AllowlistGuardrail`（Copilot 安全边界雏形） |
+| `codecs/` | `ReactTextCodec`（含 M1 冒号 bug 回归）与 `NativeCodec` 双编解码（ADR-0002） |
+| `agents/react_agent.py` | `TinyAgent` 门面：声明式组装六协议 |
+| `api.py` | 版本化公共 API（唯一稳定导入面） |
 
-M2 将其**重构迁入** `packages/tinyagent-core/src/tinyagent/`（发行名 `tinyagent-core`、导入名保持 `tinyagent`；非照搬）：六协议化接口、`@tool` 装饰器 + 类型注解生成 JSON Schema、补齐 session / tracing / guardrail、建立单测。`agent_usage/hello_world.py` 随新 API 改写为 `examples/`。
+验证：单测 20/20（mock 无 key，含 M1 教训回归）+ 真实 API 全链路（L2 demo：事件流 / 会话持久化 / 工具往返）。
+
+## ADR
+
+- [ADR-0001 内核与六协议](adr/0001-agent-loop-and-protocols.md)
+- [ADR-0002 双 codec](adr/0002-call-codec.md)
+- [ADR-0003 session 与 tracing](adr/0003-session-and-tracing.md)
+
+## 演进
+
+v0.1（M2，已实现）loop + 双 codec + 文件 session + JSONL tracer + 单测 → v0.2 guardrail 完善 + memory + api 冻结 → v0.3（M4）handoff + MCP 工具源 + 多 agent → v0.4（M5+）graph runtime 预研 + LangChain 适配器。`hello_agents/src/`（复刻版）作为对照保留，其能力按版本渐进并入后移除。
 
 ## 相关
 
-- [重构方案 §3](../90-reference/refactor-plan-2026-10.md)：框架设计全文
 - [10-scratch](../10-scratch/index.md)：手写内核是框架的前身
+- [重构方案 §4](../90-reference/refactor-plan-2026-10.md)：框架设计全文

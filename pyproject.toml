@@ -54,6 +54,7 @@ lint.ignore = [
     "UP035",
     "D417",
     "E501",
+    "D107", # __init__ 由类 docstring 覆盖（Google 惯例）
 ]
 
 [tool.ruff.lint.per-file-ignores]
