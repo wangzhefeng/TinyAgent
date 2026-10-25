@@ -6,3 +6,4 @@
 - [docs-maintenance](docs-maintenance.md) — 文档维护规范
 - [testing](testing.md) — 测试策略与现状
 - [cleanup-log](cleanup-log.md) — 删除/清理记录
+- [outputs](outputs.md) — 数据与产物目录约定（dataset / downloaded_models / results / logs）

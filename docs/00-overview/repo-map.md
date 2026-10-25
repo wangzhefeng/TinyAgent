@@ -17,6 +17,7 @@
 | `learn/level5_ecosystem/`（mcp / adk / frameworks / deployment） | [60-ecosystem](../60-ecosystem/index.md) |
 | `learn/level6_evals/`、`evals/`（M5 建立） | [70-evals](../70-evals/index.md) |
 | `tests/` | [testing](../80-development/testing.md) |
+| `dataset/`、`downloaded_models/`、`results/`、`logs/`（不入库） | [outputs](../80-development/outputs.md) |
 | `utils/`、`scripts/` | [environment](environment.md)、[AGENTS](../../AGENTS.md) |
 | 文档结构本身 | [docs-maintenance](../80-development/docs-maintenance.md) |
 

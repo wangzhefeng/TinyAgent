@@ -36,8 +36,8 @@ source .venv/bin/activate
 ## 运行约定
 
 - 脚本一律从**仓库根目录**运行。
-- 日志：`utils/log_util.py`，输出到 stderr 与 `logs/<LOG_NAME>/`（`LOG_NAME` 由各脚本设置，`logs/` 不入库）。
-- 本地模型（可选）：下载至 `downloaded_models/`（不入库）。
+- 日志：`utils/log_util.py`，输出到 stderr 与 `logs/<LOG_NAME>/`（`LOG_NAME` 由各脚本设置）。
+- 数据 / 模型 / 产物目录：`dataset/`、`downloaded_models/`、`results/`、`logs/` 均不入库，约定详见 [outputs](../80-development/outputs.md)。
 
 ## 文档检查
 
