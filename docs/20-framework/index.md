@@ -38,10 +38,12 @@
 - [ADR-0003 session 与 tracing](adr/0003-session-and-tracing.md)
 - [ADR-0004 handoff 与 Swarm](adr/0004-handoff-and-swarm.md)（v0.3 已实现）
 - [ADR-0005 MCP 工具源](adr/0005-mcp-tool-source.md)（v0.3 已实现，extras `mcp`）
+- [ADR-0006 Graph Runtime 提案](adr/0006-graph-runtime-proposal.md)（预研，暂缓）
+- [ADR-0007 长期记忆](adr/0007-long-term-memory.md)（v0.3.1 已实现，兑现 hello_agents 空壳设计）
 
 ## 演进
 
-v0.1（M2）loop + 双 codec + 文件 session + JSONL tracer + 单测 → v0.2（M2 期间随 C1 落地 guardrail 应用 + memory 语义）→ **v0.3（M4，已实现）handoff/Swarm + MCP 工具源（`tinyagent.ext.mcp`）** → v0.4（M5+）graph runtime 预研 + LangChain 适配器。`hello_agents/src/`（复刻版）作为对照保留，其能力按版本渐进并入后移除。
+v0.1（M2）loop + 双 codec + 文件 session + JSONL tracer + 单测 → v0.2（M2 期间随 C1 落地 guardrail 应用 + memory 语义）→ v0.3（M4）handoff/Swarm + MCP 工具源（`tinyagent.ext.mcp`）→ **v0.3.1（2026-10-25）hello_agents 能力并入**：`ReflectionAgent` / `PlanAndSolveAgent` 开箱组件 + `ListMemory` / `FileLongTermMemory`（ADR-0007）→ v0.4 提案 Graph runtime 预研 + LangChain 适配器（ADR-0006）。`hello_agents/` 已于并入完成后整体移除（见 [cleanup-log](../80-development/cleanup-log.md)）。
 
 ## 相关
 

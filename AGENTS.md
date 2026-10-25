@@ -10,7 +10,7 @@ TinyAgent 是 AI Agent 学习与实验仓库，双主线 + 一个载体应用：
 | 主线 | 位置 | 说明 |
 |---|---|---|
 | 学习路径 | `learn/`（L0–L2、L5 已迁入；L3/L4/L6 随里程碑填充） | 从零手写 → 框架 → 模式 → 生态 → 评测 |
-| 自研框架 | `packages/tinyagent-core/`（发行名 `tinyagent-core`，导入名 `tinyagent`；M0 骨架已建，M2 自 `hello_agents/src/` 重构迁入） | 教学级、可扩展的 Agent 框架 |
+| 自研框架 | `packages/tinyagent-core/`（发行名 `tinyagent-core`，导入名 `tinyagent`；hello_agents 能力已于 v0.3.1 并入后移除该目录） | 教学级、可扩展的 Agent 框架 |
 | 载体应用 | `apps/experiment_copilot/`（doc_qa 已迁入） | 实验副驾驶，默认操作 `~/projects/tsproj_ml` |
 
 学习地图与里程碑见 [learning-path](docs/00-overview/learning-path.md)。
@@ -19,7 +19,7 @@ TinyAgent 是 AI Agent 学习与实验仓库，双主线 + 一个载体应用：
 
 1. **唯一文档中心**：项目级文档全部放在 `docs/`。
    - 允许的例外：根目录 `README.md`（总索引）与本文件。
-   - 代码目录（`learn/`、`packages/`、`apps/`、迁移期 `src/`、`hello_agents/`）**不放长 README**。
+   - 代码目录（`learn/`、`packages/`、`apps/`）**不放长 README**。
 2. **根 README 只做索引**：项目定位、快速索引、快速开始、目录概览、文档入口。
 3. **渐进式披露**：
    - 入口页（`docs/README.md`、各域 `index.md`）只放概要与目录；

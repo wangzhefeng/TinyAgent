@@ -16,7 +16,7 @@
 
 ## 当前结构（M0 迁移已完成）
 
-2026-10-25 M0 完成：学习代码迁入 `learn/`，RAG 应用迁入 `apps/experiment_copilot/doc_qa/`，框架示例位建于 `packages/tinyagent-core/examples/`。残留 `hello_agents/`（`src/` 与 `version.py`）为 M2 重构迁入前的过渡。映射明细见[重构方案](../90-reference/refactor-plan-2026-10.md)与[repo-map](repo-map.md)。
+2026-10-25 M0 完成：学习代码迁入 `learn/`，RAG 应用迁入 `apps/experiment_copilot/doc_qa/`，框架示例位建于 `packages/tinyagent-core/examples/`；`hello_agents/` 于同日能力并入（ADR-0007）后整体移除。映射明细见[重构方案](../90-reference/refactor-plan-2026-10.md)与[repo-map](repo-map.md)。
 
 ## 目标结构
 

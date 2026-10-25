@@ -35,7 +35,7 @@
 
 - v0.4 Graph Runtime（[ADR-0006 提案](../20-framework/adr/0006-graph-runtime-proposal.md)）；
 - Copilot C2（interrupt 审批内置化）与写操作（HITL 后）；
-- `hello_agents/` 复刻版剩余能力（memory/plan_solve 等六种 agent）并入框架后移除；
+- ~~`hello_agents/` 复刻版剩余能力并入框架后移除~~（✅ 已于 2026-10-25 完成：memory 兑现 + Reflection/PlanAndSolve 并入后整体移除，见 ADR-0007 与 cleanup-log）；
 - 评测扩容（模式间量化对比、LangSmith 后端对照）。
 
 ## 相关

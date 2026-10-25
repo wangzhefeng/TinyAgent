@@ -18,7 +18,7 @@
 | `learn/level0_llm_basics/prompt_chaining.py` | LCEL 链式调用（需 `OPENAI_API_KEY`，课程遗留） |
 | `python -m learn.level1_from_scratch.react.agent_run` | **手写 ReAct**：模型/工具双注入；calculator 工具无外部 key 即可演示工具循环 |
 | `learn/level1_from_scratch/react/llm_local.py` | 本地推理后端（可选，需 torch/transformers + downloaded_models/），与 ChatClient 同接口 |
-| `learn/level1_from_scratch/react_hello_agents/` | ReAct 复刻练习（保留对照） |
+| `learn/level1_from_scratch/react_hello_agents/` | ReAct 复刻练习（已改接 L0 ChatClient，作第二种实现对照） |
 | `python -m learn.level1_from_scratch.plan_execute.PlanAndSolve` | **Plan-Execute**：planner 生成步骤列表 → executor 逐步执行 |
 | `python -m learn.level1_from_scratch.reflection.Reflection` | **Reflection**：生成 → 反思 → 优化循环 + Memory 轨迹 |
 | `learn/level1_from_scratch/hello_agent_5min/` | 5 分钟快速上手（smolagents 风格，保留对照） |
