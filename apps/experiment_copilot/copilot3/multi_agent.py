@@ -28,10 +28,10 @@ ANALYST_SYSTEM = "你是指标分析专家：基于给定材料给出口径与�
 REPORTER_SYSTEM = "你是报告撰写人：输出 Markdown 报告（结论先行 + 指标表 + 口径警示）。"
 
 
-def plan(model) -> list[str]:  # noqa: ANN001
+def plan(model, question: str) -> list[str]:  # noqa: ANN001
     """planner：拆解子问题。"""
     text = TinyAgent(model=model, system=PLANNER_SYSTEM, max_steps=1).run(
-        f"研究问题：{QUESTION}\n可用工具：list_experiment_configs / "
+        f"研究问题：{question}\n可用工具：list_experiment_configs / "
         "list_experiment_results / read_experiment_config / "
         "read_experiment_result_summary"
     ).text
@@ -54,28 +54,32 @@ def execute(model, sub_questions: list[str]) -> str:  # noqa: ANN001
     return "\n\n".join(findings)
 
 
-def main():
+def run_pipeline(question: str) -> str:
+    """C3：planner/executor/analyst/reporter 完整流水，返回 Markdown 报告。"""
     from tinyagent import OpenAIChatModel
 
     model = OpenAIChatModel()
 
     print("[planner] 拆解研究问题")
-    sub_questions = plan(model)
+    sub_questions = plan(model, question)
     print(f"[planner] {len(sub_questions)} 个子问题")
 
     findings = execute(model, sub_questions)
 
     print("[analyst] 分析口径")
     analysis = TinyAgent(model=model, system=ANALYST_SYSTEM, max_steps=1).run(
-        f"研究问题：{QUESTION}\n\n检索材料：\n{findings[:6000]}"
+        f"研究问题：{question}\n\n检索材料：\n{findings[:6000]}"
     ).text
 
     print("[reporter] 生成报告")
     report = TinyAgent(model=model, system=REPORTER_SYSTEM, max_steps=1).run(
-        f"研究问题：{QUESTION}\n\n检索材料：\n{findings[:6000]}\n\n分析：\n{analysis}"
+        f"研究问题：{question}\n\n检索材料：\n{findings[:6000]}\n\n分析：\n{analysis}"
     ).text
-    print("\n" + "=" * 60)
-    print(report)
+    return report
+
+
+def main():
+    print(run_pipeline(QUESTION))
 
 
 if __name__ == "__main__":

@@ -22,13 +22,20 @@ QUESTIONS = [
 ]
 
 
-def main():
+def answer(question: str) -> str:
+    """C0：手写 ReAct Agent + 只读工具，回答单个问题（评测 harness 复用）。"""
     agent = Agent(model=ChatClient(), tools=CopilotTools())
+    response, _history = agent.text_completion(text=question, history=[])
+    return response
+
+
+def main():
     history = []
     for i, question in enumerate(QUESTIONS, 1):
         print("\n" + "=" * 60)
         print(f"[问题 {i}] {question}")
         print("-" * 60)
+        agent = Agent(model=ChatClient(), tools=CopilotTools())
         response, history = agent.text_completion(text=question, history=history)
         print(f"[回答 {i}] {response}")
 

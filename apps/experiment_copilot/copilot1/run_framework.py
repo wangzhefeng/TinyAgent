@@ -75,6 +75,11 @@ def build_agent() -> TinyAgent:
     )
 
 
+def answer(question: str) -> str:
+    """C1：框架版 Copilot，回答单个问题（评测 harness 复用）。"""
+    return build_agent().run(question, session_id="copilot-c1-eval").text
+
+
 # 测试代码 main 函数
 def main():
     agent = build_agent()
