@@ -68,24 +68,26 @@ uv run python -m tinyagent.cli \
 
 ```text
 src/tinyagent/
+├── api.py       # v1.0 稳定公共 API
 ├── agent/       # Run/Event 与 ContextView
+├── core/        # 模型、消息与工具基础协议
 ├── runtime/     # SQLite、执行、恢复、审批、Scheduler
 ├── tools/       # 工作区、学习和调度工具
 ├── execution/   # 本地与沙箱执行后端
 ├── memory/      # USER/MEMORY 与冻结快照
 ├── skills/      # Skills 草稿与人工审核
 ├── channels/    # CLI
+├── ext/         # 可选 MCP 工具源
 └── cli.py       # 应用入口
 evals/           # 个人任务、学习循环和例行自动化评测
-tests/           # 单元与示例测试
-examples/        # 使用示例
+tests/           # 单元测试
 docs/            # 文档中心
 ```
 
 ## 开发
 
 ```bash
-uv run pytest tests -q        # 69 项测试
+uv run pytest tests -q        # 38 项测试
 uv run ruff check .
 uv run python scripts/check_docs.py
 uv run python -m evals.run_eval  # 校验个人任务与 fixtures

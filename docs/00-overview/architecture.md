@@ -34,17 +34,19 @@ SQLite：事件、会话、任务、审批、FTS5；JSONL 仅导出
 
 ```text
 src/tinyagent/
+├── api.py        # v1.0 稳定公共 API
 ├── agent/
+├── core/         # 模型、消息与工具基础协议
 ├── runtime/
 ├── tools/
 ├── execution/
 ├── memory/
 ├── skills/
 ├── channels/
+├── ext/          # 可选 MCP 工具源
 └── cli.py
 evals/          # personal / learning / routine 场景
-tests/          # 单元与示例测试
-examples/       # 使用示例
+tests/          # 单元测试
 docs/           # 唯一文档中心
 ```
 

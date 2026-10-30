@@ -65,7 +65,7 @@ src/tinyagent/
 ├── channels/   # CLI；聊天渠道后置
 └── cli.py      # 单用户应用入口
 evals/          # personal、learning、routine 场景与 harness
-tests/  examples/  docs/
+tests/  docs/
 ```
 
 | 现有资产 | 处置 |

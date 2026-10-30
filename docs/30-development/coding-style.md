@@ -12,7 +12,7 @@
 
 ## 2. 日志与输出
 
-- 日志统一 `from utils.log_util import logger`，禁止调试 print 入库。
+- 禁止调试 print 入库。
 - CLI 用户输出可放在 `main()` 或渠道层；库代码不得使用 print 调试。
 
 ## 3. docstring 与注释

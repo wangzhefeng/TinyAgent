@@ -21,3 +21,5 @@
 | 2026-10-30 | 删除 `docs/30-copilot/`、课程域文档与 `learning-path.md` 等旧定位页面 | 文档主线改为个人 Agent 的使用、架构、评测与运维；归档内容已先在 `TinyAgent-lab` 验证 |
 | 2026-10-31 | 清除 pytest/ruff 缓存、Python 字节码、`apps`/`learn` 残留目录及 `results/archive` 本地克隆；`docs/images/` 移至 `TinyAgent-lab`（提交 `aaf6688`） | 仅清理生成物与未引用资源；`results/evals/` 完整保留，旧源码、日志和 `.env` 未改动 |
 | 2026-10-31 | 文档目录重排：`20-framework` → `10-framework`、`70-evals` → `20-evals`、`80-development` → `30-development`、`90-reference` → `40-reference` | 统一为连续 00/10/20/30/40 层级；同步更新全部文档、README、代码注释与链接，check_docs 通过 |
+| 2026-10-31 | 删除 `examples/`、旧 Agent/codec/loop/memory/session/tracer 实现及对应测试；归档至私有 `TinyAgent-lab/legacy-v0/`（提交 `be9f781`），公共 API 升级为 v1.0 | 主仓只维护个人 Agent 产品能力，不保留旧通用框架兼容门面；稳定导出收敛为上下文、模型/工具与 Personal Runtime |
+| 2026-10-31 | 清除旧框架 `logs/`、`results/archive/` 本地克隆、缓存与空目录；删除无引用的 `utils/` | 归档已推送私有仓库；当前代码不再使用旧日志器；保留 `.env`、`.venv` 和完整 `results/evals/` |

@@ -26,7 +26,17 @@ Python 自托管、单用户个人 Agent：小型 Agent 核心 + 可选 Personal
 | `skills/` | Skills 草稿、审核与按需加载 |
 | `channels/`、`cli.py` | 单用户 CLI |
 
-验证：69 项测试全绿；真实模型完成只读调查、精确编辑、带引用调研、跨会话记忆和心跳投递。
+验证：38 项测试全绿；真实模型完成只读调查、精确编辑、带引用调研、跨会话记忆和心跳投递。
+
+## v1.0 公共 API
+
+稳定入口统一为 `from tinyagent import ...`，仅暴露三组能力：
+
+- 上下文与记录：`ContextBuilder`、`ContextView`、`EventRecord`、`RunRecord`。
+- 模型与工具：`ChatModel`、`OpenAIChatModel`、`Tool`、`ToolRegistry`、`tool` 及相关消息类型。
+- 个人运行时：`PersonalRuntime`、`SQLiteStore`、`Scheduler`、`LocalOutbox` 与取消异常。
+
+旧 `TinyAgent`、Agent 变体、Swarm、双 codec、旧 Memory/Session/Tracer 不再导出；历史实现归档在私有 `TinyAgent-lab` 的 `legacy-v0/`。
 
 ## ADR
 

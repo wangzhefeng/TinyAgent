@@ -23,11 +23,11 @@
 | `learn/` | 迁至 `TinyAgent-lab` | P5；保留可运行历史，主仓删除前验证归档完整性 |
 | 课程文档与课程测试 | 归档或重写 | 课程叙述外迁；MCP、部署等内容改为个人 Agent 用户文档 |
 | `docs/30-copilot/` | 删除并清理索引 | P5；同步根 README、docs 索引、repo-map 与 cleanup-log |
-| 循环、codec、MCP、Memory、Swarm | 保留语义并重写 | 多 Agent 后置，行为进入个人 Agent 功能矩阵 |
-| `FileSessionStore`、`JsonlTracer` | 替换并迁移数据 | 按 ADR-0009；旧 JSONL 备份只读，完成校验后才进入 P5 |
-| `TinyAgent.run` 及旧公共导出 | v1.0 重写 | 不设通用框架兼容层，提供 CLI 与内部模块迁移指南 |
+| 循环、codec、MCP、Memory、Swarm | 语义已选择性重写，旧实现已归档 | 个人 Agent 使用原生工具调用并保留 MCP；多 Agent、双 codec 与旧 Memory 已淘汰 |
+| `FileSessionStore`、`JsonlTracer` | 已替换并归档 | SQLite + FTS5 为事实源，JSONL 仅用于导出 |
+| `TinyAgent.run` 及旧公共导出 | 已淘汰并归档到 `legacy-v0/` | v1.0 仅提供个人 Agent 公共 API，不设通用框架兼容层 |
 | README、AGENTS、pyproject | 重写 | 去除教学、旧载体和 course/lab 依赖，改为单用户应用配置 |
-| `examples/` | 精简重写 | 仅保留 CLI 任务、工作区工具、记忆/Skills、Scheduler 示例 |
+| `examples/` | 已归档并删除 | CLI 用法保留在根 README，历史示例位于 `TinyAgent-lab/legacy-v0/` |
 
 ## 3. P0 扫描结果（2026-10-30）
 

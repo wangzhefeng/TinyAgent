@@ -6,6 +6,7 @@
 
 | 代码区域 | 文档 |
 |---|---|
+| `src/tinyagent/api.py` | [个人 Agent 框架与 v1.0 公共 API](../10-framework/index.md) |
 | `src/tinyagent/agent/` | [ADR-0010](../10-framework/adr/0010-context-view.md)、各阶段执行文档 |
 | `src/tinyagent/runtime/` | [ADR-0008](../10-framework/adr/0008-runtime-json-rpc.md)、[ADR-0009](../10-framework/adr/0009-event-store-sqlite.md) |
 | `src/tinyagent/tools/` | [ADR-0011](../10-framework/adr/0011-approval-execution.md)、[environment](environment.md) |
@@ -17,7 +18,7 @@
 | `evals/` | [application-scenarios](../20-evals/application-scenarios.md)、[20-evals](../20-evals/index.md) |
 | `tests/` | [testing](../30-development/testing.md) |
 | `results/`、`logs/` | [outputs](../30-development/outputs.md) |
-| `utils/`、`scripts/` | [environment](environment.md)、[AGENTS](../../AGENTS.md) |
+| `scripts/` | [environment](environment.md)、[AGENTS](../../AGENTS.md) |
 | 文档结构本身 | [docs-maintenance](../30-development/docs-maintenance.md) |
 
 ## 规则

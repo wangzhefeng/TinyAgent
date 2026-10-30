@@ -25,7 +25,7 @@
 | P4 | 5 个调度用例；真实心跳投递/静默与重复防护通过 |
 | P5 | 三个任务各 3 轮全部验收；归档提交 `4ff9255`；69 项测试、Ruff、文档与任务契约全绿 |
 
-项目共 **69 项测试通过**，Ruff 和文档检查全绿。真实 usage 记录 input/output/total tokens、API/工具调用和延迟；成本缺失记 unknown，不记为零。
+项目当前共 **38 项测试通过**，Ruff 和文档检查全绿。真实 usage 记录 input/output/total tokens、API/工具调用和延迟；成本缺失记 unknown，不记为零。
 
 ## 相关
 

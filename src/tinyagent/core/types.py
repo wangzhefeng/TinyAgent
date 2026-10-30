@@ -76,33 +76,3 @@ class ModelReply:
     text: str = ""
     tool_calls: list[ToolCallReply] = field(default_factory=list)
     usage: dict[str, Any] = field(default_factory=dict)
-
-
-@dataclass
-class ToolAction:
-    """A decoded intention to call one tool."""
-
-    name: str
-    arguments: dict[str, Any]
-
-
-@dataclass
-class FinalAnswer:
-    """A decoded final answer (no further tool call)."""
-
-    text: str
-
-
-@dataclass
-class LoopResult:
-    """Outcome of one ``agent_loop`` run.
-
-    Attributes:
-        text: final answer text (or the last raw reply when max_steps hit).
-        messages: full message history of the run.
-        steps: number of tool-call rounds executed.
-    """
-
-    text: str
-    messages: list[Message]
-    steps: int

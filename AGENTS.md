@@ -22,7 +22,7 @@ TinyAgent 是 **Python 自托管、单用户、可持续进化的个人 Agent**�
 | `src/tinyagent/skills/` | Skills 草稿与人工审核 |
 | `src/tinyagent/channels/`、`cli.py` | CLI 入口 |
 | `evals/` | 个人任务、学习循环和例行自动化评测 |
-| `tests/` | 单元与示例测试 |
+| `tests/` | 单元测试 |
 | `docs/` | 唯一文档中心 |
 
 目录与文档映射见 [architecture](docs/00-overview/architecture.md) 和 [repo-map](docs/00-overview/repo-map.md)。
@@ -54,7 +54,7 @@ TinyAgent 是 **Python 自托管、单用户、可持续进化的个人 Agent**�
 完整规范见 [coding-style](docs/30-development/coding-style.md)。要点：
 
 - import 三段式（标准库 / 第三方 / 本地），段内字母序；
-- 日志统一 `from utils.log_util import logger`，禁止 print 调试代码入库；CLI 用户输出除外；
+- 禁止 print 调试代码入库；CLI 用户输出除外；
 - 公开函数写 Google 风格 docstring（首行英文一句话，中文正文）；
 - 脚本从仓库根目录运行；新代码禁止新增 `sys.path` hack；
 - 提交前 `uv run ruff check .`：新代码必须通过。

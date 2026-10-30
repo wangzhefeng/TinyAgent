@@ -9,7 +9,7 @@
 | `dataset/` | 实验数据、RAG 语料等输入数据 | 手动放置；脚本按需只读 |
 | `downloaded_models/` | 下载的离线模型权重 | 模型下载脚本 |
 | `results/` | Agent 运行产物、评测结果和隔离工作副本 | 各阶段与应用 |
-| `logs/` | 运行日志：`utils/log_util` 与框架 `logs/tinyagent/`（sessions / traces） | 框架与日志器自动 |
+| `logs/` | 应用运行日志（如启用） | 应用按需创建 |
 
 ## 规则
 

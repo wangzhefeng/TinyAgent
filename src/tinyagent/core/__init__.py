@@ -1,1 +1,1 @@
-"""Core: types, protocols, model, tools, loop, session, tracer, guardrails."""
+"""Core model, message, and tool abstractions."""

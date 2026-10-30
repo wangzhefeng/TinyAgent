@@ -1,72 +1,37 @@
-"""Versioned public API of tinyagent (the only stable import surface)."""
+"""Versioned public API of tinyagent (the stable personal-agent surface)."""
 
-from __future__ import annotations
-
-from .agents.plan_solve_agent import PlanAndSolveAgent
-from .agents.react_agent import TinyAgent
-from .agents.reflection_agent import ReflectionAgent
-from .agents.swarm import Swarm
-from .codecs.native import NativeCodec
-from .codecs.react_text import ReactTextCodec
-from .core.guardrails import AllowlistGuardrail, CompositeGuardrail
-from .core.handoff import HANDOFF_MARKER, extract_handoff, make_transfer_tools
+from .agent import ContextBuilder, ContextView, EventRecord, RunRecord
 from .core.llm import PROVIDER_PRESETS, OpenAIChatModel
-from .core.loop import agent_loop
-from .core.memory import FileLongTermMemory, ListMemory
-from .core.protocols import (
-    ChatModel,
-    Guardrail,
-    Memory,
-    SessionStore,
-    Tool,
-    Tracer,
-)
-from .core.session import FileSessionStore
+from .core.protocols import ChatModel, Tool
 from .core.tools import ToolRegistry, ToolWrapper, tool
-from .core.tracer import JsonlTracer
-from .core.types import (
-    FinalAnswer,
-    LoopResult,
-    Message,
-    ModelReply,
-    ToolAction,
-    ToolCallReply,
-    ToolSpec,
+from .core.types import Message, ModelReply, ToolCallReply, ToolSpec
+from .runtime import (
+    LocalOutbox,
+    PersonalRuntime,
+    RunCancelled,
+    Scheduler,
+    SQLiteStore,
 )
 
 __all__ = [
-    "AllowlistGuardrail",
     "ChatModel",
-    "CompositeGuardrail",
-    "FileLongTermMemory",
-    "FileSessionStore",
-    "FinalAnswer",
-    "Guardrail",
-    "HANDOFF_MARKER",
-    "JsonlTracer",
-    "ListMemory",
-    "LoopResult",
-    "Memory",
+    "ContextBuilder",
+    "ContextView",
+    "EventRecord",
+    "LocalOutbox",
     "Message",
     "ModelReply",
-    "NativeCodec",
     "OpenAIChatModel",
     "PROVIDER_PRESETS",
-    "PlanAndSolveAgent",
-    "ReactTextCodec",
-    "ReflectionAgent",
-    "SessionStore",
-    "Swarm",
-    "TinyAgent",
+    "PersonalRuntime",
+    "RunCancelled",
+    "RunRecord",
+    "SQLiteStore",
+    "Scheduler",
     "Tool",
-    "ToolAction",
     "ToolCallReply",
     "ToolRegistry",
     "ToolSpec",
     "ToolWrapper",
-    "Tracer",
-    "agent_loop",
-    "extract_handoff",
-    "make_transfer_tools",
     "tool",
 ]
