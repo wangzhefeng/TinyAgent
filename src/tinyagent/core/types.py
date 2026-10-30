@@ -71,10 +71,11 @@ class ToolCallReply:
 
 @dataclass
 class ModelReply:
-    """Unified model reply: plain text and/or tool calls."""
+    """Unified model reply: plain text, tool calls, and optional token usage."""
 
     text: str = ""
     tool_calls: list[ToolCallReply] = field(default_factory=list)
+    usage: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass

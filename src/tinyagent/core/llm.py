@@ -112,6 +112,15 @@ class OpenAIChatModel:
             try:
                 resp = self.client.chat.completions.create(**params)
                 choice = resp.choices[0].message
+                usage = (
+                    {
+                        "input_tokens": resp.usage.prompt_tokens,
+                        "output_tokens": resp.usage.completion_tokens,
+                        "total_tokens": resp.usage.total_tokens,
+                    }
+                    if resp.usage is not None
+                    else {}
+                )
                 return ModelReply(
                     text=choice.content or "",
                     tool_calls=[
@@ -122,6 +131,7 @@ class OpenAIChatModel:
                         )
                         for tc in (choice.tool_calls or [])
                     ],
+                    usage=usage,
                 )
             except Exception as e:  # noqa: BLE001
                 last_error = e

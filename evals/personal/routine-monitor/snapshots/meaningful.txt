@@ -1,0 +1,12 @@
+# Agent Runtime Release Notes
+
+Source: https://example.com/runtime/release-notes
+Captured: 2026-10-03T09:00:00Z
+
+## Version 1.5
+
+- Default request timeout: 45 seconds.
+- Maximum retries: 3.
+- Sessions are stored in SQLite.
+- Scheduled checks run every 30 seconds.
+- Heartbeat summaries can be suppressed when there is no meaningful update.

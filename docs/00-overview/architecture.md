@@ -2,35 +2,56 @@
 
 # 仓库架构
 
-## 双主线 + 载体应用
+## 定位
+
+TinyAgent 是 Python 自托管、单用户、可持续进化的个人 Agent。项目采用**应用优先**结构，不以通用 Agent 框架或教学路径为目标。
+
+## 分层
 
 ```text
-学习路径 learn/（L0–L6，横向递进）──每升一级──▶ 自研框架 packages/tinyagent（纵向进化）
-                     │
-                     └──每级用新能力增强同一应用──▶ apps/experiment_copilot
+CLI（当前） / 聊天渠道（后续）
+              ↓
+Personal Runtime：Conversation / Run / Approval / Scheduler
+              ↓
+AIAgent：循环 / 工具调用 / ContextView / 事件
+              ↓
+Workspace Tools / Memory / Skills / Execution Backend
+              ↓
+SQLite：事件、会话、任务、审批、FTS5；JSONL 仅导出
 ```
 
-- **学习路径**：每级一组可运行代码 + README（目标 / 运行方式 / 进度）。
-- **自研框架**：从 L1 的最小内核逐级进化到具备 memory / session / tracing / handoff 的完整框架，每一级对标一个成熟框架源码。
-- **载体应用**：面向时序预测实验仓库的实验副驾驶，默认操作 `~/projects/tsproj_ml`。
+- **agent/**：Run/Event 类型与模型上下文视图。
+- **runtime/**：SQLite、执行、恢复、审批、usage 与 Scheduler。
+- **tools/**：工作区、学习和调度工具。
+- **execution/**：本地、Seatbelt、bubblewrap 执行后端。
+- **memory/**：USER/MEMORY 文件与冻结快照。
+- **skills/**：正式 Skills 与待审核草稿隔离。
+- **channels/**、**cli.py**：单用户 CLI。
 
-## 当前结构（M0 迁移已完成）
+核心不导入 CLI、调度或具体存储；工具副作用不承诺 exactly-once，会话回滚不等于外部副作用回滚。
 
-2026-10-25 M0 完成学习代码迁移；同日完成 hello_agents 能力并入（ADR-0007）后移除，以及**库化重构**：`src/` 提根为仓库本体（发行名 `tinyagent`，同日由 `tinyagent-core` 更名统一），learn/apps/evals 保留为不打包的 Lab 层。映射明细见[重构方案](../90-reference/refactor-plan-2026-10.md)与[repo-map](repo-map.md)。
-
-## 目标结构
-
-目标目录树、迁移映射与实施阶段统一维护在[重构方案（评审稿）](../90-reference/refactor-plan-2026-10.md)，本页不重复。方案要点：
+## 当前目录
 
 ```text
-learn/                  # L0–L6 学习路径
-src/                    # 自研框架本体（仓库即库：发行名与导入名同为 tinyagent）
-apps/experiment_copilot/# 载体应用
-evals/  tests/          # 评测与测试
-docs/                   # 唯一文档中心（本目录）
+src/tinyagent/
+├── agent/
+├── runtime/
+├── tools/
+├── execution/
+├── memory/
+├── skills/
+├── channels/
+└── cli.py
+evals/          # personal / learning / routine 场景
+tests/          # 单元与示例测试
+examples/       # 使用示例
+docs/           # 唯一文档中心
 ```
+
+P0–P4 已实现 CLI 单会话、只读与安全写入、沙箱、学习循环和例行自动化；P5 完成总验收与旧资产清理。实施记录见[个人 Agent 重构方案](../40-reference/refactor-plan-product.md)。
 
 ## 相关
 
-- [learning-path](learning-path.md)：各级学什么、产出什么
-- [repo-map](repo-map.md)：改代码时该更新哪篇文档
+- [repo-map](repo-map.md)
+- [environment](environment.md)
+- [testing](../30-development/testing.md)

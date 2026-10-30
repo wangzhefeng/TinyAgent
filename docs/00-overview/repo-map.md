@@ -2,26 +2,26 @@
 
 # 代码 → 文档映射
 
-修改代码时，按下表找到应同步更新的文档（M0 结构迁移后按新目录组织，2026-10-25 重建）。
+修改代码时，按下表同步对应文档。
 
 | 代码区域 | 文档 |
 |---|---|
-| `learn/level0_llm_basics/` | [10-scratch](../10-scratch/index.md) |
-| `learn/level1_from_scratch/`（react / react_hello_agents / plan_execute / reflection / hello_agent_5min） | [10-scratch](../10-scratch/index.md) |
-| `learn/level2_own_framework/` | [20-framework](../20-framework/index.md) |
-| `src/tinyagent/`（库本体）、`examples/` | [20-framework](../20-framework/index.md) |
-| `learn/level2_own_framework/` | [20-framework](../20-framework/index.md) |
-| `apps/experiment_copilot/`（doc_qa 及后续 Copilot 版本） | [30-copilot](../30-copilot/index.md) |
-| `learn/level3_langgraph/`（M3 建立） | [40-langgraph](../40-langgraph/index.md) |
-| `learn/level4_patterns/`（M4 建立） | [50-patterns](../50-patterns/index.md) |
-| `learn/level5_ecosystem/`（mcp / adk / frameworks / deployment） | [60-ecosystem](../60-ecosystem/index.md) |
-| `learn/level6_evals/`、`evals/`（M5 建立） | [70-evals](../70-evals/index.md) |
-| `tests/` | [testing](../80-development/testing.md) |
-| `dataset/`、`downloaded_models/`、`results/`、`logs/`（不入库） | [outputs](../80-development/outputs.md) |
+| `src/tinyagent/agent/` | [ADR-0010](../10-framework/adr/0010-context-view.md)、各阶段执行文档 |
+| `src/tinyagent/runtime/` | [ADR-0008](../10-framework/adr/0008-runtime-json-rpc.md)、[ADR-0009](../10-framework/adr/0009-event-store-sqlite.md) |
+| `src/tinyagent/tools/` | [ADR-0011](../10-framework/adr/0011-approval-execution.md)、[environment](environment.md) |
+| `src/tinyagent/execution/` | [ADR-0011](../10-framework/adr/0011-approval-execution.md)、[P2](../40-reference/p2-execution.md) |
+| `src/tinyagent/memory/` | [ADR-0009](../10-framework/adr/0009-event-store-sqlite.md)、[P3](../40-reference/p3-execution.md) |
+| `src/tinyagent/skills/` | [P3](../40-reference/p3-execution.md) |
+| `src/tinyagent/runtime/scheduler.py`、`tools/scheduler.py` | [ADR-0008](../10-framework/adr/0008-runtime-json-rpc.md)、[P4](../40-reference/p4-execution.md) |
+| `src/tinyagent/channels/`、`cli.py` | 根 README、各阶段执行文档 |
+| `evals/` | [application-scenarios](../20-evals/application-scenarios.md)、[20-evals](../20-evals/index.md) |
+| `tests/` | [testing](../30-development/testing.md) |
+| `results/`、`logs/` | [outputs](../30-development/outputs.md) |
 | `utils/`、`scripts/` | [environment](environment.md)、[AGENTS](../../AGENTS.md) |
-| 文档结构本身 | [docs-maintenance](../80-development/docs-maintenance.md) |
+| 文档结构本身 | [docs-maintenance](../30-development/docs-maintenance.md) |
 
 ## 规则
 
-- 表中"文档"指该域入口页；具体子页由域 `index.md` 二次导航。
-- 结构迁移历史见[重构方案](../90-reference/refactor-plan-2026-10.md)。
+- 目录新增、移动或删除时，同步根 README、[architecture](architecture.md) 与本页。
+- 阶段实现与验收记录放在 `docs/40-reference/`；清理动作同时记录到 [cleanup-log](../30-development/cleanup-log.md)。
+- 历史重构方案见 [refactor-plan-product](../40-reference/refactor-plan-product.md) 与 [product-refactor-migration](../40-reference/product-refactor-migration.md)。

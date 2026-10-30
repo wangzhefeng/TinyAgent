@@ -1,0 +1,6 @@
+# Operations Note
+
+Source: https://example.com/personal-agent/operations-note
+Published: 2026-01-20
+
+This note was written for Guide v1 deployments. It recommends a 60-second scheduled-check interval and 2 retries. It does not state which Guide version later deployments use, and it must not be used to infer the current default.

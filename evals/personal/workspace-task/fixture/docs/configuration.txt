@@ -1,0 +1,5 @@
+# Order Configuration
+
+- `discount` must be between 0 and 1 and is subtracted from the order total.
+- The default tax rate is 0.2.
+- Tax is applied after the discounted total has been calculated.

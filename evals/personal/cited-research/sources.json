@@ -1,0 +1,14 @@
+{
+  "guide_v1": {
+    "path": "corpus/guide-v1.txt",
+    "url": "https://example.com/personal-agent/guide-v1"
+  },
+  "guide_v2": {
+    "path": "corpus/guide-v2.txt",
+    "url": "https://example.com/personal-agent/guide-v2"
+  },
+  "operations_note": {
+    "path": "corpus/operations-note.txt",
+    "url": "https://example.com/personal-agent/operations-note"
+  }
+}

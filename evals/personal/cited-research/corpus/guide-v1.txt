@@ -1,0 +1,9 @@
+# Personal Agent Guide v1
+
+Source: https://example.com/personal-agent/guide-v1
+Published: 2025-12-15
+
+- The default scheduled-check interval is 60 seconds.
+- A model request is retried at most 2 times.
+- Long-term memory is loaded as a frozen snapshot when a session starts.
+- Memory written during a session becomes part of the prompt in the next session.

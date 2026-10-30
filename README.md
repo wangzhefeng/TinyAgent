@@ -1,77 +1,94 @@
 # tinyagent
 
-**A teaching-grade, extensible agent framework** — 一个 ~50 行的循环内核、六个可插拔协议、双工具调用编解码，以及面向真实工程的能力面（handoff/Swarm、MCP 工具源、长期记忆）。
-
-> 本仓库同时是 AI Agent 学习实验室（`learn/` L0–L6、`apps/` 应用、`evals/` 评测），见下方 [Lab 章节](#lab-学习与应用层)。
+**A self-hosted personal agent** — Python 自托管、单用户、可持续进化的个人 Agent：安全操作工作区、记住偏好、检索经验、沉淀 Skills，并定时主动完成任务。
 
 ## 安装
 
 ```bash
-# 库本体（Python ≥ 3.11）
-pip install tinyagent            # 或: uv add tinyagent
-pip install "tinyagent[mcp]"     # 需要 MCP 工具源时
+# Python ≥ 3.11
+pip install tinyagent
+pip install "tinyagent[mcp]"   # 可选 MCP 工具源
+pip install "tinyagent[socks]" # 可选 SOCKS 代理支持
 ```
 
-本地开发（本仓库）：
+本地开发：
 
 ```bash
-uv sync --all-extras        # 库 + dev + mcp
-uv sync --all-groups        # 另含 learn/apps 所需的 course/lab 依赖
+uv sync --all-extras
+uv sync --group dev
 ```
 
-## 30 秒上手
+模型使用 `.env` 中的 `LLM_*` OpenAI 兼容配置。
 
-```python
-from tinyagent import TinyAgent, tool
+## CLI 快速开始（P1–P5）
 
-@tool
-def calculator(expression: str) -> str:
-    """Arithmetic calculator supporting + - * / // % ** and parentheses."""
-    ...
+```bash
+# 默认只读：调查工作区，不允许修改
+uv run python -m tinyagent.cli \
+  --workspace <工作区> --state <SQLite 状态文件> run "你的任务"
 
-agent = TinyAgent(tools=[calculator])   # 模型配置读 .env（LLM_*，OpenAI 兼容端点）
-print(agent.run("Compute (123 + 456) * 2").text)
+# 在隔离工作区显式启用写入和受限 shell
+uv run python -m tinyagent.cli \
+  --workspace <隔离工作区> --state <SQLite 状态文件> \
+  --writable run "修改允许文件并运行检查"
 ```
 
-可运行示例见 [`examples/`](examples/)（最小冒烟 / 编排组件 / 长期记忆 / MCP 挂载）。
+- 单会话聊天、Run 取消/恢复、事件查看和 JSONL 导出。
+- 写入和 shell 逐条审批，非交互环境默认拒绝；`--yes` 仅用于可审查的隔离环境。
+- macOS Seatbelt / Linux bubblewrap 沙箱优先，不可用时逐条确认后本地执行。
 
-## 能力面
+## 能力
 
 | 能力 | 入口 | 说明 |
 |---|---|---|
-| 六协议内核 | `tinyagent.core.loop.agent_loop` | ChatModel / Tool / SessionStore / Tracer / Guardrail / Memory 全部可注入替换（[ADR-0001](docs/20-framework/adr/0001-agent-loop-and-protocols.md)） |
-| 双 codec | `ReactTextCodec` / `NativeCodec` | ReAct 文本协议与原生 function calling 同内核切换 |
-| 多智能体 | `Swarm` / `make_transfer_tools` | 移交即工具，max_handoffs 防乒乓（ADR-0004） |
-| MCP 工具源 | `tinyagent.ext.mcp.MCPToolSource` | stdio 挂载任意 MCP server（ADR-0005） |
-| 会话与观测 | `FileSessionStore` / `JsonlTracer` | 可恢复会话 + JSONL 事件流（ADR-0003） |
-| 开箱组件 | `ReflectionAgent` / `PlanAndSolveAgent` | 生成-反思-优化 / 规划-执行（ADR-0007） |
-| 长期记忆 | `ListMemory` / `FileLongTermMemory` | embedding 余弦检索，离线自动退化关键词 |
+| 工作区工具 | `list_dir` / `read_file` / `search_text` / `edit_file` / `run_shell` | 路径边界、精确编辑、命令白名单、审批与沙箱 |
+| 持久化 | SQLite | Run、不可变事件、审批、幂等、定时任务和 usage |
+| 上下文 | `ContextBuilder` | 工具结果截断、旧结果清理、摘要与 tool call 配对 |
+| 长期记忆 | `USER.md` / `MEMORY.md` | 容量限制、自动写入审计、会话开始冻结快照 |
+| 历史检索 | FTS5 | 同一会话多词命中，返回 event 定位与短片段 |
+| Skills | `skills/` + `skill-drafts/` | 未审核不可执行，人工审核后按需加载 |
+| 例行自动化 | `schedule add/list/run/cancel` | 隔离会话、有限预授权、错过不补跑、心跳投递 |
 
-稳定导入面：`tinyagent.api`（`from tinyagent import ...`）；`0.x` 阶段 semver 起步。
+## 定时任务
 
-## Lab（学习与应用层）
+```bash
+uv run python -m tinyagent.cli \
+  --workspace evals/personal/routine-monitor \
+  --state results/evals/p4/state.db \
+  schedule add "every 5m" "检查信息源并汇报更新" \
+  --kind heartbeat --immediate
 
-仓库下半部分是完整的 Agent 学习路径与应用实验（不打包进 wheel）：
+uv run python -m tinyagent.cli \
+  --state results/evals/p4/state.db schedule run
+```
 
-| 层 | 代码 | 文档 |
-|---|---|---|
-| L0–L1 基础与手写 | [`learn/level0_llm_basics/`](learn/level0_llm_basics)、[`learn/level1_from_scratch/`](learn/level1_from_scratch) | [docs/10-scratch](docs/10-scratch/index.md) |
-| L2 框架对照 | [`learn/level2_own_framework/`](learn/level2_own_framework) | [docs/20-framework](docs/20-framework/index.md) |
-| L3 LangGraph 课程 | [`learn/level3_langgraph/`](learn/level3_langgraph) | [docs/40-langgraph](docs/40-langgraph/index.md) |
-| L4 模式实验室 | [`learn/level4_patterns/`](learn/level4_patterns) | [docs/50-patterns](docs/50-patterns/index.md) |
-| L5 生态（MCP/ADK/部署） | [`learn/level5_ecosystem/`](learn/level5_ecosystem) | [docs/60-ecosystem](docs/60-ecosystem/index.md) |
-| 载体应用 Copilot | [`apps/experiment_copilot/`](apps/experiment_copilot) | [docs/30-copilot](docs/30-copilot/index.md) |
-| Survey Agent | [`apps/survey_agent/`](apps/survey_agent) | [docs/70-evals](docs/70-evals/index.md) |
-| 评测 | [`evals/`](evals) | [docs/70-evals](docs/70-evals/index.md) |
+定时任务使用全新隔离会话，不能创建新任务、自动写记忆或修改 Skills；shell 不允许预授权。
 
-学习地图与里程碑见 [docs/00-overview/learning-path](docs/00-overview/learning-path.md)；项目全览见[收官总结](docs/90-reference/project-summary.md)。
+## 项目结构
+
+```text
+src/tinyagent/
+├── agent/       # Run/Event 与 ContextView
+├── runtime/     # SQLite、执行、恢复、审批、Scheduler
+├── tools/       # 工作区、学习和调度工具
+├── execution/   # 本地与沙箱执行后端
+├── memory/      # USER/MEMORY 与冻结快照
+├── skills/      # Skills 草稿与人工审核
+├── channels/    # CLI
+└── cli.py       # 应用入口
+evals/           # 个人任务、学习循环和例行自动化评测
+tests/           # 单元与示例测试
+examples/        # 使用示例
+docs/            # 文档中心
+```
 
 ## 开发
 
 ```bash
-uv run pytest tests -q        # 33 项（unit + 示例冒烟，无 API key）
+uv run pytest tests -q        # 69 项测试
 uv run ruff check .
-python scripts/check_docs.py
+uv run python scripts/check_docs.py
+uv run python -m evals.run_eval  # 校验个人任务与 fixtures
 ```
 
-协作规则（文档系统/编码风格/安全边界）见 [AGENTS.md](AGENTS.md)；完整文档中心见 [docs/README.md](docs/README.md)。
+协作规则见 [AGENTS.md](AGENTS.md)，完整文档见 [docs/README.md](docs/README.md)，实施记录见 [个人 Agent 重构方案](docs/40-reference/refactor-plan-product.md)。学习与历史示例归档在私有 `TinyAgent-lab` 仓库。

@@ -1,14 +1,13 @@
 [project]
 name = "tinyagent"
-description = "A teaching-grade, extensible agent framework: a ~50-line loop kernel, six pluggable protocols, dual tool-call codecs, handoff/Swarm, MCP tool source, and long-term memory."
+description = "A self-hosted personal agent with safe workspace tools, durable sessions, memory, reviewed skills, and scheduled automation."
 readme = "README.md"
 dynamic = ["version"]
 requires-python = ">=3.11"
-keywords = ["agent", "llm", "framework", "teaching", "mcp", "react"]
+keywords = ["agent", "llm", "personal-assistant", "cli", "mcp", "sqlite"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "Intended Audience :: Education",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -22,40 +21,14 @@ dependencies = [
 
 [project.optional-dependencies]
 mcp = ["mcp>=1.0"]
+socks = ["httpx[socks]"]
 
-# ------------------------------------------------------------------
-# Lab 层（learn/ apps/ evals/）依赖：不进库元数据，按组安装
-#   uv sync --group course   # LangGraph/LangChain 课程栈
-#   uv sync --group lab      # Copilot/评测/学习示例全部依赖
-# ------------------------------------------------------------------
 [dependency-groups]
 dev = [
     "mypy>=1.11.1",
     "ruff>=0.6.1",
     "pytest",
     "pytest-xdist",
-]
-course = [
-    "langchain>=0.3.9",
-    "langchain-core>=0.3.59",
-    "langchain-openai",
-    "langgraph>=0.4.2",
-    "langgraph-cli[inmem]",
-    "langsmith[pytest]>=0.3.4",
-    "google-api-python-client>=2.128.0",
-    "google-auth-oauthlib",
-    "google-auth-httplib2",
-]
-lab = [
-    "httpx[socks]",
-    "json5",
-    "requests",
-    "pandas",
-    "matplotlib",
-    "rich",
-    "jupyter",
-    "pyppeteer",
-    "html2text",
 ]
 
 [build-system]
@@ -69,19 +42,11 @@ path = "src/tinyagent/__init__.py"
 packages = ["src/tinyagent"]
 
 [tool.pytest.ini_options]
-# tests/unit/* 以 `from tests.conftest import ...` 绝对导入共享 fixture，
-# console script（uv run pytest）不把 cwd 放进 sys.path，需显式声明
 pythonpath = ["."]
 
 [tool.ruff]
 lint.select = [
-    "E",    # pycodestyle
-    "F",    # pyflakes
-    "I",    # isort
-    "D",    # pydocstyle
-    "D401", # First line should be in imperative mood
-    "T201",
-    "UP",
+    "E", "F", "I", "D", "D401", "T201", "UP",
 ]
 lint.ignore = [
     "UP006",
@@ -89,17 +54,15 @@ lint.ignore = [
     "UP035",
     "D417",
     "E501",
-    "D107", # __init__ 由类 docstring 覆盖（Google 惯例）
+    "D107",
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["D", "UP"]
-# 迁移期旧代码豁免：I001/F401/F541/F811/F841/E722 为历史风格；新代码应保持整洁（见 docs/80-development/coding-style.md）
-"learn/*" = ["D", "UP", "T201", "E402", "I001", "F401", "F541", "F811", "F841", "E722"]
-"apps/*" = ["D", "UP", "T201", "E402", "I001", "F401", "F541", "F811", "F841", "E722"]
 "examples/*" = ["D", "T201"]
 "scripts/*" = ["T201"]
 "evals/*" = ["D", "T201"]
+"src/tinyagent/channels/cli.py" = ["T201"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
