@@ -15,6 +15,7 @@ from tinyagent.core.types import ModelReply
 from tinyagent.execution import LocalExecutionBackend
 from tinyagent.memory import MemoryManager
 from tinyagent.runtime import LocalOutbox, PersonalRuntime, Scheduler, SQLiteStore
+from tinyagent.runtime.scheduler import run_daemon_loop
 from tinyagent.skills import SkillManager
 from tinyagent.tools import make_learning_tools, make_workspace_tools
 
@@ -106,3 +107,17 @@ def test_cli_schedule_add_list_and_run(tmp_path: Path, capsys: pytest.CaptureFix
     assert main(["--state", str(state), "schedule", "run"], model=model) == 0
     outcome = json.loads(capsys.readouterr().out)
     assert outcome[0]["delivered"] is True
+
+
+def test_daemon_loop_ticks_deliver_once_and_log(tmp_path: Path):
+    model = ScriptedModel([ModelReply(text="HEARTBEAT_OK"), ModelReply(text="report")])
+    runtime, scheduler = _runtime(tmp_path, model)
+    scheduler.add("every 5m", "quiet check", kind="heartbeat", immediate=True)
+    scheduler.add("every 5m", "do work", immediate=True)
+    sleeps: list[float] = []
+    logs: list[str] = []
+    run_daemon_loop(scheduler, interval=5, ticks=2, log=logs.append, sleep=sleeps.append)
+    assert sleeps == [5, 5]
+    assert any("delivered=False" in line for line in logs)
+    assert any("delivered=True" in line for line in logs)
+    assert len((tmp_path / "deliveries.jsonl").read_text().splitlines()) == 1

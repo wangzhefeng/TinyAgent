@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import re
+import time
+from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -140,3 +142,20 @@ class Scheduler:
             raise ValueError("invalid daily time")
         candidate = after.replace(hour=hour, minute=minute, second=0, microsecond=0)
         return candidate if candidate > after else candidate + timedelta(days=1)
+
+
+def run_daemon_loop(
+    scheduler: Scheduler,
+    interval: float = 30.0,
+    ticks: int | None = None,
+    log: Callable[[str], None] = print,
+    sleep: Callable[[float], None] = time.sleep,
+) -> None:
+    """Run due scheduled tasks in a loop for the CLI daemon command."""
+    done = 0
+    while ticks is None or done < ticks:
+        for outcome in scheduler.run_due():
+            summary = str(outcome["output"]).replace("\n", " ")[:200]
+            log(f"[{outcome['task_id']}] delivered={outcome['delivered']} {summary}")
+        sleep(interval)
+        done += 1

@@ -79,13 +79,18 @@ uv run python -m tinyagent.cli \
   --state results/local-demo/state.db schedule run
 ```
 
-支持 `every 30m`、`every 2h`、`daily 09:00`，最小间隔 5 分钟。定时任务使用独立会话，不自动写记忆或修改 Skills，shell 不可预授权；心跳无事不投递。
+支持 `every 30m`、`every 2h`、`daily 09:00`，最小间隔 5 分钟。定时任务使用独立会话，不自动写记忆或修改 Skills，shell 不可预授权；心跳无事不投递。`schedule daemon` 常驻运行（默认每 30 秒检查一次，`--interval` 可调、最小 5 秒）：到点自动执行并打印投递摘要，结果仍写入本地 `deliveries.jsonl`，Ctrl-C 退出，不接任何远程渠道。
+
+```bash
+uv run python -m tinyagent.cli \
+  --state results/local-demo/state.db schedule daemon
+```
 
 ## 6. 运行记录
 
 CLI 还提供 `resume`、`usage`、`events`、`export`，分别用于恢复 Run、查看用量、查看事件和导出 JSONL。通过对应命令的 `--help` 查看参数。
 
-`results/` 保存运行产物、评测结果和本地状态，`logs/` 保存按需启用的日志；两者都不入库。当前没有 HTTP 服务、Web UI 或后台守护进程，直接运行 CLI 即可体验。
+`results/` 保存运行产物、评测结果和本地状态，`logs/` 保存按需启用的日志；两者都不入库。当前没有 HTTP 服务或 Web UI；`schedule daemon` 是唯一的常驻命令，直接运行 CLI 即可体验。
 
 ## 相关
 

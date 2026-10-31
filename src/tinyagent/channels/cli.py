@@ -14,7 +14,13 @@ from ..core.protocols import ChatModel
 from ..core.tools import ToolRegistry
 from ..execution import make_execution_backend
 from ..memory import MemoryManager
-from ..runtime import LocalOutbox, PersonalRuntime, Scheduler, SQLiteStore
+from ..runtime import (
+    LocalOutbox,
+    PersonalRuntime,
+    Scheduler,
+    SQLiteStore,
+    run_daemon_loop,
+)
 from ..runtime.approvals import CLIApprover
 from ..skills import SkillManager
 from ..tools import (
@@ -120,6 +126,8 @@ def build_parser() -> argparse.ArgumentParser:
     cancel = schedule_sub.add_parser("cancel", help="Cancel a task")
     cancel.add_argument("task_id")
     schedule_sub.add_parser("run", help="Run due tasks")
+    daemon = schedule_sub.add_parser("daemon", help="Keep running due tasks in a loop")
+    daemon.add_argument("--interval", type=int, default=30, help="Seconds between checks (min 5)")
     return parser
 
 
@@ -197,6 +205,13 @@ def main(argv: list[str] | None = None, model: ChatModel | None = None) -> int:
                     print(json.dumps({"cancelled": cancelled}))
                 elif args.schedule_command == "run":
                     print(json.dumps(runtime.scheduler.run_due(), ensure_ascii=False))
+                elif args.schedule_command == "daemon":
+                    interval = max(5, args.interval)
+                    print(f"Watching scheduled tasks every {interval}s; Ctrl-C to stop.")
+                    try:
+                        run_daemon_loop(runtime.scheduler, interval=interval)
+                    except KeyboardInterrupt:
+                        print()
             elif args.command == "chat":
                 print("TinyAgent personal CLI. Use /events or /exit.")
                 while True:

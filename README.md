@@ -48,7 +48,7 @@ uv run python -m tinyagent.cli \
 | 长期记忆 | `USER.md` / `MEMORY.md` | 容量限制、自动写入审计、会话开始冻结快照 |
 | 历史检索 | FTS5 | 同一会话多词命中，返回 event 定位与短片段 |
 | Skills | `skills/` + `skill-drafts/` | 未审核不可执行，人工审核后按需加载 |
-| 例行自动化 | `schedule add/list/run/cancel` | 隔离会话、有限预授权、错过不补跑、心跳投递 |
+| 例行自动化 | `schedule add/list/run/cancel/daemon` | 隔离会话、有限预授权、错过不补跑、心跳投递、常驻执行 |
 | MCP 工具源 | `mcp.json` · `mcp__服务器__工具` | stdio 连接、统一审批，仅点名工具只读 |
 
 ## 定时任务
@@ -64,7 +64,7 @@ uv run python -m tinyagent.cli \
   --state results/evals/p4/state.db schedule run
 ```
 
-定时任务使用全新隔离会话，不能创建新任务、自动写记忆或修改 Skills；shell 不允许预授权。
+定时任务使用全新隔离会话，不能创建新任务、自动写记忆或修改 Skills；shell 不允许预授权。`schedule daemon` 可常驻自动执行到期任务，结果写本地 `deliveries.jsonl`。
 
 ## 项目结构
 
