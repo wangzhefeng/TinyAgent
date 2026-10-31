@@ -1,4 +1,4 @@
-"""MCPToolSource: mount tools from an MCP server (ADR-0005, extra `mcp`).
+"""MCPToolSource: mount tools from an MCP server (extra `mcp`).
 
 The python MCP client is async (anyio cancel scopes must enter/exit in the
 same task); tinyagent's loop is sync. Bridge: one long-lived *server

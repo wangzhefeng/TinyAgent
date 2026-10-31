@@ -20,7 +20,7 @@ uv sync --group dev
 
 模型使用 `.env` 中的 `LLM_*` OpenAI 兼容配置。
 
-## CLI 快速开始（P1–P5）
+## CLI 快速开始
 
 ```bash
 # 默认只读：调查工作区，不允许修改
@@ -79,7 +79,7 @@ src/tinyagent/
 ├── channels/    # CLI
 ├── ext/         # 可选 MCP 工具源
 └── cli.py       # 应用入口
-evals/           # 个人任务、学习循环和例行自动化评测
+evals/           # personal 任务契约与 fixtures
 tests/           # 单元测试
 docs/            # 文档中心
 ```
@@ -93,4 +93,4 @@ uv run python scripts/check_docs.py
 uv run python -m evals.run_eval  # 校验个人任务与 fixtures
 ```
 
-协作规则见 [AGENTS.md](AGENTS.md)，完整文档见 [docs/README.md](docs/README.md)，实施记录见 [个人 Agent 重构方案](docs/40-reference/refactor-plan-product.md)。学习与历史示例归档在私有 `TinyAgent-lab` 仓库。
+协作规则见 [AGENTS.md](AGENTS.md)，文档入口见 [docs/README.md](docs/README.md)，使用说明见 [使用指南](docs/usage/guide.md)。

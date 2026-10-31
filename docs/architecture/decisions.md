@@ -1,0 +1,73 @@
+> 所属：[TinyAgent Docs](../README.md) › [架构](overview.md)
+
+# 架构设计决策
+
+本文记录当前核心设计的原因、选择与边界。系统结构和模块说明见[架构概览](overview.md)。
+
+## D1：采用进程内 Personal Runtime
+
+**背景**：单用户 Agent 需要统一管理任务、审批、恢复和定时执行，但当前没有多客户端或多节点需求。
+
+**决策**：
+
+- CLI 直接调用 `PersonalRuntime`，不经过 HTTP 或 JSON-RPC。
+- Run 保存状态、输入输出、usage 和错误；Event 只追加，Session 记录当前 leaf。
+- 支持幂等创建、协作式取消和原 Run 恢复；不盲目重放结果未知的工具。
+- Scheduler 使用独立会话、有限预授权和本地心跳投递。
+
+**边界**：当前没有事件订阅、远程审批、`retry_of` 或自动重试 Run。出现第二个真实客户端后再评审服务接口。
+
+## D2：SQLite 保存事实，文本保存稳定记忆
+
+**背景**：任务状态和会话检索需要事务与全文索引，长期偏好则需要可审查、可编辑的表示。
+
+**决策**：
+
+- SQLite 保存 runs、events、sessions、approvals、idempotency、context artifacts 和 scheduled tasks。
+- `session_fts` 与原始事件在同一事务中更新，检索返回 session/event 定位和短片段。
+- `USER.md` 保存稳定偏好，`MEMORY.md` 保存环境约定与重复经验，会话开始冻结快照。
+- 数据库、记忆和 Skills 位于 workspace 外；Skills 草稿审核后才可加载。
+
+**边界**：当前是单写入者，不支持多节点写入；自动备份恢复和其他格式的会话导入尚未实现。
+
+## D3：原始事件与 ContextView 分离
+
+**背景**：完整历史需要长期保存，但模型上下文必须有限，压缩不能破坏事实或 tool call 配对。
+
+**决策**：
+
+- 每次模型调用前由 `ContextBuilder` 从事件生成视图，原始事件不变。
+- 依次采用工具结果头尾截断、旧结果清理、压缩前记忆和完整回合摘要。
+- 常驻内容仅包括系统约定、当前任务、冻结记忆和 Skills 目录，其他内容按需加载。
+- 默认软/硬阈值为 16000/24000 tokens；缺少 API usage 时按约 4 字符一个 token 估算并标记。
+
+**边界**：按模型窗口自动计算阈值和模型 tokenizer 适配尚未实现；单长回合不强行摘要。
+
+## D4：安全边界由代码确定性执行
+
+**背景**：文件、命令、长期记忆和无人值守任务都有真实副作用，不能依赖模型遵守提示词。
+
+**决策**：
+
+- 默认只读；`--writable` 只开放能力，写入和 shell 仍需审批。
+- 路径检查覆盖绝对路径、`..` 和符号链接；shell 使用白名单、固定目录、超时和输出上限。
+- macOS Seatbelt、Linux bubblewrap 优先；不可用时逐条确认，无人值守拒绝。
+- 定时任务只放行明确预授权操作，shell 不可预授权；记忆写入有审计，Skills 必须人工审核。
+
+**边界**：本地降级没有硬隔离，独立 plan 模式和远程渠道安全策略尚未实现。
+
+## D5：MCP 是可选工具源
+
+**背景**：外部 MCP server 可以扩展工具来源，但不应增加核心依赖或绕过统一审批。
+
+**决策**：
+
+- `MCPToolSource` 通过 stdio 连接 server，将工具 schema 映射为 `ToolSpec`。
+- MCP 工具与 `@tool` 函数统一进入 `ToolRegistry` 和 Runtime 审批路径。
+- 依赖放入 `tinyagent[mcp]` extra；连接由上下文管理器显式关闭，描述与结果视为不可信输入。
+
+**边界**：当前只支持 stdio；SSE 和 streamable HTTP 待真实需求出现后评审。
+
+## 相关
+
+- [架构概览](overview.md) ｜ [使用指南](../usage/guide.md) ｜ [下一阶段](../development/next-phase.md)

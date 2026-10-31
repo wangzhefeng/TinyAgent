@@ -1,14 +1,13 @@
 # AGENTS.md
 
-本文件是 TinyAgent 的**强制协作规则**，适用于人类与 AI Agent。目标：代码可维护、文档不腐化、个人 Agent 安全可用。
+本文件是 TinyAgent 的**强制协作规则**，适用于人类与 AI Agent。目标：代码可维护、文档与实现一致、个人 Agent 安全可用。
 
 ## 1. 项目定位
 
 TinyAgent 是 **Python 自托管、单用户、可持续进化的个人 Agent**：通过 CLI 接受任务，安全操作工作区，记住偏好、检索经验、沉淀 Skills，并定时主动完成任务。
 
 - 应用优先，不以通用 Agent 框架或教学项目为目标。
-- 参考 Hermes 的个人学习循环、Pi 的小内核与可选 Runtime，以及手写教程的代码级安全边界。
-- 旧学习与示例资产归档在私有 `TinyAgent-lab` 仓库；旧 Experiment Copilot 不再使用。
+- 当前只提供本地 CLI；新渠道和服务接口必须经过评审。
 
 ## 2. 目录职责
 
@@ -21,37 +20,37 @@ TinyAgent 是 **Python 自托管、单用户、可持续进化的个人 Agent**�
 | `src/tinyagent/memory/` | USER/MEMORY 与冻结快照 |
 | `src/tinyagent/skills/` | Skills 草稿与人工审核 |
 | `src/tinyagent/channels/`、`cli.py` | CLI 入口 |
-| `evals/` | 个人任务、学习循环和例行自动化评测 |
+| `evals/` | personal 任务契约与 fixtures |
 | `tests/` | 单元测试 |
-| `docs/` | 唯一文档中心 |
-
-目录与文档映射见 [architecture](docs/00-overview/architecture.md) 和 [repo-map](docs/00-overview/repo-map.md)。
+| `docs/usage/` | 当前安装、配置与使用 |
+| `docs/architecture/` | 当前架构、公共 API 与设计决策 |
+| `docs/evaluation/` | 当前评测契约与验证结果 |
+| `docs/development/` | 开发规则与下一阶段 |
 
 ## 3. 文档系统（强制）
 
 1. **唯一文档中心**：项目级文档全部放在 `docs/`。例外仅为根目录 `README.md` 与本文件。
-2. **根 README 只做索引**：项目定位、快速开始、能力、目录概览和文档入口。
-3. **渐进式披露**：入口页只放概要与目录；正文页尽量 **≤ 150 行**，超过就拆页；页面之间使用相对链接，不复制内容。
-4. **单页单主题**：正文页顶部写所属导航；命名使用小写短横线，入口统一 `index.md`；历史/迁移材料放 `docs/40-reference/`。
-5. 代码目录**不放长 README**；评测 fixture 中的数据文件使用 `.txt` 等非文档后缀。
+2. **四个文档域**：使用、架构、评测、开发；不得新增职责重复的历史/参考目录。
+3. **只写当前事实**：已删除的功能、旧项目过程和迁移记录不保留在现行文档中。
+4. **渐进式披露**：根 README 只做项目入口；`docs/README.md` 说明目录职责；正文单页单主题，尽量不超过 150 行。
+5. 页面顶部写所属导航，使用相对链接；代码目录不放长 README，评测 fixture 使用 `.txt` 等非文档后缀。
 
 ## 4. 修改功能时必须更新文档
 
 | 变更 | 必须更新 |
 |---|---|
-| 新增/删除/移动功能或示例 | 对应域页面、域 `index.md`、[repo-map](docs/00-overview/repo-map.md) |
-| 改命令/参数/依赖 | 对应操作页、根 README 快速开始（如受影响）、[environment](docs/00-overview/environment.md) |
-| 改目录结构 | 根 README 目录概览、[architecture](docs/00-overview/architecture.md)、repo-map |
-| 改测试 | [testing](docs/30-development/testing.md) |
-| 改公共 API | [framework](docs/10-framework/index.md) 及相关 ADR |
-| 改工具或安全边界 | [ADR-0011](docs/10-framework/adr/0011-approval-execution.md) |
-| 删除内容 | [cleanup-log](docs/30-development/cleanup-log.md) |
+| 安装、命令、参数、workspace/state、产物 | [使用指南](docs/usage/guide.md)、根 README（如受影响） |
+| 目录、模块、公共 API、能力边界 | [架构概览](docs/architecture/overview.md) |
+| 重要设计取舍与工具安全边界 | [设计决策](docs/architecture/decisions.md) |
+| fixtures、任务契约、评分与验证结果 | [评测规范](docs/evaluation/scenarios.md) |
+| 编码、测试或文档规则 | [开发指南](docs/development/contributing.md) |
+| 后续方向与待决策事项 | [下一阶段](docs/development/next-phase.md) |
 
-**完成标准**：代码可运行 + 相关文档已更新 + 链接可跳转 + 必要时更新索引。
+**完成标准**：代码可运行 + 相关文档已更新 + 链接可跳转 + 必要时更新索引。删除内容时直接清理现行引用，不另写历史迁移记录。
 
 ## 5. 编码风格（强制要点）
 
-完整规范见 [coding-style](docs/30-development/coding-style.md)。要点：
+完整规范见[开发指南](docs/development/contributing.md)。要点：
 
 - import 三段式（标准库 / 第三方 / 本地），段内字母序；
 - 禁止 print 调试代码入库；CLI 用户输出除外；
@@ -73,9 +72,8 @@ TinyAgent 是 **Python 自托管、单用户、可持续进化的个人 Agent**�
 ## 7. 提交/评审清单
 
 - [ ] 代码可从仓库根目录运行？
-- [ ] 新增/移动/删除目录时，是否更新 repo-map 与 architecture？
-- [ ] 命令、参数或依赖变化时，是否更新对应操作页和环境文档？
-- [ ] 新文档是否加入域 `index.md` 与 `docs/README.md`？
+- [ ] 目录、命令、参数或依赖变化是否更新对应现行文档？
+- [ ] 新文档是否归入四个文档域并加入 `docs/README.md`？
 - [ ] 是否有超过 150 行的文档需要拆分？
 - [ ] 相对链接是否有效？→ `uv run python scripts/check_docs.py`。
 - [ ] 新依赖是否说明理由，重依赖是否进入 extras？
@@ -90,22 +88,21 @@ uv run pytest tests -q
 uv run python -m evals.run_eval
 ```
 
-`check_docs.py` 会报告超长文档、失效相对链接和 `docs/` 外的 markdown（根 README / AGENTS 除外）。
+`check_docs.py` 检查超长文档、失效相对链接和 `docs/` 外的 markdown（根 README / AGENTS 除外）。
 
 ## 9. 文档事实来源
 
-- 目录/职责：`docs/00-overview/architecture.md`
-- 代码映射：`docs/00-overview/repo-map.md`
-- 框架与 ADR：`docs/10-framework/`
-- 评测：`docs/20-evals/`
-- 工程规范：`docs/30-development/`
-- 重构与迁移：`docs/40-reference/`
+- 使用与配置：`docs/usage/guide.md`
+- 架构与设计决策：`docs/architecture/`
+- 评测：`docs/evaluation/scenarios.md`
+- 工程规范：`docs/development/contributing.md`
+- 后续规划：`docs/development/next-phase.md`
 
 若文档与代码冲突，以**代码 + 测试**为准，并立即修正文档；不要保留“过期但看起来正确”的描述。
 
 ## 10. 术语与禁止事项
 
-术语见 [terminology](docs/00-overview/terminology.md)：tool calling 统一译“工具调用”；HITL 为“人工介入”；checkpoint 为“检查点”；guardrail 为“护栏”；handoff 为“移交”。
+tool calling 统一译“工具调用”；HITL 为“人工介入”；checkpoint 为“检查点”；guardrail 为“护栏”；handoff 为“移交”。
 
 - 禁止在代码目录新增长 README；
 - 禁止复制整段文档到多个页面；

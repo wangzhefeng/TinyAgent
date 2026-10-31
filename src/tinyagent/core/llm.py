@@ -16,7 +16,7 @@ from .types import Message, ModelReply, ToolCallReply, ToolSpec
 # 读取根目录 .env（LLM_PROVIDER / LLM_BASE_URL / LLM_API_KEY / LLM_MODEL_ID）
 _ = load_dotenv(find_dotenv(), override=True)
 
-#: provider presets: base_url + env key/model names (see docs/00-overview/environment.md)
+#: provider presets: base_url + env key/model names (see docs/usage/guide.md)
 PROVIDER_PRESETS: dict[str, dict[str, str]] = {
     "zhipu": {
         "base_url": "https://open.bigmodel.cn/api/paas/v4",
@@ -70,7 +70,7 @@ def _messages_to_openai(messages: list[Message]) -> list[dict[str, Any]]:
 class OpenAIChatModel:
     """ChatModel over any OpenAI-compatible endpoint.
 
-    The retry ladder follows docs/00-overview/environment.md: transient
+    The retry ladder follows docs/usage/guide.md: transient
     congestion gets exponential backoff; timeouts hint at ``LLM_TIMEOUT``.
     """
 
