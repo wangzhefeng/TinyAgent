@@ -2,13 +2,17 @@
 
 from __future__ import annotations
 
+import urllib.error
+import urllib.request
 from pathlib import Path
+from urllib.parse import urlparse
 
 from ..core.tools import ToolWrapper, tool
 from ..execution import LocalExecutionBackend, ShellPolicy
 
 _SAFE_SUFFIXES = {".txt", ".md", ".json", ".jsonl", ".py", ".toml", ".yaml", ".yml"}
 _MAX_SHELL_CHARS = 12000
+_MAX_FETCH_BYTES = 1_000_000
 
 
 class Workspace:
@@ -81,7 +85,24 @@ def make_workspace_tools(
                         return "\n".join(hits)
         return "\n".join(hits) or "No matches"
 
-    tools = [list_dir, read_file, search_text]
+    @tool
+    def fetch_url(url: str) -> str:
+        """Fetch one http or https page as text with a timeout and output cap."""
+        parsed = urlparse(url)
+        if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+            return f"Error: only http/https URLs are supported: {url}"
+        request = urllib.request.Request(url, headers={"User-Agent": "tinyagent"})
+        try:
+            with urllib.request.urlopen(request, timeout=15) as response:
+                status = response.status
+                body = response.read(_MAX_FETCH_BYTES).decode("utf-8", errors="replace")
+        except urllib.error.HTTPError as error:
+            return f"Error: HTTP {error.code} for {url}"
+        except (urllib.error.URLError, OSError) as error:
+            return f"Error: fetch failed: {type(error).__name__}: {error}"
+        return f"[status {status}]\n{_cap_output(body)}"
+
+    tools = [list_dir, read_file, search_text, fetch_url]
     if execution is None:
         return tools
 

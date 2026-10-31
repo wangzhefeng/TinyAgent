@@ -47,7 +47,7 @@ uv run python -m tinyagent.cli \
 
 交互中输入 `/events` 查看事件，输入 `/exit` 退出。使用相同 state 可保留会话、记忆和定时任务。
 
-## 4. 写入与 shell
+## 4. 写入、shell 与网络抓取
 
 ```bash
 uv run python -m tinyagent.cli \
@@ -57,7 +57,7 @@ uv run python -m tinyagent.cli \
   run "修改允许文件并运行检查"
 ```
 
-`--writable` 只开放能力，写入和 shell 仍需逐项审批。`--yes` 会批准本次调用的全部写入和 shell，仅用于可审查的隔离环境。macOS 使用 Seatbelt、Linux 使用 bubblewrap；沙箱不可用时本地降级没有硬隔离。
+`--writable` 只开放能力，写入和 shell 仍需逐项审批。`--yes` 会批准本次调用的全部写入和 shell，仅用于可审查的隔离环境。macOS 使用 Seatbelt、Linux 使用 bubblewrap；沙箱不可用时本地降级没有硬隔离。`fetch_url` 抓取 http/https 页面文本，同样逐次审批；不可预授权，无人值守的定时任务中默认拒绝。
 
 ## 5. 定时任务
 

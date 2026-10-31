@@ -41,7 +41,7 @@ src/tinyagent/
 |---|---|
 | `agent/` | 原始事件到模型视图的转换、截断、清理与配对检查 |
 | `runtime/` | Run 生命周期、幂等、恢复、usage、审批和定时执行 |
-| `tools/` | 文件、检索、记忆、Skills 与调度工具 |
+| `tools/` | 文件、检索、网络抓取、记忆、Skills 与调度工具 |
 | `execution/` | 命令白名单、超时、输出限制和沙箱降级 |
 | `memory/`、`skills/` | 可审查的长期记忆与按需加载能力 |
 | `channels/`、`cli.py` | 单用户命令行交互 |

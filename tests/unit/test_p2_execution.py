@@ -1,7 +1,9 @@
-"""Tests for P2 write tools and execution backends."""
+"""Tests for P2 write, fetch, and execution tools."""
 
 from __future__ import annotations
 
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 import pytest
@@ -55,3 +57,48 @@ def test_sandbox_unavailable_falls_back_to_local(tmp_path: Path, monkeypatch: py
     backend = make_execution_backend(tmp_path / "state")
     assert not backend.sandboxed
     assert backend.name == "local"
+
+
+class _FakeResponse:
+    def __init__(self, body: bytes, status: int = 200) -> None:
+        self._body = body
+        self.status = status
+
+    def read(self, _limit: int | None = None) -> bytes:
+        return self._body
+
+    def __enter__(self) -> _FakeResponse:
+        return self
+
+    def __exit__(self, *_exc: object) -> bool:
+        return False
+
+
+def test_fetch_url_returns_status_and_capped_body(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(
+        urllib.request, "urlopen",
+        lambda _req, timeout=None: _FakeResponse(("x" * 20_000).encode()),
+    )
+    registry = ToolRegistry(make_workspace_tools(tmp_path))
+    result = registry.call("fetch_url", url="https://example.com/page")
+    assert result.startswith("[status 200]")
+    assert "中间省略" in result
+
+
+def test_fetch_url_rejects_non_http_schemes(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    def _fail(*_args: object, **_kwargs: object) -> object:
+        raise AssertionError("urlopen must not be called")
+
+    monkeypatch.setattr(urllib.request, "urlopen", _fail)
+    registry = ToolRegistry(make_workspace_tools(tmp_path))
+    for url in ("file:///etc/passwd", "ftp://example.com/file"):
+        assert "only http/https" in registry.call("fetch_url", url=url)
+
+
+def test_fetch_url_reports_http_errors(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    def _raise(*_args: object, **_kwargs: object) -> object:
+        raise urllib.error.HTTPError("https://example.com", 404, "Not Found", None, None)
+
+    monkeypatch.setattr(urllib.request, "urlopen", _raise)
+    registry = ToolRegistry(make_workspace_tools(tmp_path))
+    assert "HTTP 404" in registry.call("fetch_url", url="https://example.com/missing")

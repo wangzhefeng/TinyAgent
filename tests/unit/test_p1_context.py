@@ -92,6 +92,7 @@ def test_cli_runtime_construction(tmp_path: Path):
         "list_dir",
         "read_file",
         "search_text",
+        "fetch_url",
         "remember",
         "search_sessions",
         "load_skill",
