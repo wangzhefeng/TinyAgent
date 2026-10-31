@@ -11,7 +11,7 @@ from tinyagent.agent import ContextBuilder
 from tinyagent.agent.types import EventRecord
 from tinyagent.channels.cli import build_runtime
 from tinyagent.core.tools import ToolRegistry
-from tinyagent.runtime.approvals import CLIApprover
+from tinyagent.runtime.approvals import CLIApprover, render_call
 from tinyagent.tools import make_workspace_tools
 
 
@@ -83,6 +83,35 @@ def test_unknown_tool_needs_confirmation_and_fails_closed():
     allowed, reason = approver.check("write_file", {"path": "x"})
     assert not allowed
     assert "non-interactive" in reason
+
+
+def test_render_call_shows_real_arguments():
+    assert render_call("run_shell", {"command": "ls -la"}).strip() == "$ ls -la"
+    rendered = render_call("write_file", {"path": "a.txt", "content": "x" * 500})
+    assert "路径：a.txt" in rendered
+    assert "已截断" in rendered
+    assert render_call("fetch_url", {"url": "https://e.com"}).strip() == "URL：https://e.com"
+    assert "{" in render_call("list_dir", {"path": "."})
+
+
+def test_approver_deny_note_and_always_allow():
+    answers = iter(["n 先列出来给我看", "a", "a"])
+    approver = CLIApprover(set(), ask=lambda _p: next(answers), interactive=True)
+    allowed, reason = approver.check("write_file", {"path": "x", "content": "c"})
+    assert not allowed
+    assert "user note: 先列出来给我看" in reason
+    # 第二次回答 a：批准，且 write_file 进入本次运行白名单
+    assert approver.check("write_file", {"path": "y", "content": "c"}) == (
+        True, "approved for the rest of this run",
+    )
+    # 第三次命中白名单快路径，不再触发 ask（多问一次会在末尾耗尽迭代器）
+    assert approver.check("write_file", {"path": "z", "content": "c"}) == (
+        True, "approved for the rest of this run",
+    )
+    # a 对非 REMEMBERABLE 工具不生效，明确拒绝
+    allowed, reason = approver.check("fetch_url", {"url": "https://e.com"})
+    assert not allowed
+    assert "always-allow" in reason
 
 
 def test_cli_runtime_construction(tmp_path: Path):

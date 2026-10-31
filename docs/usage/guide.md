@@ -57,7 +57,7 @@ uv run python -m tinyagent.cli \
   run "修改允许文件并运行检查"
 ```
 
-`--writable` 只开放能力，写入和 shell 仍需逐项审批。`--yes` 会批准本次调用的全部写入和 shell，仅用于可审查的隔离环境。macOS 使用 Seatbelt、Linux 使用 bubblewrap；沙箱不可用时本地降级没有硬隔离。`fetch_url` 抓取 http/https 页面文本，同样逐次审批；不可预授权，无人值守的定时任务中默认拒绝。
+`--writable` 只开放能力，写入和 shell 仍需逐项审批，审批提示展示真实参数（命令、写入内容预览）；拒绝时可附原因回传给模型，`write_file` 可选「本次运行一直允许」。`--yes` 会批准本次调用的全部写入和 shell，仅用于可审查的隔离环境。macOS 使用 Seatbelt、Linux 使用 bubblewrap；沙箱不可用时本地降级没有硬隔离。`fetch_url` 抓取 http/https 页面文本，同样逐次审批；不可预授权，无人值守的定时任务中默认拒绝。
 
 ## 5. 定时任务
 
