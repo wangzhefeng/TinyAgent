@@ -21,7 +21,7 @@ uv run python -m evals.run_eval
 - 禁止 print 调试入库；CLI 用户输出只放在 `main()` 或渠道层。
 - 不新增 `sys.path` hack；使用包导入或 workspace 安装。
 - 注释解释“为什么”，行为变化后同步更新注释和 docstring。
-- 提交信息使用 `type(scope): summary`，类型包括 feat、docs、refactor、fix、chore、test。
+- 提交信息使用 `type(scope): summary`，类型包括 feat、docs、refactor、fix、chore、test；正文说明如何验证与如何回滚。
 
 ## 3. 测试
 
@@ -29,6 +29,7 @@ uv run python -m evals.run_eval
 
 - 单测命名为 `test_<module>.py`，共享夹具放 `tests/conftest.py`。
 - 公共 API 或行为变化必须先改/补测试。
+- 每个修复的 Bug 保留一个回归用例（单测或 `evals/` 场景），换模型或发布前重跑。
 - 每个测试使用独立 workspace/state，不读取真实凭证或现有私人项目。
 - 应用级任务契约放 `evals/`，规则见[评测规范](../evaluation/scenarios.md)。
 - `docs/development/tutorials/` 保存原样迁移的独立教学快照，不参与 Ruff 检查和默认 pytest 收集；按教程索引中的显式路径单独测试，不作为产品代码风格示例。
@@ -52,6 +53,7 @@ uv run python -m evals.run_eval
 - HITL：人工介入。
 - checkpoint：检查点。
 - guardrail：护栏。
+- handoff：移交。
 - session / memory / eval：会话 / 记忆 / 评测。
 
 ## 相关
