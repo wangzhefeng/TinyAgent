@@ -45,7 +45,7 @@ tests/unit/
 | routine/routine-delivery | 有更新投递恰好一次、重跑不重复投递；心跳无事不投递；每次执行记录 usage |
 | routine/unattended-boundary | scheduled run 仅 `write_file` 可预授权；shell、记忆、Skills、嵌套调度全部拒绝 |
 
-定时任务和子 Run 不得自动写记忆或 Skills；任务拆解见[下一阶段](../development/next-phase.md)。
+定时任务和子 Run 不得自动写记忆或 Skills；方向取舍见[设计决策](../architecture/decisions.md)。
 
 ## 4. 运行与当前结果
 

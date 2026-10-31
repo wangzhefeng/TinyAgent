@@ -17,7 +17,7 @@
 - 查看当前设计：[架构概览](architecture/overview.md)
 - 修改代码前：[开发指南](development/contributing.md)
 - 学习 Agent 开发：[开发学习教程](development/tutorials/README.md)
-- 规划后续工作：[下一阶段实施准备](development/next-phase.md)
+- 规划后续工作：[下一阶段方向评审](development/next-phase.md)
 
 ## 架构决策
 
