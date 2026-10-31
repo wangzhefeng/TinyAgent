@@ -21,7 +21,11 @@ _DEFAULT_SYSTEM = (
     "cite concrete evidence, and do not claim changes you did not make. "
     "Write files or run commands only when necessary, and report exact checks."
 )
-_SAFE_TOOL_NAMES = {"list_dir", "read_file", "search_text", "remember", "search_sessions", "load_skill"}
+_SAFE_TOOL_NAMES = {"list_dir", "read_file", "search_text", "remember", "search_sessions", "load_skill", "update_plan"}
+_PLAN_SAFE_TOOLS = {
+    "list_dir", "read_file", "search_text", "search_sessions",
+    "load_skill", "list_tasks", "update_plan", "submit_plan",
+}
 
 
 class RunCancelled(RuntimeError):
@@ -54,6 +58,7 @@ class PersonalRuntime:
         self.system = system
         self.max_steps = max_steps
         self.execution_name = execution_name
+        self._plan_sessions: set[str] = set()
         self._session_locks: dict[str, threading.Lock] = {}
         self._session_locks_guard = threading.Lock()
 
@@ -99,6 +104,14 @@ class PersonalRuntime:
             self.store.update_run_status(run_id, "cancelled")
             self.store.append_event(run_id, "run_end", {"final": False, "cancelled": True})
         return self.store.get_run(run_id)
+
+    def enter_plan_mode(self, session_id: str = "default") -> None:
+        """Restrict one session to read-only investigation until a plan is approved."""
+        self._plan_sessions.add(session_id)
+
+    def in_plan_mode(self, session_id: str = "default") -> bool:
+        """Return whether one session is currently in plan mode."""
+        return session_id in self._plan_sessions
 
     def _session_lock(self, session_id: str) -> threading.Lock:
         with self._session_locks_guard:
@@ -290,11 +303,20 @@ class PersonalRuntime:
         arguments: dict[str, Any],
     ) -> str:
         run = self.store.get_run(run_id)
+        if (
+            run.kind != "scheduled"
+            and run.session_id in self._plan_sessions
+            and name not in _PLAN_SAFE_TOOLS
+        ):
+            return (
+                "Permission denied: 计划模式下只能读和调查（可用 update_plan 记录计划）；"
+                "想好后调用 submit_plan 提交完整计划，经批准后才能动手。"
+            )
         if run.kind == "scheduled":
             task = self.store.scheduled_task_by_run(run_id)
             allowed = set(json.loads(task["allow_json"])) if task else set()
             read_only = {"list_dir", "read_file", "search_text", "search_sessions", "load_skill"}
-            forbidden = {"run_shell", "remember", "create_skill_draft", "schedule_task", "cancel_task", "list_tasks"}
+            forbidden = {"run_shell", "remember", "create_skill_draft", "schedule_task", "cancel_task", "list_tasks", "update_plan", "submit_plan"}
             if name in forbidden or (name not in read_only and name not in allowed):
                 return f"Permission denied: {name} is not preauthorized for unattended runs"
             try:
@@ -327,6 +349,8 @@ class PersonalRuntime:
             result = str(self.registry.call(name, **arguments))
         except Exception as error:  # noqa: BLE001
             return f"tool error: {type(error).__name__}: {error}"
+        if name == "submit_plan" and not result.startswith("Error"):
+            self._plan_sessions.discard(run.session_id)
         if name == "remember" and not result.startswith("Error"):
             self.store.append_event(
                 run_id,

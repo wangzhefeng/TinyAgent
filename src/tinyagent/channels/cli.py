@@ -16,9 +16,15 @@ from ..memory import MemoryManager
 from ..runtime import LocalOutbox, PersonalRuntime, Scheduler, SQLiteStore
 from ..runtime.approvals import CLIApprover
 from ..skills import SkillManager
-from ..tools import make_learning_tools, make_scheduler_tools, make_workspace_tools
+from ..tools import (
+    make_learning_tools,
+    make_plan_tools,
+    make_scheduler_tools,
+    make_workspace_tools,
+)
+from ..tools.planning import PLAN_MODE_PROMPT
 
-_SAFE_TOOLS = {"list_dir", "read_file", "search_text", "remember", "search_sessions", "load_skill", "list_tasks"}
+_SAFE_TOOLS = {"list_dir", "read_file", "search_text", "remember", "search_sessions", "load_skill", "list_tasks", "update_plan"}
 
 
 def build_runtime(
@@ -38,6 +44,7 @@ def build_runtime(
     registry = ToolRegistry([
         *make_workspace_tools(workspace, execution=execution),
         *make_learning_tools(memory, skills, store),
+        *make_plan_tools(),
     ])
     approver = CLIApprover(
         _SAFE_TOOLS,
@@ -169,6 +176,9 @@ def main(argv: list[str] | None = None, model: ChatModel | None = None) -> int:
                 if task == "/events":
                     _print_events(runtime, args.session)
                 elif task:
+                    if task.startswith("/plan "):
+                        runtime.enter_plan_mode(args.session)
+                        task = PLAN_MODE_PROMPT + task[len("/plan "):]
                     print(runtime.run(task, session_id=args.session))
         return 0
     except (RuntimeError, ValueError, KeyError, OSError) as error:

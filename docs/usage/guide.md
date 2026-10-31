@@ -45,7 +45,7 @@ uv run python -m tinyagent.cli \
   chat
 ```
 
-交互中输入 `/events` 查看事件，输入 `/exit` 退出。使用相同 state 可保留会话、记忆和定时任务。
+交互中输入 `/events` 查看事件，输入 `/exit` 退出；输入 `/plan 任务` 进入计划模式：先只读调查（有副作用的工具会被代码拒绝），Agent 调用 `submit_plan` 提交完整计划并经你批准后才开始修改。使用相同 state 可保留会话、记忆和定时任务。
 
 ## 4. 写入、shell 与网络抓取
 

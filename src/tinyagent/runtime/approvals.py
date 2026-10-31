@@ -40,6 +40,8 @@ def render_call(name: str, arguments: dict[str, Any], max_chars: int = _PREVIEW_
         return f"  路径：{arguments.get('path')}\n{indent(f'- {old}\n+ {new}', '    ')}"
     if name == "fetch_url":
         return f"  URL：{arguments.get('url', '')}"
+    if name == "submit_plan":
+        return indent(str(arguments.get("plan", "")), "  ")
     if name == "remember":
         old = f"\n  原来那条（包含）：{arguments.get('old')}" if arguments.get("old") else ""
         return f"  {arguments.get('action')}：{arguments.get('text', '')}{old}"

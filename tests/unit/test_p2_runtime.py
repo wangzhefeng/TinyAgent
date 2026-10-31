@@ -121,4 +121,5 @@ def test_cli_writable_opt_in_keeps_read_tools_safe(tmp_path: Path):
         "search_sessions",
         "load_skill",
         "list_tasks",
+        "update_plan",
     }

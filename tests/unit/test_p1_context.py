@@ -126,6 +126,8 @@ def test_cli_runtime_construction(tmp_path: Path):
         "search_sessions",
         "load_skill",
         "create_skill_draft",
+        "update_plan",
+        "submit_plan",
         "schedule_task",
         "list_tasks",
         "cancel_task",

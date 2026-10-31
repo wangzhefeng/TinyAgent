@@ -5,7 +5,9 @@ from __future__ import annotations
 from ..core.types import Message
 from .types import ContextView, EventRecord
 
-_SKILL_PREFIX = "[skill]"
+_KEEP_RESULT_PREFIXES = ("[skill]", "[plan]")
+_PLAN_PREFIX = "[plan]"
+_OLD_PLAN = "[plan] 这是旧版计划，已被后面的版本取代"
 _MAX_NOTES_CHARS = 3000
 
 
@@ -112,6 +114,12 @@ class ContextBuilder:
             index for index, event in enumerate(events) if event.type == "tool_result"
         ]
         keep = set(tool_indexes[-keep_tool_results:]) if keep_tool_results is not None else set()
+        plan_indexes = [
+            index for index, event in enumerate(events)
+            if event.type == "tool_result"
+            and str(event.data.get("content", "")).startswith(_PLAN_PREFIX)
+        ]
+        stale_plans = set(plan_indexes[:-1])
         for index, event in enumerate(events):
             if event.type == "user_input":
                 messages.append(Message("user", str(event.data.get("text", ""))))
@@ -125,13 +133,15 @@ class ContextBuilder:
                 )
             elif event.type == "tool_result":
                 content = str(event.data.get("content", ""))
-                if (
+                if index in stale_plans:
+                    content = _OLD_PLAN
+                elif (
                     keep_tool_results is not None
                     and index not in keep
-                    and not content.startswith(_SKILL_PREFIX)
+                    and not content.startswith(_KEEP_RESULT_PREFIXES)
                 ):
                     content = "[旧工具结果已清理，如需要请重新调用工具]"
-                if truncate:
+                if truncate and index not in stale_plans:
                     content = self._truncate(content)
                 messages.append(
                     Message("tool", content, tool_call_id=str(event.data.get("call_id", "")))
