@@ -31,6 +31,7 @@ uv run python -m evals.run_eval
 - 公共 API 或行为变化必须先改/补测试。
 - 每个测试使用独立 workspace/state，不读取真实凭证或现有私人项目。
 - 应用级任务契约放 `evals/`，规则见[评测规范](../evaluation/scenarios.md)。
+- `docs/development/tutorials/` 保存原样迁移的独立教学快照，不参与 Ruff 检查和默认 pytest 收集；按教程索引中的显式路径单独测试，不作为产品代码风格示例。
 
 ## 4. 文档职责与联动
 

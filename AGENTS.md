@@ -25,7 +25,7 @@ TinyAgent 是 **Python 自托管、单用户、可持续进化的个人 Agent**�
 | `docs/usage/` | 当前安装、配置与使用 |
 | `docs/architecture/` | 当前架构、公共 API 与设计决策 |
 | `docs/evaluation/` | 当前评测契约与验证结果 |
-| `docs/development/` | 开发规则与下一阶段 |
+| `docs/development/` | 开发规则、独立教学快照与下一阶段 |
 
 ## 3. 文档系统（强制）
 

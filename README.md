@@ -93,4 +93,4 @@ uv run python scripts/check_docs.py
 uv run python -m evals.run_eval  # 校验个人任务与 fixtures
 ```
 
-协作规则见 [AGENTS.md](AGENTS.md)，文档入口见 [docs/README.md](docs/README.md)，使用说明见 [使用指南](docs/usage/guide.md)。
+协作规则见 [AGENTS.md](AGENTS.md)，文档入口见 [docs/README.md](docs/README.md)，使用说明见 [使用指南](docs/usage/guide.md)。Agent 开发学习教程见 [Nami Agent 第 11 课](docs/development/tutorials/README.md)。
