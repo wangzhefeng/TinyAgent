@@ -25,7 +25,7 @@ uv run python -m evals.run_eval
 
 ## 3. 测试
 
-`tests/unit/` 当前有 38 个用例，mock LLM、无 API key 可运行，覆盖 Agent 循环、工具、存储、审批、记忆和调度。
+`tests/unit/` 当前有 64 个用例，mock LLM、无 API key 可运行，覆盖 Agent 循环、工具、存储、审批、记忆、调度、计划模式、MCP 接线与子 Agent。
 
 - 单测命名为 `test_<module>.py`，共享夹具放 `tests/conftest.py`。
 - 公共 API 或行为变化必须先改/补测试。
