@@ -66,7 +66,7 @@
 **决策**：
 
 - `MCPToolSource` 通过 stdio 连接 server，将工具 schema 映射为 `ToolSpec`。
-- MCP 工具与 `@tool` 函数统一进入 `ToolRegistry` 和 Runtime 审批路径。
+- CLI 启动时读取 state 目录旁 `mcp.json`，以 `mcp__服务器__工具` 名注册进统一审批路径；仅配置 `safe_tools` 点名的工具计入只读名单。
 - 依赖放入 `tinyagent[mcp]` extra；连接由上下文管理器显式关闭，描述与结果视为不可信输入。
 
 **边界**：当前只支持 stdio；SSE 和 streamable HTTP 待真实需求出现后评审。

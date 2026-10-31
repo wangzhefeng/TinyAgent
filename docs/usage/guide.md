@@ -27,6 +27,13 @@ LLM_TIMEOUT=60
 - `--state`：SQLite 状态文件；其所在目录还保存 USER/MEMORY、Skills 和 outbox。
 - 状态目录应位于 workspace 外；不同任务使用独立 workspace 和 state。
 - 本地体验可使用 `results/local-demo/workspace` 与 `results/local-demo/state.db`。
+- state 目录旁可放 `mcp.json` 接入 MCP 工具源（需安装 `tinyagent[mcp]`）：
+
+```json
+{"servers": {"demo": {"command": "python", "args": ["server.py"], "safe_tools": ["now"]}}}
+```
+
+工具以 `mcp__服务器__工具` 名注册，进入统一审批路径；仅 `safe_tools` 点名的工具视为只读，其余逐次审批。单个服务器启动失败不影响其余服务器。
 
 ## 3. 执行任务
 

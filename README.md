@@ -49,6 +49,7 @@ uv run python -m tinyagent.cli \
 | 历史检索 | FTS5 | 同一会话多词命中，返回 event 定位与短片段 |
 | Skills | `skills/` + `skill-drafts/` | 未审核不可执行，人工审核后按需加载 |
 | 例行自动化 | `schedule add/list/run/cancel` | 隔离会话、有限预授权、错过不补跑、心跳投递 |
+| MCP 工具源 | `mcp.json` · `mcp__服务器__工具` | stdio 连接、统一审批，仅点名工具只读 |
 
 ## 定时任务
 
