@@ -23,7 +23,7 @@ LLM_TIMEOUT=60
 
 ## 2. 工作区与状态
 
-- `--workspace`：Agent 可访问的目录，默认只读。
+- `--workspace`：Agent 可访问的目录，默认只读；根目录可放 `AGENTS.md` 项目说明，截断后常驻系统提示。
 - `--state`：SQLite 状态文件；其所在目录还保存 USER/MEMORY、Skills 和 outbox。
 - 状态目录应位于 workspace 外；不同任务使用独立 workspace 和 state。
 - 本地体验可使用 `results/local-demo/workspace` 与 `results/local-demo/state.db`。

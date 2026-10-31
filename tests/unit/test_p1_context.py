@@ -130,3 +130,38 @@ def test_cli_runtime_construction(tmp_path: Path):
         "list_tasks",
         "cancel_task",
     }
+
+
+def test_project_notes_in_system_prompt():
+    events = [_event("user_input", {"text": "hi"}, 1)]
+    view = ContextBuilder(project_notes="项目规范：不要提交密钥").build(events, "system")
+    assert "## 项目说明（来自工作区 AGENTS.md）" in view.messages[0].content
+    assert "不要提交密钥" in view.messages[0].content
+
+
+def test_project_notes_truncated_to_cap():
+    notes = "x" * 4000
+    view = ContextBuilder(project_notes=notes).build(
+        [_event("user_input", {"text": "hi"}, 1)], "system"
+    )
+    assert "x" * 3000 in view.messages[0].content
+    assert "x" * 3001 not in view.messages[0].content
+
+
+def test_skill_results_survive_clearing():
+    events = _tool_events(["[skill] demo\n长技能正文", "older", "new"])
+    view = ContextBuilder(
+        soft_limit_tokens=1,
+        hard_limit_tokens=1000,
+        keep_recent_tool_results=1,
+    ).build(events, "system")
+    tool_messages = [message for message in view.messages if message.role == "tool"]
+    assert tool_messages[0].content.startswith("[skill] demo")
+    assert tool_messages[1].content.startswith("[旧工具结果已清理")
+    assert tool_messages[2].content == "new"
+
+
+def test_build_runtime_reads_workspace_agents_md(tmp_path: Path):
+    (tmp_path / "AGENTS.md").write_text("# 项目说明\n- 保持只读", encoding="utf-8")
+    runtime = build_runtime(tmp_path, tmp_path / "state.db", ScriptedModel([]))
+    assert "保持只读" in runtime.context.project_notes

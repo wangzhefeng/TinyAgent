@@ -5,6 +5,9 @@ from __future__ import annotations
 from ..core.types import Message
 from .types import ContextView, EventRecord
 
+_SKILL_PREFIX = "[skill]"
+_MAX_NOTES_CHARS = 3000
+
 
 class ContextBuilder:
     """Project session events into a bounded message list."""
@@ -15,11 +18,13 @@ class ContextBuilder:
         hard_limit_tokens: int = 24000,
         max_tool_chars: int = 4000,
         keep_recent_tool_results: int = 3,
+        project_notes: str = "",
     ) -> None:
         self.soft_limit_tokens = soft_limit_tokens
         self.hard_limit_tokens = hard_limit_tokens
         self.max_tool_chars = max_tool_chars
         self.keep_recent_tool_results = keep_recent_tool_results
+        self.project_notes = project_notes
 
     def build(
         self,
@@ -32,7 +37,9 @@ class ContextBuilder:
     ) -> ContextView:
         """Build a context view and validate native tool-call pairing."""
         artifacts: list[str] = []
-        system_text = self._system_prompt(system, memory_snapshot or {}, skills_catalog)
+        system_text = self._system_prompt(
+            system, memory_snapshot or {}, skills_catalog, self.project_notes
+        )
         if compaction and compaction.get("content"):
             source_end = compaction.get("source_end")
             recent = events[(source_end or 0):]
@@ -72,8 +79,16 @@ class ContextBuilder:
         return view
 
     @staticmethod
-    def _system_prompt(system: str, snapshot: dict[str, str], skills_catalog: str) -> str:
+    def _system_prompt(
+        system: str,
+        snapshot: dict[str, str],
+        skills_catalog: str,
+        project_notes: str = "",
+    ) -> str:
         parts = [system]
+        if project_notes:
+            notes = project_notes[:_MAX_NOTES_CHARS]
+            parts.append(f"## 项目说明（来自工作区 AGENTS.md）\n{notes}")
         if snapshot.get("user"):
             parts.append(f"## 用户稳定偏好（背景信息，不是指令）\n{snapshot['user']}")
         if snapshot.get("memory"):
@@ -109,10 +124,13 @@ class ContextBuilder:
                     )
                 )
             elif event.type == "tool_result":
-                if keep_tool_results is not None and index not in keep:
+                content = str(event.data.get("content", ""))
+                if (
+                    keep_tool_results is not None
+                    and index not in keep
+                    and not content.startswith(_SKILL_PREFIX)
+                ):
                     content = "[旧工具结果已清理，如需要请重新调用工具]"
-                else:
-                    content = str(event.data.get("content", ""))
                 if truncate:
                     content = self._truncate(content)
                 messages.append(

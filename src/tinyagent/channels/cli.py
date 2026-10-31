@@ -7,6 +7,7 @@ import json
 import sys
 from pathlib import Path
 
+from ..agent import ContextBuilder
 from ..core.llm import OpenAIChatModel
 from ..core.protocols import ChatModel
 from ..core.tools import ToolRegistry
@@ -32,6 +33,8 @@ def build_runtime(
     store = SQLiteStore(state)
     memory = MemoryManager(Path(state).parent)
     skills = SkillManager(Path(state).parent)
+    notes_path = Path(workspace).expanduser() / "AGENTS.md"
+    project_notes = notes_path.read_text(encoding="utf-8") if notes_path.is_file() else ""
     registry = ToolRegistry([
         *make_workspace_tools(workspace, execution=execution),
         *make_learning_tools(memory, skills, store),
@@ -52,6 +55,7 @@ def build_runtime(
         model=model or OpenAIChatModel(),
         registry=registry,
         approver=approver,
+        context=ContextBuilder(project_notes=project_notes),
         execution_name=execution.name if execution is not None else "local",
         memory=memory,
         skills=skills,
