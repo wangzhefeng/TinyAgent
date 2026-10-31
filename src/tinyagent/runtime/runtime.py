@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextvars
 import json
 import threading
 from typing import Any
@@ -25,7 +26,12 @@ _SAFE_TOOL_NAMES = {"list_dir", "read_file", "search_text", "remember", "search_
 _PLAN_SAFE_TOOLS = {
     "list_dir", "read_file", "search_text", "search_sessions",
     "load_skill", "list_tasks", "update_plan", "submit_plan",
+    "delegate", "delegate_parallel",
 }
+
+_CURRENT_SESSION: contextvars.ContextVar[str | None] = contextvars.ContextVar(
+    "current_session", default=None
+)
 
 
 class RunCancelled(RuntimeError):
@@ -78,14 +84,15 @@ class PersonalRuntime:
         session_id: str = "default",
         idempotency_key: str | None = None,
         kind: str = "interactive",
+        tools: set[str] | None = None,
     ) -> str:
-        """Create and execute one interactive or scheduled run."""
+        """Create and execute one run, optionally restricted to a tool subset."""
         with self._session_lock(session_id):
             run = self.create_run(question, session_id, idempotency_key, kind=kind)
             if run.status == "completed":
                 return run.output
             self.store.update_run_status(run.id, "running")
-            return self._execute(run.id, append_input=True)
+            return self._execute(run.id, append_input=True, allowed_tools=tools)
 
     def resume_run(self, run_id: str) -> str:
         """Resume a persisted run without duplicating its user input."""
@@ -117,70 +124,85 @@ class PersonalRuntime:
         with self._session_locks_guard:
             return self._session_locks.setdefault(session_id, threading.Lock())
 
-    def _execute(self, run_id: str, append_input: bool) -> str:
+    def _execute(
+        self, run_id: str, append_input: bool, allowed_tools: set[str] | None = None
+    ) -> str:
+        """Execute one persisted run, optionally restricted to a tool subset."""
         run = self.store.get_run(run_id)
-        if append_input:
-            self.store.append_event(run_id, "user_input", {"text": run.input})
-        prompt_state = self._prompt_state(run.session_id)
-        api_calls = 0
-        tool_calls = 0
-        token_totals = {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}
-        has_real_usage = False
-        last_usage: dict[str, Any] = {}
+        session_token = _CURRENT_SESSION.set(run.session_id)
         try:
-            for _step in range(1, self.max_steps + 1):
-                self._raise_if_cancelled(run_id)
-                view = self._view(run.session_id, last_usage, prompt_state)
-                if view.needs_compaction:
-                    compaction_usage, view = self._compact_if_needed(run_id, view, prompt_state)
-                    api_calls += compaction_usage["api_calls"]
-                    for key in token_totals:
-                        token_totals[key] += compaction_usage[key]
-                    has_real_usage = has_real_usage or compaction_usage["has_real_usage"]
-                reply = self.model.chat(view.messages, tools=self.registry.specs)
-                api_calls += 1
-                last_usage = reply.usage
-                if reply.usage:
-                    has_real_usage = True
-                    for key in token_totals:
-                        token_totals[key] += self._reply_tokens(reply, key)
-                self.store.append_event(
-                    run_id,
-                    "assistant_reply",
-                    {
-                        "text": reply.text,
-                        "tool_calls": [call.to_dict() for call in reply.tool_calls],
-                        "usage": reply.usage,
-                    },
-                )
-                if not reply.tool_calls:
-                    usage = self._usage(api_calls, tool_calls, token_totals, has_real_usage)
-                    self.store.update_run_status(run_id, "completed", output=reply.text, usage=usage)
-                    self.store.append_event(run_id, "run_end", {"final": True})
-                    return reply.text
-                for call in reply.tool_calls:
+            if append_input:
+                self.store.append_event(run_id, "user_input", {"text": run.input})
+            prompt_state = self._prompt_state(run.session_id)
+            specs = (
+                [spec for spec in self.registry.specs if spec.name in allowed_tools]
+                if allowed_tools is not None
+                else self.registry.specs
+            )
+            api_calls = 0
+            tool_calls = 0
+            token_totals = {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}
+            has_real_usage = False
+            last_usage: dict[str, Any] = {}
+            try:
+                for _step in range(1, self.max_steps + 1):
                     self._raise_if_cancelled(run_id)
-                    tool_calls += 1
-                    arguments = parse_tool_arguments(call.arguments)
+                    view = self._view(run.session_id, last_usage, prompt_state)
+                    if view.needs_compaction:
+                        compaction_usage, view = self._compact_if_needed(run_id, view, prompt_state)
+                        api_calls += compaction_usage["api_calls"]
+                        for key in token_totals:
+                            token_totals[key] += compaction_usage[key]
+                        has_real_usage = has_real_usage or compaction_usage["has_real_usage"]
+                    reply = self.model.chat(view.messages, tools=specs)
+                    api_calls += 1
+                    last_usage = reply.usage
+                    if reply.usage:
+                        has_real_usage = True
+                        for key in token_totals:
+                            token_totals[key] += self._reply_tokens(reply, key)
                     self.store.append_event(
                         run_id,
-                        "tool_call",
-                        {"call_id": call.id, "name": call.name, "arguments": arguments},
+                        "assistant_reply",
+                        {
+                            "text": reply.text,
+                            "tool_calls": [call.to_dict() for call in reply.tool_calls],
+                            "usage": reply.usage,
+                        },
                     )
-                    result = self._call_tool(run_id, call.id, call.name, arguments)
-                    self.store.append_event(
-                        run_id,
-                        "tool_result",
-                        {"call_id": call.id, "content": result},
-                    )
-            raise RuntimeError(f"maximum steps reached: {self.max_steps}")
-        except RunCancelled:
-            raise
-        except Exception as error:
-            usage = self._usage(api_calls, tool_calls, token_totals, has_real_usage)
-            self.store.update_run_status(run_id, "failed", error=str(error), usage=usage)
-            self.store.append_event(run_id, "run_end", {"final": False, "error": str(error)})
-            raise
+                    if not reply.tool_calls:
+                        usage = self._usage(api_calls, tool_calls, token_totals, has_real_usage)
+                        self.store.update_run_status(run_id, "completed", output=reply.text, usage=usage)
+                        self.store.append_event(run_id, "run_end", {"final": True})
+                        return reply.text
+                    for call in reply.tool_calls:
+                        self._raise_if_cancelled(run_id)
+                        tool_calls += 1
+                        arguments = parse_tool_arguments(call.arguments)
+                        self.store.append_event(
+                            run_id,
+                            "tool_call",
+                            {"call_id": call.id, "name": call.name, "arguments": arguments},
+                        )
+                        if allowed_tools is not None and call.name not in allowed_tools:
+                            result = f"Error: 当前运行不能使用工具 {call.name}"
+                        else:
+                            result = self._call_tool(run_id, call.id, call.name, arguments)
+                        self.store.append_event(
+                            run_id,
+                            "tool_result",
+                            {"call_id": call.id, "content": result},
+                        )
+                raise RuntimeError(f"maximum steps reached: {self.max_steps}")
+            except RunCancelled:
+                raise
+            except Exception as error:
+                usage = self._usage(api_calls, tool_calls, token_totals, has_real_usage)
+                self.store.update_run_status(run_id, "failed", error=str(error), usage=usage)
+                self.store.append_event(run_id, "run_end", {"final": False, "error": str(error)})
+                raise
+        finally:
+            _CURRENT_SESSION.reset(session_token)
 
     def _prompt_state(self, session_id: str) -> dict[str, Any]:
         state = self.store.get_session_state(session_id)
@@ -316,7 +338,7 @@ class PersonalRuntime:
             task = self.store.scheduled_task_by_run(run_id)
             allowed = set(json.loads(task["allow_json"])) if task else set()
             read_only = {"list_dir", "read_file", "search_text", "search_sessions", "load_skill"}
-            forbidden = {"run_shell", "remember", "create_skill_draft", "schedule_task", "cancel_task", "list_tasks", "update_plan", "submit_plan"}
+            forbidden = {"run_shell", "remember", "create_skill_draft", "schedule_task", "cancel_task", "list_tasks", "update_plan", "submit_plan", "delegate", "delegate_parallel"}
             if name in forbidden or (name not in read_only and name not in allowed):
                 return f"Permission denied: {name} is not preauthorized for unattended runs"
             try:

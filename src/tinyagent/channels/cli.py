@@ -27,11 +27,12 @@ from ..tools import (
     make_learning_tools,
     make_plan_tools,
     make_scheduler_tools,
+    make_subagent_tools,
     make_workspace_tools,
 )
 from ..tools.planning import PLAN_MODE_PROMPT
 
-_SAFE_TOOLS = {"list_dir", "read_file", "search_text", "remember", "search_sessions", "load_skill", "list_tasks", "update_plan"}
+_SAFE_TOOLS = {"list_dir", "read_file", "search_text", "remember", "search_sessions", "load_skill", "list_tasks", "update_plan", "delegate", "delegate_parallel"}
 
 
 def build_runtime(
@@ -83,6 +84,8 @@ def build_runtime(
     )
     for extra_tool in extra_tools or []:
         runtime.registry.add(extra_tool)
+    for subagent_tool in make_subagent_tools(runtime):
+        runtime.registry.add(subagent_tool)
     for scheduler_tool in make_scheduler_tools(scheduler):
         runtime.registry.add(scheduler_tool)
     runtime.scheduler = scheduler

@@ -43,6 +43,7 @@ uv run python -m tinyagent.cli \
 |---|---|---|
 | 工作区工具 | `list_dir` / `read_file` / `search_text` / `fetch_url` / `edit_file` / `run_shell` | 路径边界、精确编辑、命令白名单、页面抓取、审批与沙箱 |
 | 计划模式 | `/plan` · `update_plan` / `submit_plan` | 代码强制只读调查，完整计划经审批后执行，旧计划自动折叠 |
+| 子 Agent | `delegate` / `delegate_parallel` | 独立上下文只带回结论、≤3 并行只读、审批继承、深度限 1 |
 | 持久化 | SQLite | Run、不可变事件、审批、幂等、定时任务和 usage |
 | 上下文 | `ContextBuilder` | 工具结果截断、旧结果清理、摘要与 tool call 配对 |
 | 长期记忆 | `USER.md` / `MEMORY.md` | 容量限制、自动写入审计、会话开始冻结快照 |

@@ -122,4 +122,6 @@ def test_cli_writable_opt_in_keeps_read_tools_safe(tmp_path: Path):
         "load_skill",
         "list_tasks",
         "update_plan",
+        "delegate",
+        "delegate_parallel",
     }

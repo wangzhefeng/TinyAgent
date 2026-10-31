@@ -128,6 +128,8 @@ def test_cli_runtime_construction(tmp_path: Path):
         "create_skill_draft",
         "update_plan",
         "submit_plan",
+        "delegate",
+        "delegate_parallel",
         "schedule_task",
         "list_tasks",
         "cancel_task",
