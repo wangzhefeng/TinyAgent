@@ -79,6 +79,18 @@
 
 **边界**：C 已于 2026-10-31 完成并验收（8 任务 × 3 轮 24/24 通过，见[评测规范](../evaluation/scenarios.md)）。B 的评审清单见[下一阶段](../development/next-phase.md)。
 
+## D7：单层子 Agent 用于隔离调查上下文
+
+**背景**：大量只读调查会占满主会话上下文；nami-agent 教程验证了「独立上下文子 Agent + 只带回结论」的形态。此前多 Agent 列为默认非目标。
+
+**决策**：
+
+- 引入一层子 Agent：`delegate`（explore 只读 / worker 可写且逐次审批）与 `delegate_parallel`（≤3 并行只读）。
+- 子 Agent 使用独立会话与上下文，深度限 1；派生、调度、计划、记忆工具不下发；审批继承父会话。
+- 结论限长回传，中间过程不进入父会话；多层编排、Agent 间通信与并行写仍为非目标。
+
+**边界**：尚未实现，拆解见[下一阶段 D-7](../development/next-phase.md)；无人值守任务不允许派生子 Agent。
+
 ## 相关
 
 - [架构概览](overview.md) ｜ [使用指南](../usage/guide.md) ｜ [下一阶段](../development/next-phase.md)
