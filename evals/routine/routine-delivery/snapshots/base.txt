@@ -1,0 +1,11 @@
+# PackageMonitor Changelog
+
+Source: https://example.com/packagemon/changelog
+Captured: 2026-10-10T08:00:00Z
+
+## Version 2.2
+
+- Scan depth: 2 directory levels.
+- Reports: markdown only.
+- Retention: 7 days.
+- Digest schedule: daily 08:00.

@@ -1,0 +1,2 @@
+- The home cluster reboots every Tuesday at 04:00
+- Backups are verified on the first day of each month

@@ -1,0 +1,9 @@
+session: pricing-2026-09
+
+user: The pricing page shows wrong numbers for bulk orders.
+
+assistant: The bulk table is cached in Redis with a 30 minute TTL; the pool max connections is 30 there.
+
+user: Lower the TTL and recheck.
+
+assistant: TTL is now 5 minutes and the bulk table shows correct numbers.

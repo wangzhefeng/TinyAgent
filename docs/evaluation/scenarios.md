@@ -9,12 +9,20 @@ evals/personal/
 ├── routine-monitor/   # 定期监测任务、快照与评分输入
 ├── workspace-task/    # 工作区 fixture、任务与允许修改清单
 └── cited-research/    # 调研语料、任务与引用清单
+evals/learning/
+├── memory-lifecycle/  # 稳定记忆、审计、快照冻结与一次性进展拒绝
+├── session-recall/    # 可重放会话 transcript 与 FTS 检索定位
+└── skill-gating/      # 待审核 skill draft 与人工审核门禁
+evals/routine/
+├── routine-delivery/  # 定时投递恰好一次、心跳无事静默与 usage 记录
+└── unattended-boundary/ # 无人值守预授权边界 fixtures
 tests/unit/
-├── test_p3_learning.py    # 记忆、FTS、Skills 与压缩
-└── test_p4_scheduler.py   # 调度、预授权、心跳与恢复
+├── test_p3_learning.py       # 记忆、FTS、Skills 与压缩
+├── test_p4_scheduler.py      # 调度、预授权、心跳与恢复
+└── test_eval_contracts.py    # 三域任务契约加载与门禁字段校验
 ```
 
-当前只有 `evals/personal/` 具有独立任务契约和 fixtures。学习与例行自动化由单元测试覆盖，独立的 `evals/learning/`、`evals/routine/` 尚未建立。
+三个域共用同一契约格式（task_id、input、allowed_actions、expected、scoring、fixture_version）；fixtures 一律使用 `.txt` 等非文档后缀。
 
 ## 2. 个人任务契约
 
@@ -29,24 +37,32 @@ tests/unit/
 
 ## 3. 学习与例行任务契约
 
-- 稳定记忆可跨会话生效，自动写入有审计，冻结快照不被当前会话新写入改变。
-- 一次性进展不进入长期记忆；定时任务和子 Run 不得自动写记忆或 Skills。
-- FTS 检索返回正确 session/event 定位；未审核 Skills 不可加载。
-- 定时任务使用独立会话和有限预授权，不错误补跑、不重复投递。
-- 心跳无事不投递；每次执行仍记录 token、调用、延迟和异常。
+| 域 | 必过条件 |
+|---|---|
+| learning/memory-lifecycle | 稳定事实写入并跨会话可见；写入有审计；冻结快照不被本会话新写入改变；一次性进展不写入 |
+| learning/session-recall | FTS 检索返回正确 session/event 定位与短片段；不得编造 |
+| learning/skill-gating | 未审核 Skills 不可加载；人工审核后才可使用 |
+| routine/routine-delivery | 有更新投递恰好一次、重跑不重复投递；心跳无事不投递；每次执行记录 usage |
+| routine/unattended-boundary | scheduled run 仅 `write_file` 可预授权；shell、记忆、Skills、嵌套调度全部拒绝 |
+
+定时任务和子 Run 不得自动写记忆或 Skills；任务拆解见[下一阶段](../development/next-phase.md)。
 
 ## 4. 运行与当前结果
 
 ```bash
 uv run pytest tests -q
 uv run python -m evals.run_eval
+uv run python -m evals.run_scenarios --rounds 3   # 真实模型验收，需 .env 模型配置
 ```
+
+`run_scenarios` 只覆盖 learning 与 routine 域：每轮使用独立 state 写入 `results/evals/<域>/<场景>/run-N/`，按契约评分并汇总 usage、延迟与成功率到 `results/evals/learning-routine/summary.json`；任一必过失败即退出非零。
 
 当前基线：
 
-- 38 项单元测试通过，无 API key 可运行。
-- 3 个个人场景、5 个任务契约与 fixtures 校验通过。
+- 40 项单元测试通过，无 API key 可运行。
+- 3 个域、8 个场景、13 个任务契约与 fixtures 校验通过。
 - 真实模型已验证工作区修复、引用调研、记忆快照与例行监测。
+- learning 与 routine 8 个任务已用 `glm-5.3-flash` 独立 3 轮验收：24/24 通过，共 96 次调用、83,749 tokens；单任务 p95 延迟 10.7–51.7 秒（`routine-preauth-scope` 为确定性检查，0 次调用，成本记 unknown）。明细见 `results/evals/learning-routine/summary.json`（不入库）。
 - usage 缺失记 unknown，不记为零；成本、模型、fixture 和异常应写入真实运行记录。
 
 ## 5. 质量门禁

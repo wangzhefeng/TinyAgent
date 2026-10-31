@@ -1,0 +1,9 @@
+---
+name: release-notes
+description: Summarize release notes with cited changes
+---
+
+1. Read the changelog source completely.
+2. Group changes by severity: breaking, fixed, added.
+3. Cite the source URL for every claim.
+4. State explicitly when the changelog has no meaningful update.

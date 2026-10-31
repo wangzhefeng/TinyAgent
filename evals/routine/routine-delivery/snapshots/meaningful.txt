@@ -1,0 +1,12 @@
+# PackageMonitor Changelog
+
+Source: https://example.com/packagemon/changelog
+Captured: 2026-10-12T08:00:00Z
+
+## Version 2.3
+
+- Scan depth: 3 directory levels.
+- Reports: markdown and json.
+- Retention: 14 days.
+- Digest schedule: daily 07:00.
+- Digest emails can be suppressed when nothing meaningful changed.

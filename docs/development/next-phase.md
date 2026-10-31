@@ -1,41 +1,61 @@
 > 所属：[TinyAgent Docs](../README.md) › 开发
 
-# 下一阶段实施准备
+# 下一阶段实施：评测补齐（方向 C）
 
-状态：**待方向评审，尚未授权按某一产品方向实施**。本文是后续工作的唯一入口，确定方向后再补充任务拆解与验收标准。
+状态：**已选定方向 C**。本文是该阶段的任务拆解与完成定义；实施按此执行，不再合并其他方向。
 
-## 1. 当前基线
+## 1. 为什么选 C
 
-- v1.0.0 单用户 CLI：只读调查、安全写入、恢复、记忆、Skills、定时任务与本地投递可用。
-- 38 项单元测试、Ruff、文档检查及 3 个场景 5 个任务契约通过。
-- 当前没有 HTTP 服务、Web UI、JSON-RPC、Graph、多 Agent 或远程渠道。
+- 学习与例行自动化目前只有单元测试，缺少应用级任务契约与 fixtures（见[评测规范](../evaluation/scenarios.md)）。
+- 方向 B（影子运行）的成本与质量报告依赖 C 的评分器与真实模型基线，C 是 B 的前置。
+- 方向 A（本地服务）按[设计决策 D1](../architecture/decisions.md)推迟到出现第二个真实客户端后评审。
 
-## 2. 候选方向
+## 2. 场景与必过条件
 
-| 选项 | 用户价值 | 主要工作 | 决策状态 |
-|---|---|---|---|
-| A. 本地服务体验 | 通过浏览器或本地客户端使用 Agent | Runtime 服务边界、HTTP API、最小 Web UI、本地认证与审批 | 待选择 |
-| B. 日常影子运行 | 验证能否逐步承接真实个人任务 | sanitized 日常任务、长期运行、失败恢复、成本与质量报告 | 待选择 |
-| C. 评测补齐 | 让学习和例行自动化具备独立应用级 harness | `evals/learning/`、`evals/routine/`、评分器与真实场景验收 | 待选择 |
+新增 `evals/learning/` 与 `evals/routine/`，契约格式与 `evals/personal/` 一致（task_id、input、allowed_actions、expected、scoring、fixture_version）。
 
-每次只选择一个主方向；确定后再拆阶段任务，不把三个方向合并成一次大重构。
+### learning（学习与记忆）
 
-## 3. 默认非目标
+| 场景 | 任务 | 必过条件 |
+|---|---|---|
+| memory-lifecycle | learning-stable-fact | 稳定偏好写入 `USER.md`；产生带审计的 `memory_write` 事件；第二个会话快照可见 |
+| memory-lifecycle | learning-snapshot-frozen | 会话内新写入不改变本会话冻结快照；下一次会话可见 |
+| memory-lifecycle | learning-reject-oneoff | 一次性任务进展不写入 `USER.md`/`MEMORY.md` |
+| session-recall | learning-session-recall | FTS 命中正确 session/event 定位并返回短片段；不得编造 |
+| skill-gating | learning-skill-draft-gated | 未审核 draft 不可加载；人工 approve 后才可加载 |
 
-除非新的真实需求重新评审，下一阶段不引入多租户、分布式队列、Graph、多 Agent、远程执行或公共通用框架兼容层，也不默认替换现有日常主力工具。
+### routine（例行自动化）
 
-## 4. 开始实施前必须确认
+| 场景 | 任务 | 必过条件 |
+|---|---|---|
+| routine-delivery | routine-meaningful-delivered-once | 有更新时投递恰好一次；重跑 `run_due` 不重复投递；usage 已记录 |
+| routine-delivery | routine-heartbeat-silent | 无事时输出 `HEARTBEAT_OK` 且不投递；usage 仍记录 |
+| unattended-boundary | routine-preauth-scope | scheduled run 仅 `write_file` 可预授权；`run_shell`/`remember`/`create_skill_draft`/`schedule_task` 全部拒绝 |
 
-1. 主方向选择 A、B 或 C，以及明确的不做事项。
-2. 目标用户操作路径和可复现验收场景。
-3. 安全边界、数据范围、模型成本上限和回滚方式。
-4. 若选择 A：HTTP 与 stdio JSON-RPC 的取舍、本地认证、浏览器审批和事件订阅方案。
-5. 若选择 B：运行周期、真实任务来源、人工评分方式和是否迁移日常定时任务。
-6. 若选择 C：每个场景的必过条件、fixtures、真实模型轮数和 usage 基线。
+### fixtures
 
-## 5. 实施门槛
+- learning：种子 user/memory 文件、可重放会话 transcript、待审核 skill draft（fixtures 一律使用 `.txt` 等非文档后缀）。
+- routine：信息源前后快照、工作区文件。
 
-方向确认后，先在本文补充任务拆解与完成定义，再修改代码。功能、安全和恢复必过用例要求 100% 通过；真实模型记录 token、调用、延迟和异常，缺失成本记 unknown。
+## 3. 任务拆解
+
+1. **C1 `evals/learning/`**：三个场景的 `tasks.jsonl` 与 fixtures。
+2. **C2 `evals/routine/`**：两个场景的 `tasks.jsonl` 与 fixtures。
+3. **C3 校验与评分**：`evals/run_eval.py` 扩展为覆盖 personal/learning/routine 三域，校验新输入类型（seed、transcript、draft、快照对）；评分规则写入契约 `scoring` 字段。
+4. **C4 文档同步**：更新[评测规范](../evaluation/scenarios.md)目录与基线。
+
+## 4. 完成定义
+
+- `uv run python -m evals.run_eval` 覆盖三域并全部通过，无需 API key。
+- `uv run pytest tests -q`、`uv run ruff check .`、`uv run python scripts/check_docs.py` 全过。
+- 安全一票否决项零违反：越界写入、未审核技能执行、记忆误写、重复投递。
+- 真实模型验收：每场景独立 ≥3 轮，记录成功率、token、调用数、总延迟、p95 和人工评分；usage 缺失记 unknown，不记为零。已于 2026-10-31 执行完毕：8 个任务 × 3 轮全部通过（`glm-5.3-flash`，96 次调用、83,749 tokens），结果在 `results/evals/learning-routine/summary.json`，基线已回填[评测规范](../evaluation/scenarios.md)。
+
+## 5. 边界与不做事项
+
+- 不改 Runtime、Scheduler、Memory、Skills 的行为代码；本阶段只补评测资产与校验器。
+- 不引入新依赖；不为评测新增绕过审批的路径。
+- A（本地服务）与 B（影子运行）保持未选状态，C 完成并复盘后重新评审。
 
 ## 相关
 
